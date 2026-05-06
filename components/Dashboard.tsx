@@ -5,6 +5,7 @@ import { BulkTextButton } from "@/components/BulkTextButton";
 import { CustomerTable } from "@/components/CustomerTable";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { FilterTabs } from "@/components/FilterTabs";
+import { RefreshDashboardButton } from "@/components/RefreshDashboardButton";
 import {
   applyFilter,
   computeDSO,
@@ -16,9 +17,16 @@ import { ConnectionStatus } from "./ConnectionStatus";
 type Props = {
   companyName: string;
   customers: Customer[];
+  refreshedAt: number | null;
+  stale: boolean;
 };
 
-export function Dashboard({ companyName, customers }: Props) {
+export function Dashboard({
+  companyName,
+  customers,
+  refreshedAt,
+  stale,
+}: Props) {
   const [filter, setFilter] = useState<FilterKey>("all");
 
   const totalOwed = useMemo(() => computeTotalOwed(customers), [customers]);
@@ -51,6 +59,10 @@ export function Dashboard({ companyName, customers }: Props) {
         totalOwed={totalOwed}
         dso={dso}
       />
+
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <RefreshDashboardButton refreshedAt={refreshedAt} stale={stale} />
+      </div>
 
       <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
         <FilterTabs active={filter} counts={counts} onChange={setFilter} />

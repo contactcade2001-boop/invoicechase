@@ -4,6 +4,12 @@ import { mockBusiness, mockCustomers } from "@/lib/mockData";
 import { useMockData } from "../env";
 import { getConnectionForOrg } from "../db/connections";
 import {
+  invalidateQboDashboardCache,
+  readQboDashboardCache,
+  writeQboDashboardCache,
+} from "../db/qboCache";
+import { captureException } from "../observability";
+import {
   listCustomers,
   listOpenInvoices,
   listOpenInvoicesForCustomer,
@@ -20,7 +26,15 @@ import {
 
 export type DashboardData =
   | { connected: false }
-  | { connected: true; companyName: string; customers: Customer[] };
+  | {
+      connected: true;
+      companyName: string;
+      customers: Customer[];
+      refreshedAt?: number;
+      stale?: boolean;
+    };
+
+const DASHBOARD_TTL_MS = 60_000;
 
 export type CustomerLookup =
   | { ok: true; customer: Customer; companyName: string }
@@ -126,17 +140,11 @@ function aggregate(
   return out;
 }
 
-export async function getDashboardData(
+type ConnectedDashboardData = Extract<DashboardData, { connected: true }>;
+
+async function fetchFreshDashboardData(
   organizationId: number,
 ): Promise<DashboardData> {
-  if (useMockData()) {
-    return {
-      connected: true,
-      companyName: mockBusiness.name,
-      customers: mockCustomers,
-    };
-  }
-
   const conn = getConnectionForOrg(organizationId);
   if (!conn) return { connected: false };
 
@@ -155,6 +163,115 @@ export async function getDashboardData(
     companyName: conn.companyName ?? "Your business",
     customers: aggregate(customers, openInvoices, signalsByCustomer),
   };
+}
+
+function persistDashboardCache(
+  organizationId: number,
+  data: ConnectedDashboardData,
+  refreshedAt: number,
+): void {
+  try {
+    writeQboDashboardCache(
+      organizationId,
+      JSON.stringify({
+        companyName: data.companyName,
+        customers: data.customers,
+      }),
+      refreshedAt,
+    );
+  } catch (err) {
+    captureException(err, {
+      where: "qbo.cache.write",
+      organizationId,
+    });
+  }
+}
+
+function readCachedDashboard(
+  organizationId: number,
+): { data: ConnectedDashboardData; refreshedAt: number } | null {
+  const cached = readQboDashboardCache(organizationId);
+  if (!cached) return null;
+  try {
+    const parsed = JSON.parse(cached.payload) as {
+      companyName: string;
+      customers: Customer[];
+    };
+    return {
+      data: {
+        connected: true,
+        companyName: parsed.companyName,
+        customers: parsed.customers,
+        refreshedAt: cached.refreshedAt,
+      },
+      refreshedAt: cached.refreshedAt,
+    };
+  } catch {
+    invalidateQboDashboardCache(organizationId);
+    return null;
+  }
+}
+
+export async function getDashboardData(
+  organizationId: number,
+  options?: { forceRefresh?: boolean },
+): Promise<DashboardData> {
+  if (useMockData()) {
+    return {
+      connected: true,
+      companyName: mockBusiness.name,
+      customers: mockCustomers,
+      refreshedAt: Date.now(),
+    };
+  }
+
+  const force = options?.forceRefresh === true;
+  const now = Date.now();
+
+  if (!force) {
+    const cached = readCachedDashboard(organizationId);
+    if (cached && now - cached.refreshedAt < DASHBOARD_TTL_MS) {
+      return cached.data;
+    }
+  }
+
+  try {
+    const fresh = await fetchFreshDashboardData(organizationId);
+    if (fresh.connected) {
+      persistDashboardCache(organizationId, fresh, now);
+      return { ...fresh, refreshedAt: now };
+    }
+    // Disconnected: drop any stale cache so it doesn't bleed across re-connects.
+    invalidateQboDashboardCache(organizationId);
+    return fresh;
+  } catch (err) {
+    // QBO blip: fall back to cached data (stale) so the dashboard still loads.
+    const cached = readCachedDashboard(organizationId);
+    if (cached) {
+      captureException(err, {
+        where: "qbo.dashboard.fetch_failed_using_stale",
+        organizationId,
+        cachedAgeMs: now - cached.refreshedAt,
+      });
+      return { ...cached.data, stale: true };
+    }
+    throw err;
+  }
+}
+
+export function invalidateDashboardCache(organizationId: number): void {
+  invalidateQboDashboardCache(organizationId);
+}
+
+export async function warmDashboardCache(organizationId: number): Promise<void> {
+  try {
+    await getDashboardData(organizationId, { forceRefresh: true });
+  } catch (err) {
+    captureException(err, {
+      where: "qbo.dashboard.warm",
+      organizationId,
+    });
+  }
 }
 
 export async function lookupCustomerForOrg(

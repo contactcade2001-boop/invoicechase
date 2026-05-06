@@ -233,6 +233,12 @@ CREATE TABLE IF NOT EXISTS qbo_connections (
   updated_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS qbo_connections_org_id ON qbo_connections(organization_id);
+
+CREATE TABLE IF NOT EXISTS qbo_dashboard_cache (
+  organization_id INTEGER PRIMARY KEY,
+  payload TEXT NOT NULL,
+  refreshed_at INTEGER NOT NULL
+);
 `;
 
 function hasColumn(

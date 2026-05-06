@@ -210,6 +210,12 @@ export const qboConnections = sqliteTable("qbo_connections", {
   updatedAt: integer("updated_at").notNull(),
 });
 
+export const qboDashboardCache = sqliteTable("qbo_dashboard_cache", {
+  organizationId: integer("organization_id").primaryKey(),
+  payload: text("payload").notNull(),
+  refreshedAt: integer("refreshed_at").notNull(),
+});
+
 export type OrganizationRow = typeof organizations.$inferSelect;
 export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
 export type SmsConversationRow = typeof smsConversations.$inferSelect;
@@ -230,3 +236,4 @@ export type StripeConnectAccountRow = typeof stripeConnectAccounts.$inferSelect;
 export type PayLinkRow = typeof payLinks.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;
+export type QboDashboardCacheRow = typeof qboDashboardCache.$inferSelect;

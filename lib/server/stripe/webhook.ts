@@ -24,6 +24,7 @@ import {
 import { getStripeConfig } from "../env";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
 import { createQboRefundReceipt } from "../qbo/refundReceipt";
+import { invalidateDashboardCache } from "../qbo/sync";
 import { voidQboPayment } from "../qbo/voidPayment";
 import { getStripe } from "./client";
 
@@ -132,6 +133,10 @@ async function applyOneTimePayment(
 
   if (!succeeded) return;
 
+  // A balance just dropped to zero (or close to it) — bust the dashboard
+  // cache so the merchant sees the updated total owed on their next load.
+  invalidateDashboardCache(organizationId);
+
   const existing = findPaymentBySession(session.id);
   if (!existing?.qboPaymentId) {
     try {
@@ -223,6 +228,13 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
       const refundedCents = charge.amount_refunded ?? 0;
       const newStatus = fullyRefunded ? "refunded" : "partially_refunded";
       setRefundedAmount(paymentIntentId, refundedCents, newStatus);
+
+      // Refund changes amounts that the merchant sees on /dashboard and
+      // /payments — invalidate so a Refresh shows current numbers.
+      const refundedRow = findPaymentByIntent(paymentIntentId);
+      if (refundedRow?.organizationId) {
+        invalidateDashboardCache(refundedRow.organizationId);
+      }
 
       // Partial refund path: try to post a RefundReceipt to QBO when the org
       // has configured the deposit-to account + refund item in /settings.

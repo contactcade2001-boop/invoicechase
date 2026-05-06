@@ -8,10 +8,40 @@ import {
   findPaymentById,
 } from "@/lib/server/db/payments";
 import { recordPaymentInQbo } from "@/lib/server/qbo/recordPayment";
+import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
+import { getDashboardData } from "@/lib/server/qbo/sync";
 
 export type RetrySyncResult =
   | { ok: true; qboPaymentId: string | null }
   | { ok: false; error: string };
+
+export type RefreshResult =
+  | { ok: true; refreshedAt: number }
+  | { ok: false; error: string };
+
+export async function refreshDashboard(): Promise<RefreshResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  const orgId = user.organizationId;
+  if (!orgId) return { ok: false, error: "no_organization" };
+  // Re-use the per-org SMS-per-minute bucket as a cheap manual-refresh
+  // throttle so a stuck button can't hammer QBO.
+  const limit = checkRateLimit(
+    `dash:refresh:${orgId}`,
+    LIMITS.smsPerMinute.max,
+    LIMITS.smsPerMinute.windowMs,
+  );
+  if (!limit.allowed) return { ok: false, error: "rate_limited" };
+  try {
+    const data = await getDashboardData(orgId, { forceRefresh: true });
+    if (!data.connected) return { ok: false, error: "not_connected" };
+    revalidatePath("/dashboard");
+    return { ok: true, refreshedAt: data.refreshedAt ?? Date.now() };
+  } catch (err) {
+    console.error("[qbo] dashboard refresh failed", err);
+    return { ok: false, error: "refresh_failed" };
+  }
+}
 
 export async function retryQboSync(
   paymentId: number,

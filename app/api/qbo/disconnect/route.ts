@@ -7,6 +7,7 @@ import {
   getConnectionForOrg,
 } from "@/lib/server/db/connections";
 import { revokeToken } from "@/lib/server/qbo/oauth";
+import { invalidateDashboardCache } from "@/lib/server/qbo/sync";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
       console.error("[qbo] revoke failed (deleting locally anyway)", err);
     }
     deleteConnectionForOrg(orgId, conn.realmId);
+    invalidateDashboardCache(orgId);
     logAuditEvent({
       organizationId: orgId,
       userId: user.id,

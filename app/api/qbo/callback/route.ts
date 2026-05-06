@@ -5,6 +5,7 @@ import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import { upsertConnection } from "@/lib/server/db/connections";
 import { getQboApiBase, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
 import { exchangeCodeForTokens } from "@/lib/server/qbo/oauth";
+import { warmDashboardCache } from "@/lib/server/qbo/sync";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +92,10 @@ export async function GET(req: NextRequest) {
     targetId: realmId,
     metadata: { companyName },
   });
+
+  // Warm the dashboard cache asynchronously so the redirect to /dashboard
+  // doesn't have to wait for the QBO query roundtrip.
+  void warmDashboardCache(orgId);
 
   const res = NextResponse.redirect(
     new URL("/dashboard?qbo_connected=1", req.url),

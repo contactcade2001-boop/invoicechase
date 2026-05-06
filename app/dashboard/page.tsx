@@ -86,6 +86,8 @@ export default async function DashboardPage({
           <Dashboard
             companyName={data.companyName}
             customers={data.customers}
+            refreshedAt={data.refreshedAt ?? null}
+            stale={data.stale ?? false}
           />
         ) : (
           <ConnectPrompt error={sp.qbo_error} />
