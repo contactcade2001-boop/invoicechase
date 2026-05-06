@@ -40,6 +40,18 @@ export function getAppBaseUrl(): string {
   return required("APP_BASE_URL").replace(/\/$/, "");
 }
 
+export function getTwilioConfig() {
+  return {
+    accountSid: required("TWILIO_ACCOUNT_SID"),
+    authToken: required("TWILIO_AUTH_TOKEN"),
+    fromNumber: required("TWILIO_FROM_NUMBER"),
+  };
+}
+
 export function useMockData(): boolean {
   return process.env.USE_MOCK_DATA === "1";
+}
+
+export function useMockSms(): boolean {
+  return process.env.USE_MOCK_SMS === "1";
 }

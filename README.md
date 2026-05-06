@@ -53,9 +53,19 @@ Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
 
 In dev, magic links are **logged to the server console** (look for `[auth] Magic link for …`). For production, swap the TODO in `lib/server/auth/magic-link.ts` for a real email provider (Resend, Postmark, SES).
 
+### 5. Twilio (SMS)
+
+1. Buy or claim a Twilio number from https://console.twilio.com → put it in `TWILIO_FROM_NUMBER` in E.164 format (e.g. `+14155551234`).
+2. Copy your Account SID + Auth Token into `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN`.
+3. Or set `USE_MOCK_SMS=1` to log SMS payloads to the server console instead of hitting Twilio.
+
 ### `USE_MOCK_DATA=1`
 
 Renders the dashboard with hard-coded sample data instead of hitting QBO. Useful for UI iteration without an Intuit account. Subscription gate still applies.
+
+### `USE_MOCK_SMS=1`
+
+Skips Twilio entirely; SMS messages are logged to the server console as `[sms:mock] to=… body=…`. Combine with `USE_MOCK_DATA=1` for a fully offline demo.
 
 ## Routes
 
@@ -66,6 +76,7 @@ Renders the dashboard with hard-coded sample data instead of hitting QBO. Useful
 - `/api/auth/{request,verify,logout}` — magic-link lifecycle
 - `/api/qbo/{connect,callback,disconnect}` — QuickBooks OAuth lifecycle
 - `/api/stripe/{checkout,portal,webhook}` — Stripe billing lifecycle
+- Server actions in `app/actions/sms.ts` — Twilio SMS for the Text and bulk-text buttons
 
 ## What gets stored
 
@@ -107,6 +118,7 @@ lib/
                                      subscriptions, connections
     qbo/                             config, oauth, client, sync, reputation
     stripe/                          client, checkout (+portal), webhook
+    twilio/                          client, sendInvoiceSms
 ```
 
 ## Reputation score
@@ -118,6 +130,10 @@ Per-customer 300–850 score (`lib/server/qbo/reputation.ts`):
 
 Risk tier (`high` / `medium` / `low`) is derived from the score in `sync.ts`.
 
+## SMS
+
+The Text button and the bulk "Text ALL overdue" button call server actions in `app/actions/sms.ts`. Each message is `Pay $X now: ${APP_BASE_URL}/pay/{customerId}`. The `/pay/:customerId` route doesn't exist yet — it lands in the next slice (Stripe Checkout for the 1.9% success fee).
+
 ## Out of scope
 
-Real email delivery, Stripe Connect for the 1.9% success fee, Twilio SMS for Pay/Text buttons, full pagination of QBO queries, password-based auth.
+Real email delivery, Stripe Connect for the 1.9% success fee + the `/pay/:customerId` route, full pagination of QBO queries, password-based auth.

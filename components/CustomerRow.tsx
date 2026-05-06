@@ -1,13 +1,13 @@
 "use client";
 
+import { useTransition } from "react";
 import { CreditCard, MessageSquare } from "lucide-react";
+import { sendTextToCustomer, type SmsResult } from "@/app/actions/sms";
+import { formatCurrency, formatCurrencyDetailed } from "@/lib/format";
+import { describeDays } from "@/lib/format";
 import type { Customer } from "@/lib/types";
-import {
-  describeDays,
-  formatCurrency,
-  formatCurrencyDetailed,
-} from "@/lib/format";
 import { ReputationMeter } from "./ReputationMeter";
+import { smsErrorMessage } from "./smsErrors";
 
 function handlePay(customer: Customer) {
   console.log(
@@ -16,14 +16,25 @@ function handlePay(customer: Customer) {
   window.open("#", "_blank", "noopener,noreferrer");
 }
 
-function handleText(customer: Customer) {
-  const message = `Pay ${formatCurrencyDetailed(customer.amountOwed)} now [Stripe link]`;
-  console.log(`[mock] SMS ${customer.phone}: ${message}`);
-  alert(`Would SMS ${customer.phone}:\n\n${message}`);
+function announce(result: SmsResult, customer: Customer) {
+  if (result.ok) {
+    alert(`Sent to ${customer.phone || customer.name}.`);
+  } else {
+    alert(smsErrorMessage(result.error));
+  }
 }
 
 export function CustomerRow({ customer }: { customer: Customer }) {
+  const [pending, start] = useTransition();
   const isOverdue = customer.daysLate > 0;
+
+  function onText() {
+    start(async () => {
+      const result = await sendTextToCustomer(customer.id);
+      announce(result, customer);
+    });
+  }
+
   return (
     <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 last:border-b-0 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-center md:gap-4 md:px-6">
       <div className="flex flex-col gap-1.5">
@@ -60,11 +71,13 @@ export function CustomerRow({ customer }: { customer: Customer }) {
         </button>
         <button
           type="button"
-          onClick={() => handleText(customer)}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 md:flex-initial"
+          onClick={onText}
+          disabled={pending || !customer.phone}
+          title={!customer.phone ? "No phone on file" : undefined}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 md:flex-initial"
         >
           <MessageSquare className="h-4 w-4" aria-hidden />
-          Text
+          {pending ? "Sending…" : "Text"}
         </button>
       </div>
     </div>
