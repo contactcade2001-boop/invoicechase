@@ -6,6 +6,7 @@ import {
   getOrgById,
 } from "@/lib/server/db/organizations";
 import { smsConversations } from "@/lib/server/db/schema";
+import { logWebhookEvent } from "@/lib/server/db/webhookEvents";
 import { recordInboundAndMaybeReply } from "@/lib/server/sms/autopilot";
 import { verifyTwilioSignature } from "@/lib/server/twilio/verify";
 
@@ -54,6 +55,13 @@ export async function POST(req: NextRequest) {
     verified = false;
   }
   if (process.env.NODE_ENV === "production" && !verified) {
+    logWebhookEvent({
+      source: "twilio",
+      eventId: formObj["MessageSid"] ?? null,
+      type: "sms.inbound",
+      status: "rejected",
+      errorMessage: "bad_signature",
+    });
     return new NextResponse("invalid signature", { status: 403 });
   }
 
@@ -61,6 +69,14 @@ export async function POST(req: NextRequest) {
   const toPhone = formObj["To"] ?? "";
   const body = (formObj["Body"] ?? "").trim();
   const twilioSid = formObj["MessageSid"] ?? null;
+
+  logWebhookEvent({
+    source: "twilio",
+    eventId: twilioSid,
+    type: "sms.inbound",
+    status: "received",
+    payload: raw,
+  });
 
   if (!fromPhone || !body) {
     return twiml("");
@@ -82,6 +98,13 @@ export async function POST(req: NextRequest) {
       fromPhone,
       toPhone,
     );
+    logWebhookEvent({
+      source: "twilio",
+      eventId: twilioSid,
+      type: "sms.inbound",
+      status: "ignored",
+      errorMessage: "no_org",
+    });
     return twiml("");
   }
 
@@ -92,8 +115,21 @@ export async function POST(req: NextRequest) {
       body,
       twilioSid,
     });
+    logWebhookEvent({
+      source: "twilio",
+      eventId: twilioSid,
+      type: "sms.inbound",
+      status: "processed",
+    });
   } catch (err) {
     console.error("[sms-inbound] handler failed", err);
+    logWebhookEvent({
+      source: "twilio",
+      eventId: twilioSid,
+      type: "sms.inbound",
+      status: "errored",
+      errorMessage: err instanceof Error ? err.message : String(err),
+    });
   }
 
   return twiml("");

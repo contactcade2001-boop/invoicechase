@@ -64,6 +64,19 @@ CREATE TABLE IF NOT EXISTS inbox_reads (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS inbox_reads_user_conv ON inbox_reads(user_id, conversation_id);
 
+CREATE TABLE IF NOT EXISTS webhook_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  event_id TEXT,
+  type TEXT,
+  status TEXT NOT NULL,
+  error_message TEXT,
+  payload_digest TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS webhook_events_source_created ON webhook_events(source, created_at);
+CREATE INDEX IF NOT EXISTS webhook_events_event_id ON webhook_events(event_id);
+
 CREATE TABLE IF NOT EXISTS organization_invites (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id INTEGER NOT NULL,
