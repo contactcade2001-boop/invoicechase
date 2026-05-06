@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 import { getDb } from "./client";
 import { payments, type PaymentRow } from "./schema";
 
@@ -173,6 +173,30 @@ export function listPaymentsForOrg(
     .orderBy(desc(payments.createdAt))
     .limit(limit)
     .all();
+}
+
+// Net platform fees collected from an org's *successful* payments in a window.
+// Application-fee cents are net of refunds because we look at the live status.
+export function sumPlatformFeesInPeriod(
+  organizationId: number,
+  startMs: number,
+  endMs: number,
+): number {
+  const row = getDb()
+    .select({
+      total: sql<number>`COALESCE(SUM(COALESCE(${payments.applicationFeeCents}, 0)), 0)`,
+    })
+    .from(payments)
+    .where(
+      and(
+        eq(payments.organizationId, organizationId),
+        eq(payments.status, "succeeded"),
+        gte(payments.paidAt, startMs),
+        lt(payments.paidAt, endMs),
+      ),
+    )
+    .get();
+  return row?.total ?? 0;
 }
 
 export function listPaymentsForCustomerEmail(

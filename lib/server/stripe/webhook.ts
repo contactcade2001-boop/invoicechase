@@ -22,6 +22,7 @@ import {
   upsertSubscription,
 } from "../db/subscriptions";
 import { getStripeConfig } from "../env";
+import { markReferralFirstPaid } from "../db/partners";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
 import { createQboRefundReceipt } from "../qbo/refundReceipt";
 import { invalidateDashboardCache } from "../qbo/sync";
@@ -75,6 +76,11 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
     currentPeriodEnd: periodEndMs(sub),
     cancelAtPeriodEnd: sub.cancel_at_period_end,
   });
+  // Mark partner-attributed referral as first-paid the moment we see a paid
+  // status — used as a quality signal in the partner dashboard.
+  if (sub.status === "active" || sub.status === "trialing") {
+    markReferralFirstPaid(organizationId, Date.now());
+  }
 }
 
 function applyConnectAccount(account: Stripe.Account): void {

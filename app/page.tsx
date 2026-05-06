@@ -250,6 +250,15 @@ export default function LandingPage() {
             <Link href="/terms" className="hover:text-slate-700">
               Terms
             </Link>
+            <Link href="/partners" className="hover:text-slate-700">
+              Partner program
+            </Link>
+            <Link
+              href="/integrations/quickbooks"
+              className="hover:text-slate-700"
+            >
+              QuickBooks app
+            </Link>
             <span>&copy; {new Date().getFullYear()} Invoice Chase</span>
           </div>
         </div>

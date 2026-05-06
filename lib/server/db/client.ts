@@ -239,6 +239,53 @@ CREATE TABLE IF NOT EXISTS qbo_dashboard_cache (
   payload TEXT NOT NULL,
   refreshed_at INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS partners (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  display_name TEXT,
+  company_name TEXT,
+  referral_code TEXT NOT NULL UNIQUE,
+  commission_percent_bps INTEGER NOT NULL DEFAULT 2000,
+  payout_email TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  welcome_email_sent_at INTEGER,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS partners_referral_code ON partners(referral_code);
+
+CREATE TABLE IF NOT EXISTS partner_referrals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  partner_id INTEGER NOT NULL,
+  organization_id INTEGER NOT NULL UNIQUE,
+  attributed_at INTEGER NOT NULL,
+  first_paid_at INTEGER,
+  churned_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS partner_referrals_partner_id ON partner_referrals(partner_id);
+
+CREATE TABLE IF NOT EXISTS partner_commissions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  partner_id INTEGER NOT NULL,
+  organization_id INTEGER NOT NULL,
+  period_start INTEGER NOT NULL,
+  period_end INTEGER NOT NULL,
+  basis_cents INTEGER NOT NULL,
+  commission_cents INTEGER NOT NULL,
+  source TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  paid_at INTEGER,
+  payout_reference TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS partner_commissions_partner_period
+  ON partner_commissions(partner_id, period_start);
+CREATE UNIQUE INDEX IF NOT EXISTS partner_commissions_unique_period
+  ON partner_commissions(partner_id, organization_id, period_start, source);
 `;
 
 function hasColumn(

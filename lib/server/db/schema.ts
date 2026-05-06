@@ -216,6 +216,47 @@ export const qboDashboardCache = sqliteTable("qbo_dashboard_cache", {
   refreshedAt: integer("refreshed_at").notNull(),
 });
 
+export const partners = sqliteTable("partners", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().unique(),
+  email: text("email").notNull(),
+  displayName: text("display_name"),
+  companyName: text("company_name"),
+  referralCode: text("referral_code").notNull().unique(),
+  commissionPercentBps: integer("commission_percent_bps").notNull().default(2000),
+  payoutEmail: text("payout_email"),
+  status: text("status").notNull().default("active"),
+  welcomeEmailSentAt: integer("welcome_email_sent_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const partnerReferrals = sqliteTable("partner_referrals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  partnerId: integer("partner_id").notNull(),
+  organizationId: integer("organization_id").notNull().unique(),
+  attributedAt: integer("attributed_at").notNull(),
+  firstPaidAt: integer("first_paid_at"),
+  churnedAt: integer("churned_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const partnerCommissions = sqliteTable("partner_commissions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  partnerId: integer("partner_id").notNull(),
+  organizationId: integer("organization_id").notNull(),
+  periodStart: integer("period_start").notNull(),
+  periodEnd: integer("period_end").notNull(),
+  basisCents: integer("basis_cents").notNull(),
+  commissionCents: integer("commission_cents").notNull(),
+  source: text("source").notNull(),
+  status: text("status").notNull().default("pending"),
+  paidAt: integer("paid_at"),
+  payoutReference: text("payout_reference"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
 export type OrganizationRow = typeof organizations.$inferSelect;
 export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
 export type SmsConversationRow = typeof smsConversations.$inferSelect;
@@ -237,3 +278,6 @@ export type PayLinkRow = typeof payLinks.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;
 export type QboDashboardCacheRow = typeof qboDashboardCache.$inferSelect;
+export type PartnerRow = typeof partners.$inferSelect;
+export type PartnerReferralRow = typeof partnerReferrals.$inferSelect;
+export type PartnerCommissionRow = typeof partnerCommissions.$inferSelect;
