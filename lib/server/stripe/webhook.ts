@@ -30,8 +30,11 @@ export async function constructEvent(
   );
 }
 
-function userIdFrom(meta: Stripe.Metadata | null | undefined): number | null {
-  const raw = meta?.userId;
+function intMeta(
+  meta: Stripe.Metadata | null | undefined,
+  key: string,
+): number | null {
+  const raw = meta?.[key];
   if (!raw) return null;
   const id = Number(raw);
   return Number.isFinite(id) ? id : null;
@@ -46,16 +49,16 @@ function periodEndMs(sub: Stripe.Subscription): number | null {
 async function applySubscription(sub: Stripe.Subscription): Promise<void> {
   const customerId =
     typeof sub.customer === "string" ? sub.customer : sub.customer.id;
-  const userId =
-    userIdFrom(sub.metadata) ??
-    getSubscriptionByStripeCustomerId(customerId)?.userId ??
+  const organizationId =
+    intMeta(sub.metadata, "organizationId") ??
+    getSubscriptionByStripeCustomerId(customerId)?.organizationId ??
     null;
-  if (!userId) {
-    console.warn("[stripe] no userId for subscription", sub.id);
+  if (!organizationId) {
+    console.warn("[stripe] no organizationId for subscription", sub.id);
     return;
   }
   upsertSubscription({
-    userId,
+    organizationId,
     stripeCustomerId: customerId,
     stripeSubscriptionId: sub.id,
     status: sub.status,
@@ -65,16 +68,16 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
 }
 
 function applyConnectAccount(account: Stripe.Account): void {
-  const userId =
-    userIdFrom(account.metadata) ??
-    getConnectAccountByStripeId(account.id)?.userId ??
+  const organizationId =
+    intMeta(account.metadata, "organizationId") ??
+    getConnectAccountByStripeId(account.id)?.organizationId ??
     null;
-  if (!userId) {
-    console.warn("[stripe-connect] no userId for account", account.id);
+  if (!organizationId) {
+    console.warn("[stripe-connect] no organizationId for account", account.id);
     return;
   }
   upsertConnectAccount({
-    userId,
+    organizationId,
     stripeAccountId: account.id,
     chargesEnabled: !!account.charges_enabled,
     payoutsEnabled: !!account.payouts_enabled,
@@ -85,10 +88,13 @@ function applyConnectAccount(account: Stripe.Account): void {
 async function applyOneTimePayment(
   session: Stripe.Checkout.Session,
 ): Promise<void> {
-  const userId = userIdFrom(session.metadata);
+  const organizationId = intMeta(session.metadata, "organizationId");
   const customerId = session.metadata?.customerId ?? null;
-  if (!userId || !customerId) {
-    console.warn("[stripe] no user/customer for pay session", session.id);
+  if (!organizationId || !customerId) {
+    console.warn(
+      "[stripe] no organizationId/customerId for pay session",
+      session.id,
+    );
     return;
   }
   const paymentIntentId =
@@ -98,7 +104,7 @@ async function applyOneTimePayment(
   const succeeded = session.payment_status === "paid";
   const amountCents = session.amount_total ?? 0;
   upsertPaymentBySession({
-    userId,
+    organizationId,
     customerId,
     customerName: null,
     amountCents,
@@ -114,14 +120,11 @@ async function applyOneTimePayment(
 
   if (!succeeded) return;
 
-  // Mark the QBO invoice paid. Idempotent: skip if we already pushed it.
-  // Failures are logged but never fail the webhook — Stripe has the money,
-  // the merchant can manually reconcile if QBO sync fails.
   const existing = findPaymentBySession(session.id);
   if (existing?.qboPaymentId) return;
   try {
     const result = await recordPaymentInQbo({
-      userId,
+      organizationId,
       customerId,
       amountCents,
       noteRef: session.id,

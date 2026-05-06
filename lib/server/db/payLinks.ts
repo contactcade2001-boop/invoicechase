@@ -1,10 +1,10 @@
 import "server-only";
-import { and, desc, eq, gt } from "drizzle-orm";
+import { and, desc, eq, gt, isNull } from "drizzle-orm";
 import { getDb } from "./client";
 import { payLinks, type PayLinkRow } from "./schema";
 
 export function findActivePayLink(
-  userId: number,
+  organizationId: number,
   customerId: string,
 ): PayLinkRow | null {
   const db = getDb();
@@ -13,9 +13,10 @@ export function findActivePayLink(
     .from(payLinks)
     .where(
       and(
-        eq(payLinks.userId, userId),
+        eq(payLinks.organizationId, organizationId),
         eq(payLinks.customerId, customerId),
         gt(payLinks.expiresAt, Date.now()),
+        isNull(payLinks.amountCentsOverride),
       ),
     )
     .orderBy(desc(payLinks.createdAt))
@@ -32,14 +33,19 @@ export function findPayLinkByToken(token: string): PayLinkRow | null {
 
 export function insertPayLink(input: {
   token: string;
-  userId: number;
+  organizationId: number;
   customerId: string;
   expiresAt: number;
+  amountCentsOverride?: number;
 }): void {
   const db = getDb();
   db.insert(payLinks)
     .values({
-      ...input,
+      token: input.token,
+      organizationId: input.organizationId,
+      customerId: input.customerId,
+      expiresAt: input.expiresAt,
+      amountCentsOverride: input.amountCentsOverride ?? null,
       createdAt: Date.now(),
     })
     .run();

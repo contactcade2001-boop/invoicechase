@@ -4,11 +4,11 @@ import { AppHeader } from "@/components/AppHeader";
 import { RetrySyncButton } from "@/components/RetrySyncButton";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
-  listPaymentsForUser,
-  summarizePaymentsForUser,
+  listPaymentsForOrg,
+  summarizePaymentsForOrg,
 } from "@/lib/server/db/payments";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 import type { PaymentRow } from "@/lib/server/db/schema";
@@ -77,10 +77,15 @@ function PaymentRowView({ p }: { p: PaymentRow }) {
 export default async function PaymentsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!isActive(getSubscriptionByUserId(user.id))) redirect("/billing");
+  const orgId = user.organizationId!;
+  if (!isActive(getSubscriptionByOrgId(orgId))) {
+    if (user.role !== "owner") redirect("/dashboard");
+    redirect("/billing");
+  }
+  if (user.role === "technician") redirect("/dashboard");
 
-  const summary = summarizePaymentsForUser(user.id);
-  const rows = listPaymentsForUser(user.id);
+  const summary = summarizePaymentsForOrg(orgId);
+  const rows = listPaymentsForOrg(orgId);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">

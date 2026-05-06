@@ -4,7 +4,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { CustomerDetail } from "@/components/CustomerDetail";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 import { getCustomerDetail } from "@/lib/server/qbo/sync";
@@ -21,9 +21,13 @@ export default async function CustomerDetailPage({
   const { id } = await params;
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!isActive(getSubscriptionByUserId(user.id))) redirect("/billing");
+  const orgId = user.organizationId!;
+  if (!isActive(getSubscriptionByOrgId(orgId))) {
+    if (user.role !== "owner") redirect("/dashboard");
+    redirect("/billing");
+  }
 
-  const detail = await getCustomerDetail(user.id, id);
+  const detail = await getCustomerDetail(orgId, id);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">

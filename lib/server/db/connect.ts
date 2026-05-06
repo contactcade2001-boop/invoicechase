@@ -7,13 +7,13 @@ import {
 } from "./schema";
 
 export function getConnectAccount(
-  userId: number,
+  organizationId: number,
 ): StripeConnectAccountRow | null {
   const db = getDb();
   const row = db
     .select()
     .from(stripeConnectAccounts)
-    .where(eq(stripeConnectAccounts.userId, userId))
+    .where(eq(stripeConnectAccounts.organizationId, organizationId))
     .get();
   return row ?? null;
 }
@@ -31,7 +31,7 @@ export function getConnectAccountByStripeId(
 }
 
 export type ConnectAccountUpsert = {
-  userId: number;
+  organizationId: number;
   stripeAccountId: string;
   chargesEnabled: boolean;
   payoutsEnabled: boolean;
@@ -43,7 +43,7 @@ export function upsertConnectAccount(input: ConnectAccountUpsert): void {
   const now = Date.now();
   db.insert(stripeConnectAccounts)
     .values({
-      userId: input.userId,
+      organizationId: input.organizationId,
       stripeAccountId: input.stripeAccountId,
       chargesEnabled: input.chargesEnabled ? 1 : 0,
       payoutsEnabled: input.payoutsEnabled ? 1 : 0,
@@ -52,7 +52,7 @@ export function upsertConnectAccount(input: ConnectAccountUpsert): void {
       updatedAt: now,
     })
     .onConflictDoUpdate({
-      target: stripeConnectAccounts.userId,
+      target: stripeConnectAccounts.organizationId,
       set: {
         stripeAccountId: input.stripeAccountId,
         chargesEnabled: input.chargesEnabled ? 1 : 0,

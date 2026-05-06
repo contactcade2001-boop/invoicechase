@@ -4,7 +4,7 @@ import { ConnectPrompt } from "@/components/ConnectPrompt";
 import { Dashboard } from "@/components/Dashboard";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 import { getDashboardData } from "@/lib/server/qbo/sync";
@@ -22,10 +22,14 @@ export default async function DashboardPage({
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const sub = getSubscriptionByUserId(user.id);
-  if (!isActive(sub)) redirect("/billing");
+  const orgId = user.organizationId!;
+  const sub = getSubscriptionByOrgId(orgId);
+  if (!isActive(sub)) {
+    if (user.role !== "owner") redirect("/dashboard?wait=billing");
+    redirect("/billing");
+  }
 
-  const data = await getDashboardData(user.id);
+  const data = await getDashboardData(orgId);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">

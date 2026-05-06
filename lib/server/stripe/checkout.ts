@@ -1,6 +1,6 @@
 import "server-only";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   upsertSubscription,
 } from "../db/subscriptions";
 import type { UserRow } from "../db/schema";
@@ -8,15 +8,19 @@ import { getAppBaseUrl, getStripeConfig } from "../env";
 import { getStripe } from "./client";
 
 async function getOrCreateStripeCustomer(user: UserRow): Promise<string> {
-  const existing = getSubscriptionByUserId(user.id);
+  const orgId = user.organizationId!;
+  const existing = getSubscriptionByOrgId(orgId);
   if (existing?.stripeCustomerId) return existing.stripeCustomerId;
   const stripe = getStripe();
   const customer = await stripe.customers.create({
     email: user.email,
-    metadata: { userId: String(user.id) },
+    metadata: {
+      organizationId: String(orgId),
+      ownerUserId: String(user.id),
+    },
   });
   upsertSubscription({
-    userId: user.id,
+    organizationId: orgId,
     stripeCustomerId: customer.id,
   });
   return customer.id;
@@ -25,6 +29,7 @@ async function getOrCreateStripeCustomer(user: UserRow): Promise<string> {
 export async function createCheckoutSessionUrl(
   user: UserRow,
 ): Promise<string> {
+  const orgId = user.organizationId!;
   const { priceId } = getStripeConfig();
   const baseUrl = getAppBaseUrl();
   const stripe = getStripe();
@@ -35,10 +40,10 @@ export async function createCheckoutSessionUrl(
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${baseUrl}/billing?checkout=success`,
     cancel_url: `${baseUrl}/billing?checkout=cancel`,
-    client_reference_id: String(user.id),
-    metadata: { userId: String(user.id) },
+    client_reference_id: String(orgId),
+    metadata: { organizationId: String(orgId) },
     subscription_data: {
-      metadata: { userId: String(user.id) },
+      metadata: { organizationId: String(orgId) },
     },
     allow_promotion_codes: true,
   });
@@ -51,8 +56,8 @@ export async function createCheckoutSessionUrl(
 export async function createPortalSessionUrl(
   user: UserRow,
 ): Promise<string> {
-  const sub = getSubscriptionByUserId(user.id);
-  if (!sub) throw new Error("No subscription found for user");
+  const sub = getSubscriptionByOrgId(user.organizationId!);
+  if (!sub) throw new Error("No subscription found for organization");
   const stripe = getStripe();
   const session = await stripe.billingPortal.sessions.create({
     customer: sub.stripeCustomerId,

@@ -1,5 +1,5 @@
 import "server-only";
-import { getConnectionForUser } from "../db/connections";
+import { getConnectionForOrg } from "../db/connections";
 import {
   listOpenInvoicesForCustomer,
   qboPost,
@@ -31,7 +31,7 @@ export function buildLines(
 }
 
 export type RecordPaymentInput = {
-  userId: number;
+  organizationId: number;
   customerId: string;
   amountCents: number;
   noteRef?: string;
@@ -45,11 +45,11 @@ export type RecordPaymentResult = {
 export async function recordPaymentInQbo(
   input: RecordPaymentInput,
 ): Promise<RecordPaymentResult> {
-  const conn = getConnectionForUser(input.userId);
+  const conn = getConnectionForOrg(input.organizationId);
   if (!conn) {
     console.warn(
-      "[qbo] mark-paid: no QBO connection for user",
-      input.userId,
+      "[qbo] mark-paid: no QBO connection for org",
+      input.organizationId,
     );
     return { qboPaymentId: null, customerName: null };
   }

@@ -10,23 +10,29 @@ export type StartPayResult =
   | { ok: false; error: string };
 
 export async function createPayCheckoutUrl(input: {
-  userId: number;
+  organizationId: number;
   token: string;
   customer: Customer;
   companyName: string;
+  amountCentsOverride?: number | null;
 }): Promise<StartPayResult> {
-  const account = getConnectAccount(input.userId);
+  const account = getConnectAccount(input.organizationId);
   if (!canAcceptPayments(account)) {
     return { ok: false, error: "merchant_not_ready" };
   }
-  if (input.customer.amountOwed <= 0) {
+
+  const amount = input.amountCentsOverride ?? input.customer.amountOwed;
+  if (amount <= 0) {
     return { ok: false, error: "nothing_owed" };
   }
 
   const baseUrl = getAppBaseUrl();
   const successUrl = `${baseUrl}/pay/${input.token}?paid=1`;
   const cancelUrl = `${baseUrl}/pay/${input.token}`;
-  const fee = applicationFeeCents(input.customer.amountOwed);
+  const fee = applicationFeeCents(amount);
+  const productName = input.amountCentsOverride
+    ? `Deposit for ${input.companyName}`
+    : `Invoice from ${input.companyName}`;
 
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
@@ -35,9 +41,9 @@ export async function createPayCheckoutUrl(input: {
         quantity: 1,
         price_data: {
           currency: "usd",
-          unit_amount: input.customer.amountOwed,
+          unit_amount: amount,
           product_data: {
-            name: `Invoice from ${input.companyName}`,
+            name: productName,
             description: input.customer.name,
           },
         },
@@ -51,13 +57,13 @@ export async function createPayCheckoutUrl(input: {
       },
       receipt_email: input.customer.email,
       metadata: {
-        userId: String(input.userId),
+        organizationId: String(input.organizationId),
         customerId: input.customer.id,
         payLinkToken: input.token,
       },
     },
     metadata: {
-      userId: String(input.userId),
+      organizationId: String(input.organizationId),
       customerId: input.customer.id,
       payLinkToken: input.token,
     },

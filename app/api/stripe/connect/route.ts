@@ -9,6 +9,11 @@ async function startOnboarding(req: NextRequest) {
   if (!user) {
     return NextResponse.redirect(new URL("/login", req.url), { status: 303 });
   }
+  if (user.role !== "owner") {
+    return NextResponse.redirect(new URL("/dashboard", req.url), {
+      status: 303,
+    });
+  }
   try {
     const url = await createOnboardingLink(user);
     return NextResponse.redirect(url, { status: 303 });

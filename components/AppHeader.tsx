@@ -1,14 +1,52 @@
 import Link from "next/link";
-import type { UserRow } from "@/lib/server/db/schema";
+import type { UserRole, UserRow } from "@/lib/server/db/schema";
 
-const tabs = [
-  { key: "dashboard", href: "/dashboard", label: "Dashboard" },
-  { key: "payments", href: "/payments", label: "Payments" },
-  { key: "billing", href: "/billing", label: "Billing" },
-  { key: "settings", href: "/settings", label: "Settings" },
-] as const;
+type Tab = {
+  key: string;
+  href: string;
+  label: string;
+  visibleTo: UserRole[];
+};
 
-export type AppHeaderTab = (typeof tabs)[number]["key"];
+const tabs: Tab[] = [
+  {
+    key: "dashboard",
+    href: "/dashboard",
+    label: "Dashboard",
+    visibleTo: ["owner", "manager", "technician"],
+  },
+  {
+    key: "payments",
+    href: "/payments",
+    label: "Payments",
+    visibleTo: ["owner", "manager"],
+  },
+  {
+    key: "team",
+    href: "/team",
+    label: "Team",
+    visibleTo: ["owner"],
+  },
+  {
+    key: "settings",
+    href: "/settings",
+    label: "Settings",
+    visibleTo: ["owner", "manager"],
+  },
+  {
+    key: "billing",
+    href: "/billing",
+    label: "Billing",
+    visibleTo: ["owner"],
+  },
+];
+
+export type AppHeaderTab =
+  | "dashboard"
+  | "payments"
+  | "team"
+  | "settings"
+  | "billing";
 
 export function AppHeader({
   user,
@@ -17,6 +55,8 @@ export function AppHeader({
   user: UserRow;
   current: AppHeaderTab;
 }) {
+  const role = user.role as UserRole;
+  const visibleTabs = tabs.filter((t) => t.visibleTo.includes(role));
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
@@ -24,7 +64,7 @@ export function AppHeader({
           Invoice Chase
         </Link>
         <div className="flex items-center gap-4 text-sm">
-          {tabs.map((t) => (
+          {visibleTabs.map((t) => (
             <Link
               key={t.key}
               href={t.href}

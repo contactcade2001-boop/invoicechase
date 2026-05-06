@@ -9,6 +9,11 @@ export async function POST(req: NextRequest) {
   if (!user) {
     return NextResponse.redirect(new URL("/login", req.url), { status: 303 });
   }
+  if (user.role !== "owner") {
+    return NextResponse.redirect(new URL("/dashboard", req.url), {
+      status: 303,
+    });
+  }
   try {
     const url = await createPortalSessionUrl(user);
     return NextResponse.redirect(url, { status: 303 });

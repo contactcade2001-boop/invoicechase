@@ -8,6 +8,8 @@ const messages: Record<string, string> = {
     "No overdue customers with phone numbers to text right now.",
   send_failed: "SMS failed. Please try again.",
   rate_limited: "Slow down — too many requests. Try again shortly.",
+  forbidden: "You don't have permission for this action.",
+  no_organization: "Account not yet set up. Refresh and try again.",
 };
 
 export function smsErrorMessage(code: string): string {

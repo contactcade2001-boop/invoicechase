@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { canAcceptPayments, getConnectAccount } from "@/lib/server/db/connect";
 import { findPayLinkByToken } from "@/lib/server/db/payLinks";
-import { lookupCustomerForUser } from "@/lib/server/qbo/sync";
+import { lookupCustomerForOrg } from "@/lib/server/qbo/sync";
 import { formatCurrencyDetailed } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -119,7 +119,10 @@ export default async function PayPage({
     );
   }
 
-  const lookup = await lookupCustomerForUser(link.userId, link.customerId);
+  const lookup = await lookupCustomerForOrg(
+    link.organizationId,
+    link.customerId,
+  );
   if (!lookup.ok) {
     const body =
       lookup.reason === "not_connected"
@@ -133,8 +136,12 @@ export default async function PayPage({
   }
 
   const { customer, companyName } = lookup;
+  const isDeposit = link.amountCentsOverride != null;
+  const displayAmountCents = isDeposit
+    ? link.amountCentsOverride!
+    : customer.amountOwed;
 
-  if (customer.amountOwed <= 0) {
+  if (!isDeposit && customer.amountOwed <= 0) {
     return (
       <PageShell>
         <MessageCard
@@ -147,7 +154,7 @@ export default async function PayPage({
     );
   }
 
-  const connectAccount = getConnectAccount(link.userId);
+  const connectAccount = getConnectAccount(link.organizationId);
   if (!canAcceptPayments(connectAccount)) {
     return (
       <PageShell>
@@ -167,15 +174,17 @@ export default async function PayPage({
         <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {companyName}
         </p>
-        <h1 className="mt-2 text-2xl font-bold">Pay your invoice</h1>
+        <h1 className="mt-2 text-2xl font-bold">
+          {isDeposit ? "Pay your deposit" : "Pay your invoice"}
+        </h1>
         <p className="mt-1 text-sm text-slate-600">{customer.name}</p>
 
         <div className="mt-6 rounded-xl bg-slate-50 p-5 ring-1 ring-slate-200">
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-            Amount due
+            {isDeposit ? "Deposit due" : "Amount due"}
           </p>
           <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">
-            {formatCurrencyDetailed(customer.amountOwed)}
+            {formatCurrencyDetailed(displayAmountCents)}
           </p>
         </div>
 

@@ -14,7 +14,8 @@ export function applicationFeeCents(amountCents: number): number {
 }
 
 async function ensureStripeAccountId(user: UserRow): Promise<string> {
-  const existing = getConnectAccount(user.id);
+  const orgId = user.organizationId!;
+  const existing = getConnectAccount(orgId);
   if (existing) return existing.stripeAccountId;
   const stripe = getStripe();
   const account = await stripe.accounts.create({
@@ -24,10 +25,13 @@ async function ensureStripeAccountId(user: UserRow): Promise<string> {
       card_payments: { requested: true },
       transfers: { requested: true },
     },
-    metadata: { userId: String(user.id) },
+    metadata: {
+      organizationId: String(orgId),
+      ownerUserId: String(user.id),
+    },
   });
   upsertConnectAccount({
-    userId: user.id,
+    organizationId: orgId,
     stripeAccountId: account.id,
     chargesEnabled: !!account.charges_enabled,
     payoutsEnabled: !!account.payouts_enabled,
@@ -50,13 +54,13 @@ export async function createOnboardingLink(user: UserRow): Promise<string> {
 }
 
 export async function refreshConnectStatus(
-  userId: number,
+  organizationId: number,
   accountId: string,
 ): Promise<void> {
   const stripe = getStripe();
   const account = await stripe.accounts.retrieve(accountId);
   upsertConnectAccount({
-    userId,
+    organizationId,
     stripeAccountId: account.id,
     chargesEnabled: !!account.charges_enabled,
     payoutsEnabled: !!account.payouts_enabled,

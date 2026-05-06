@@ -12,7 +12,7 @@ import {
   getConnectAccount,
 } from "@/lib/server/db/connect";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 import { refreshConnectStatus } from "@/lib/server/stripe/connect";
@@ -48,24 +48,27 @@ export default async function BillingPage({
   const sp = await searchParams;
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (user.role !== "owner") redirect("/dashboard");
+
+  const orgId = user.organizationId!;
 
   // After returning from Stripe-hosted onboarding, pull the latest account state
   // so the UI reflects charges_enabled etc. immediately rather than waiting for
   // the account.updated webhook.
   if (sp.connect === "return") {
-    const acct = getConnectAccount(user.id);
+    const acct = getConnectAccount(orgId);
     if (acct) {
       try {
-        await refreshConnectStatus(user.id, acct.stripeAccountId);
+        await refreshConnectStatus(orgId, acct.stripeAccountId);
       } catch (err) {
         console.error("[stripe-connect] refresh failed", err);
       }
     }
   }
 
-  const sub = getSubscriptionByUserId(user.id);
+  const sub = getSubscriptionByOrgId(orgId);
   const subActive = isActive(sub);
-  const connectAccount = getConnectAccount(user.id);
+  const connectAccount = getConnectAccount(orgId);
   const acceptsPayments = canAcceptPayments(connectAccount);
   const errorMessage = sp.error ? errorMessages[sp.error] : null;
   const justCheckedOut = sp.checkout === "success";

@@ -2,7 +2,7 @@ import "server-only";
 import type { Customer, RiskTier } from "@/lib/types";
 import { mockBusiness, mockCustomers } from "@/lib/mockData";
 import { useMockData } from "../env";
-import { getConnectionForUser } from "../db/connections";
+import { getConnectionForOrg } from "../db/connections";
 import {
   listCustomers,
   listOpenInvoices,
@@ -127,7 +127,7 @@ function aggregate(
 }
 
 export async function getDashboardData(
-  userId: number,
+  organizationId: number,
 ): Promise<DashboardData> {
   if (useMockData()) {
     return {
@@ -137,7 +137,7 @@ export async function getDashboardData(
     };
   }
 
-  const conn = getConnectionForUser(userId);
+  const conn = getConnectionForOrg(organizationId);
   if (!conn) return { connected: false };
 
   const since = isoDaysAgo(new Date(), HISTORY_WINDOW_DAYS);
@@ -157,11 +157,11 @@ export async function getDashboardData(
   };
 }
 
-export async function lookupCustomerForUser(
-  userId: number,
+export async function lookupCustomerForOrg(
+  organizationId: number,
   customerId: string,
 ): Promise<CustomerLookup> {
-  const data = await getDashboardData(userId);
+  const data = await getDashboardData(organizationId);
   if (!data.connected) return { ok: false, reason: "not_connected" };
   const customer = data.customers.find((c) => c.id === customerId);
   if (!customer) return { ok: false, reason: "customer_not_found" };
@@ -202,10 +202,10 @@ function toLine(inv: QboInvoice, today: Date): OpenInvoiceLine {
 }
 
 export async function getCustomerDetail(
-  userId: number,
+  organizationId: number,
   customerId: string,
 ): Promise<CustomerDetail> {
-  const lookup = await lookupCustomerForUser(userId, customerId);
+  const lookup = await lookupCustomerForOrg(organizationId, customerId);
   if (!lookup.ok) return lookup;
 
   if (useMockData()) {
@@ -217,7 +217,7 @@ export async function getCustomerDetail(
     };
   }
 
-  const conn = getConnectionForUser(userId);
+  const conn = getConnectionForOrg(organizationId);
   if (!conn) return { ok: false, reason: "not_connected" };
   const today = new Date();
   const invoices = (await listOpenInvoicesForCustomer(conn, customerId))

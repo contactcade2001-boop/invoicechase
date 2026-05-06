@@ -17,8 +17,13 @@ export async function retryQboSync(
 ): Promise<RetrySyncResult> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role === "technician") {
+    return { ok: false, error: "forbidden" };
+  }
+  const orgId = user.organizationId;
+  if (!orgId) return { ok: false, error: "no_organization" };
 
-  const payment = findPaymentById(paymentId, user.id);
+  const payment = findPaymentById(paymentId, orgId);
   if (!payment) return { ok: false, error: "not_found" };
   if (payment.status !== "succeeded") {
     return { ok: false, error: "not_succeeded" };
@@ -32,7 +37,7 @@ export async function retryQboSync(
 
   try {
     const result = await recordPaymentInQbo({
-      userId: user.id,
+      organizationId: orgId,
       customerId: payment.customerId,
       amountCents: payment.amountCents,
       noteRef: payment.stripeCheckoutSessionId,

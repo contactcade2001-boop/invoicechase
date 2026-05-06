@@ -11,6 +11,9 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
+  if (user.role !== "owner") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
   const state = randomBytes(16).toString("hex");
   const res = NextResponse.redirect(buildAuthorizeUrl(state));
   res.cookies.set(STATE_COOKIE, state, {

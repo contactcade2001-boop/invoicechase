@@ -1,11 +1,33 @@
 import "server-only";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export const organizations = sqliteTable("organizations", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  ownerUserId: integer("owner_user_id").notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const organizationInvites = sqliteTable("organization_invites", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  email: text("email").notNull(),
+  role: text("role").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull().unique(),
   emailVerifiedAt: integer("email_verified_at"),
   smsTemplate: text("sms_template"),
+  ownerPhone: text("owner_phone"),
+  organizationId: integer("organization_id"),
+  role: text("role").notNull().default("owner"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -28,7 +50,7 @@ export const magicLinks = sqliteTable("magic_links", {
 
 export const subscriptions = sqliteTable("subscriptions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").notNull().unique(),
+  organizationId: integer("organization_id").notNull().unique(),
   stripeCustomerId: text("stripe_customer_id").notNull().unique(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),
   status: text("status"),
@@ -40,7 +62,7 @@ export const subscriptions = sqliteTable("subscriptions", {
 
 export const stripeConnectAccounts = sqliteTable("stripe_connect_accounts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").notNull().unique(),
+  organizationId: integer("organization_id").notNull().unique(),
   stripeAccountId: text("stripe_account_id").notNull().unique(),
   chargesEnabled: integer("charges_enabled").notNull().default(0),
   payoutsEnabled: integer("payouts_enabled").notNull().default(0),
@@ -52,15 +74,16 @@ export const stripeConnectAccounts = sqliteTable("stripe_connect_accounts", {
 export const payLinks = sqliteTable("pay_links", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   token: text("token").notNull().unique(),
-  userId: integer("user_id").notNull(),
+  organizationId: integer("organization_id").notNull(),
   customerId: text("customer_id").notNull(),
+  amountCentsOverride: integer("amount_cents_override"),
   expiresAt: integer("expires_at").notNull(),
   createdAt: integer("created_at").notNull(),
 });
 
 export const payments = sqliteTable("payments", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").notNull(),
+  organizationId: integer("organization_id").notNull(),
   customerId: text("customer_id").notNull(),
   customerName: text("customer_name"),
   amountCents: integer("amount_cents").notNull(),
@@ -76,7 +99,7 @@ export const payments = sqliteTable("payments", {
 
 export const qboConnections = sqliteTable("qbo_connections", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  userId: integer("user_id").notNull(),
+  organizationId: integer("organization_id").notNull(),
   realmId: text("realm_id").notNull().unique(),
   companyName: text("company_name"),
   accessTokenEnc: text("access_token_enc").notNull(),
@@ -87,6 +110,9 @@ export const qboConnections = sqliteTable("qbo_connections", {
   updatedAt: integer("updated_at").notNull(),
 });
 
+export type OrganizationRow = typeof organizations.$inferSelect;
+export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
+export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;
 export type MagicLinkRow = typeof magicLinks.$inferSelect;

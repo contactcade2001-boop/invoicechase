@@ -2,10 +2,12 @@ import "server-only";
 import { cookies } from "next/headers";
 import { eq, lt } from "drizzle-orm";
 import { getDb } from "../db/client";
+import { ensureOrgForUser } from "../db/organizations";
 import { findUserById } from "../db/users";
 import {
   sessions,
   type SessionRow,
+  type UserRole,
   type UserRow,
 } from "../db/schema";
 import { generateToken } from "./tokens";
@@ -66,11 +68,23 @@ export async function getCurrentUser(): Promise<UserRow | null> {
     pruneExpired();
     return null;
   }
-  return findUserById(session.userId);
+  const user = findUserById(session.userId);
+  if (!user) return null;
+  // Defensive: every signed-in user belongs to an org. New users (or pre-org
+  // legacy data) get a personal org auto-created here.
+  if (!user.organizationId) {
+    ensureOrgForUser(user);
+    return findUserById(user.id);
+  }
+  return user;
 }
 
 export async function requireUser(): Promise<UserRow> {
   const user = await getCurrentUser();
   if (!user) throw new Error("Unauthorized");
   return user;
+}
+
+export function hasRole(user: UserRow, ...roles: UserRole[]): boolean {
+  return roles.includes(user.role as UserRole);
 }

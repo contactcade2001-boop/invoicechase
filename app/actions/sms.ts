@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 import type { UserRow } from "@/lib/server/db/schema";
@@ -19,6 +19,7 @@ export type SmsResult =
 
 type Loaded = {
   user: UserRow;
+  organizationId: number;
   customers: Customer[];
   businessName: string;
 };
@@ -26,13 +27,16 @@ type Loaded = {
 async function loadCustomers(): Promise<Loaded | { error: string }> {
   const user = await getCurrentUser();
   if (!user) return { error: "not_signed_in" };
-  if (!isActive(getSubscriptionByUserId(user.id))) {
+  const orgId = user.organizationId;
+  if (!orgId) return { error: "no_organization" };
+  if (!isActive(getSubscriptionByOrgId(orgId))) {
     return { error: "no_active_subscription" };
   }
-  const data = await getDashboardData(user.id);
+  const data = await getDashboardData(orgId);
   if (!data.connected) return { error: "not_connected" };
   return {
     user,
+    organizationId: orgId,
     customers: data.customers,
     businessName: data.companyName,
   };
@@ -42,7 +46,7 @@ async function sendOne(
   loaded: Loaded,
   customer: Customer,
 ): Promise<void> {
-  const { url } = getOrCreatePayLink(loaded.user.id, customer.id);
+  const { url } = getOrCreatePayLink(loaded.organizationId, customer.id);
   await sendInvoiceSms(customer, {
     template: loaded.user.smsTemplate,
     businessName: loaded.businessName,
@@ -56,13 +60,13 @@ export async function sendTextToCustomer(
   const loaded = await loadCustomers();
   if ("error" in loaded) return { ok: false, error: loaded.error };
   const minute = checkRateLimit(
-    `sms:min:${loaded.user.id}`,
+    `sms:min:${loaded.organizationId}`,
     LIMITS.smsPerMinute.max,
     LIMITS.smsPerMinute.windowMs,
   );
   if (!minute.allowed) return { ok: false, error: "rate_limited" };
   const hour = checkRateLimit(
-    `sms:hr:${loaded.user.id}`,
+    `sms:hr:${loaded.organizationId}`,
     LIMITS.smsPerHour.max,
     LIMITS.smsPerHour.windowMs,
   );
@@ -83,8 +87,11 @@ export async function sendTextToCustomer(
 export async function bulkTextOverdue(): Promise<SmsResult> {
   const loaded = await loadCustomers();
   if ("error" in loaded) return { ok: false, error: loaded.error };
+  if (loaded.user.role === "technician") {
+    return { ok: false, error: "forbidden" };
+  }
   const bulk = checkRateLimit(
-    `sms:bulk:${loaded.user.id}`,
+    `sms:bulk:${loaded.organizationId}`,
     LIMITS.bulkSmsPerMinute.max,
     LIMITS.bulkSmsPerMinute.windowMs,
   );
@@ -115,6 +122,9 @@ export async function saveSmsTemplate(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role === "technician") {
+    return { ok: false, error: "forbidden" };
+  }
   const trimmed = template.trim();
   if (trimmed.length > 320) {
     return { ok: false, error: "too_long" };

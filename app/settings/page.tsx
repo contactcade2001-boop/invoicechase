@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
-import { getConnectionForUser } from "@/lib/server/db/connections";
+import { getConnectionForOrg } from "@/lib/server/db/connections";
 import {
-  getSubscriptionByUserId,
+  getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
 
@@ -13,9 +13,14 @@ export const dynamic = "force-dynamic";
 export default async function SettingsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
-  if (!isActive(getSubscriptionByUserId(user.id))) redirect("/billing");
+  if (user.role === "technician") redirect("/dashboard");
+  const orgId = user.organizationId!;
+  if (!isActive(getSubscriptionByOrgId(orgId))) {
+    if (user.role !== "owner") redirect("/dashboard");
+    redirect("/billing");
+  }
 
-  const conn = getConnectionForUser(user.id);
+  const conn = getConnectionForOrg(orgId);
   const businessName = conn?.companyName ?? "Your business";
 
   return (

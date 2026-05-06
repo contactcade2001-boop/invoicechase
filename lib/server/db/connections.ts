@@ -4,7 +4,7 @@ import { getDb } from "./client";
 import { qboConnections, type QboConnectionRow } from "./schema";
 
 export type ConnectionUpsert = {
-  userId: number;
+  organizationId: number;
   realmId: string;
   companyName: string | null;
   accessTokenEnc: string;
@@ -25,7 +25,7 @@ export function upsertConnection(input: ConnectionUpsert): void {
     .onConflictDoUpdate({
       target: qboConnections.realmId,
       set: {
-        userId: input.userId,
+        organizationId: input.organizationId,
         companyName: input.companyName,
         accessTokenEnc: input.accessTokenEnc,
         refreshTokenEnc: input.refreshTokenEnc,
@@ -37,31 +37,36 @@ export function upsertConnection(input: ConnectionUpsert): void {
     .run();
 }
 
-export function getConnectionForUser(
-  userId: number,
+export function getConnectionForOrg(
+  organizationId: number,
 ): QboConnectionRow | null {
   const db = getDb();
   const row = db
     .select()
     .from(qboConnections)
-    .where(eq(qboConnections.userId, userId))
+    .where(eq(qboConnections.organizationId, organizationId))
     .orderBy(desc(qboConnections.updatedAt))
     .limit(1)
     .get();
   return row ?? null;
 }
 
-export function deleteConnectionForUser(
-  userId: number,
+export function deleteConnectionForOrg(
+  organizationId: number,
   realmId: string,
 ): void {
   const db = getDb();
   db.delete(qboConnections)
     .where(
       and(
-        eq(qboConnections.userId, userId),
+        eq(qboConnections.organizationId, organizationId),
         eq(qboConnections.realmId, realmId),
       ),
     )
     .run();
+}
+
+export function listAllConnections(): QboConnectionRow[] {
+  const db = getDb();
+  return db.select().from(qboConnections).all();
 }

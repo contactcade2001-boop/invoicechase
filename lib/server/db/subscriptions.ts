@@ -3,14 +3,14 @@ import { eq } from "drizzle-orm";
 import { getDb } from "./client";
 import { subscriptions, type SubscriptionRow } from "./schema";
 
-export function getSubscriptionByUserId(
-  userId: number,
+export function getSubscriptionByOrgId(
+  organizationId: number,
 ): SubscriptionRow | null {
   const db = getDb();
   const row = db
     .select()
     .from(subscriptions)
-    .where(eq(subscriptions.userId, userId))
+    .where(eq(subscriptions.organizationId, organizationId))
     .get();
   return row ?? null;
 }
@@ -28,7 +28,7 @@ export function getSubscriptionByStripeCustomerId(
 }
 
 export type SubscriptionUpsert = {
-  userId: number;
+  organizationId: number;
   stripeCustomerId: string;
   stripeSubscriptionId?: string | null;
   status?: string | null;
@@ -41,7 +41,7 @@ export function upsertSubscription(input: SubscriptionUpsert): void {
   const now = Date.now();
   db.insert(subscriptions)
     .values({
-      userId: input.userId,
+      organizationId: input.organizationId,
       stripeCustomerId: input.stripeCustomerId,
       stripeSubscriptionId: input.stripeSubscriptionId ?? null,
       status: input.status ?? null,
@@ -51,7 +51,7 @@ export function upsertSubscription(input: SubscriptionUpsert): void {
       updatedAt: now,
     })
     .onConflictDoUpdate({
-      target: subscriptions.userId,
+      target: subscriptions.organizationId,
       set: {
         stripeCustomerId: input.stripeCustomerId,
         stripeSubscriptionId: input.stripeSubscriptionId ?? null,

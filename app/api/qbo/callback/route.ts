@@ -37,6 +37,10 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
+  if (user.role !== "owner") {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+  const orgId = user.organizationId!;
 
   const params = req.nextUrl.searchParams;
   const code = params.get("code");
@@ -68,7 +72,7 @@ export async function GET(req: NextRequest) {
 
   const now = Date.now();
   upsertConnection({
-    userId: user.id,
+    organizationId: orgId,
     realmId,
     companyName,
     accessTokenEnc: encryptToken(tokens.access_token),
