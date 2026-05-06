@@ -1,8 +1,9 @@
-import { Inbox } from "lucide-react";
+import { ArrowRight, Inbox } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { listPaymentsForCustomerEmail } from "@/lib/server/db/payments";
 import { getCurrentCustomerEmail } from "@/lib/server/portal/auth";
+import { listOutstandingForCustomerEmail } from "@/lib/server/portal/outstanding";
 import { formatCurrencyDetailed } from "@/lib/format";
 import { formatRelativeTime } from "@/lib/inboxFormat";
 
@@ -34,10 +35,17 @@ export default async function PortalAccountPage() {
   const email = await getCurrentCustomerEmail();
   if (!email) redirect("/portal");
 
-  const payments = listPaymentsForCustomerEmail(email);
+  const [payments, outstanding] = await Promise.all([
+    Promise.resolve(listPaymentsForCustomerEmail(email)),
+    listOutstandingForCustomerEmail(email),
+  ]);
   const lifetimeCents = payments
     .filter((p) => p.status === "succeeded")
     .reduce((s, p) => s + p.amountCents - (p.refundedAmountCents ?? 0), 0);
+  const totalOutstandingCents = outstanding.reduce(
+    (s, m) => s + m.totalOpenCents,
+    0,
+  );
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -60,65 +68,148 @@ export default async function PortalAccountPage() {
         </div>
       </header>
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8 sm:py-10">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Your payments
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Every payment you&apos;ve made through Invoice Chase. Lifetime
-            net of refunds:{" "}
-            <span className="font-semibold text-slate-900">
-              {formatCurrencyDetailed(lifetimeCents)}
-            </span>
-            .
-          </p>
-        </div>
-        {payments.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-            <Inbox className="mx-auto h-8 w-8 text-slate-400" aria-hidden />
-            <h2 className="mt-3 text-sm font-semibold">No payments yet</h2>
-            <p className="mt-1 text-sm text-slate-500">
-              When you pay through one of your business&apos; payment links,
-              the receipt will show up here.
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Outstanding now
+            </p>
+            <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums">
+              {formatCurrencyDetailed(totalOutstandingCents)}
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Across {outstanding.length}{" "}
+              {outstanding.length === 1 ? "business" : "businesses"}
             </p>
           </div>
-        ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  <th className="px-4 py-3 text-left">Date</th>
-                  <th className="px-4 py-3 text-right">Amount</th>
-                  <th className="px-4 py-3 text-right">Refunded</th>
-                  <th className="px-4 py-3 text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {payments.map((p) => (
-                  <tr
-                    key={p.id}
-                    className="border-b border-slate-100 last:border-b-0"
-                  >
-                    <td className="px-4 py-3 text-slate-700">
-                      {formatRelativeTime(p.paidAt ?? p.createdAt)}
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums">
-                      {formatCurrencyDetailed(p.amountCents)}
-                    </td>
-                    <td className="px-4 py-3 text-right tabular-nums text-slate-500">
-                      {(p.refundedAmountCents ?? 0) > 0
-                        ? `−${formatCurrencyDetailed(p.refundedAmountCents ?? 0)}`
-                        : "—"}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <StatusBadge status={p.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Lifetime paid (net of refunds)
+            </p>
+            <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums">
+              {formatCurrencyDetailed(lifetimeCents)}
+            </p>
           </div>
-        )}
+        </div>
+
+        {outstanding.length > 0 ? (
+          <section>
+            <h2 className="text-lg font-semibold tracking-tight">
+              Open invoices
+            </h2>
+            <div className="mt-3 space-y-4">
+              {outstanding.map((m) => (
+                <div
+                  key={`${m.organizationId}:${m.customerId}`}
+                  className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200"
+                >
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-900">
+                        {m.businessName}
+                      </h3>
+                      {m.customerName ? (
+                        <p className="text-xs text-slate-500">
+                          {m.customerName}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Outstanding
+                      </p>
+                      <p className="text-2xl font-bold tabular-nums">
+                        {formatCurrencyDetailed(m.totalOpenCents)}
+                      </p>
+                    </div>
+                  </div>
+                  <ul className="mt-4 space-y-1 text-sm">
+                    {m.invoices.map((inv) => (
+                      <li
+                        key={inv.qboInvoiceId}
+                        className="flex items-center justify-between border-t border-slate-100 pt-2 first:border-t-0 first:pt-0"
+                      >
+                        <span className="text-slate-600">
+                          {inv.docNumber ? `#${inv.docNumber}` : "Invoice"}
+                          {inv.dueDate ? (
+                            <span className="text-slate-400">
+                              {" "}
+                              · due {inv.dueDate}
+                            </span>
+                          ) : null}
+                        </span>
+                        <span className="tabular-nums text-slate-700">
+                          {formatCurrencyDetailed(inv.balanceCents)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  {m.payUrl ? (
+                    <Link
+                      href={m.payUrl}
+                      className="mt-5 inline-flex items-center gap-1 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                    >
+                      Pay now
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section>
+          <h2 className="text-lg font-semibold tracking-tight">
+            Past payments
+          </h2>
+          {payments.length === 0 ? (
+            <div className="mt-3 rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
+              <Inbox className="mx-auto h-8 w-8 text-slate-400" aria-hidden />
+              <h3 className="mt-3 text-sm font-semibold">No payments yet</h3>
+              <p className="mt-1 text-sm text-slate-500">
+                When you pay through one of the businesses&apos; payment
+                links, the receipt will show up here.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-3 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <th className="px-4 py-3 text-left">Date</th>
+                    <th className="px-4 py-3 text-right">Amount</th>
+                    <th className="px-4 py-3 text-right">Refunded</th>
+                    <th className="px-4 py-3 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((p) => (
+                    <tr
+                      key={p.id}
+                      className="border-b border-slate-100 last:border-b-0"
+                    >
+                      <td className="px-4 py-3 text-slate-700">
+                        {formatRelativeTime(p.paidAt ?? p.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 text-right tabular-nums">
+                        {formatCurrencyDetailed(p.amountCents)}
+                      </td>
+                      <td className="px-4 py-3 text-right tabular-nums text-slate-500">
+                        {(p.refundedAmountCents ?? 0) > 0
+                          ? `−${formatCurrencyDetailed(p.refundedAmountCents ?? 0)}`
+                          : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <StatusBadge status={p.status} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
         <p className="text-xs text-slate-500">
           Need a copy of a specific receipt? Reply to the receipt email or
           contact the business directly.

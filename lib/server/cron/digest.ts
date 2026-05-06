@@ -6,6 +6,7 @@ import {
   listOrgsWithQboConnection,
   markDigestSent,
 } from "../db/organizations";
+import { pruneAuditEventsOlderThan } from "../db/auditEvents";
 import { pruneWebhookEventsOlderThan } from "../db/webhookEvents";
 import { getDashboardData } from "../qbo/sync";
 import { sendRawSms } from "../twilio/sms";
@@ -16,9 +17,11 @@ export type DigestRunResult = {
   skipped: number;
   errors: number;
   webhookEventsPruned: number;
+  auditEventsPruned: number;
 };
 
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
 
 function buildDigestBody(input: {
   totalOwedCents: number;
@@ -52,6 +55,7 @@ export async function runWeeklyDigest(): Promise<DigestRunResult> {
     skipped: 0,
     errors: 0,
     webhookEventsPruned: 0,
+    auditEventsPruned: 0,
   };
   const connections = listAllConnections();
   const orgIds = new Set<number>();
@@ -100,14 +104,21 @@ export async function runWeeklyDigest(): Promise<DigestRunResult> {
     }
   }
 
-  // Retention: drop webhook_events older than 30 days. Errors here don't fail
-  // the cron — the digest already finished.
+  // Retention: drop webhook_events > 30 days, audit_events > 90 days.
+  // Errors here don't fail the cron — the digest already finished.
   try {
     result.webhookEventsPruned = pruneWebhookEventsOlderThan(
       Date.now() - THIRTY_DAYS_MS,
     );
   } catch (err) {
     console.error("[digest] webhook_events prune failed", err);
+  }
+  try {
+    result.auditEventsPruned = pruneAuditEventsOlderThan(
+      Date.now() - NINETY_DAYS_MS,
+    );
+  } catch (err) {
+    console.error("[digest] audit_events prune failed", err);
   }
 
   return result;

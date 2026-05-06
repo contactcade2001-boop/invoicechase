@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq, gte, like } from "drizzle-orm";
+import { and, desc, eq, gte, like, lt } from "drizzle-orm";
 import { getDb } from "./client";
 import { auditEvents, type AuditEventRow } from "./schema";
 
@@ -61,6 +61,15 @@ export type AuditEventFilters = {
   kind?: string;
   sinceMs?: number;
 };
+
+export function pruneAuditEventsOlderThan(cutoffMs: number): number {
+  const db = getDb();
+  const result = db
+    .delete(auditEvents)
+    .where(lt(auditEvents.createdAt, cutoffMs))
+    .run();
+  return Number(result.changes ?? 0);
+}
 
 export function listAuditEventsForOrg(
   organizationId: number,
