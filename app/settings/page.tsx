@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { AutomationSettings } from "@/components/AutomationSettings";
 import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
+import { getOrgById } from "@/lib/server/db/organizations";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -20,8 +22,10 @@ export default async function SettingsPage() {
     redirect("/billing");
   }
 
+  const org = getOrgById(orgId)!;
   const conn = getConnectionForOrg(orgId);
   const businessName = conn?.companyName ?? "Your business";
+  const isOwner = user.role === "owner";
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -46,6 +50,18 @@ export default async function SettingsPage() {
             />
           </div>
         </section>
+
+        {isOwner ? (
+          <AutomationSettings
+            initial={{
+              autopilotEnabled: org.autopilotEnabled === 1,
+              depositEnabled: org.depositEnabled === 1,
+              depositPercentBps: org.depositPercentBps,
+              depositThresholdScore: org.depositThresholdScore,
+              digestPhone: org.digestPhone ?? "",
+            }}
+          />
+        ) : null}
       </main>
     </div>
   );

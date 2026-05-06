@@ -7,9 +7,14 @@ import {
 } from "@/lib/server/db/subscriptions";
 import type { UserRow } from "@/lib/server/db/schema";
 import { setSmsTemplate } from "@/lib/server/db/users";
+import {
+  appendMessage,
+  getOrCreateConversation,
+} from "@/lib/server/db/sms";
 import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
+import { renderSmsBody } from "@/lib/smsTemplate";
 import { sendInvoiceSms } from "@/lib/server/twilio/sms";
 import type { Customer } from "@/lib/types";
 
@@ -52,6 +57,24 @@ async function sendOne(
     businessName: loaded.businessName,
     payUrl: url,
   });
+  if (customer.phone) {
+    const conv = getOrCreateConversation({
+      organizationId: loaded.organizationId,
+      customerPhone: customer.phone,
+      customerId: customer.id,
+      customerName: customer.name,
+    });
+    appendMessage({
+      conversationId: conv.id,
+      direction: "outbound",
+      body: renderSmsBody(loaded.user.smsTemplate, {
+        amountCents: customer.amountOwed,
+        payUrl: url,
+        customerName: customer.name,
+        businessName: loaded.businessName,
+      }),
+    });
+  }
 }
 
 export async function sendTextToCustomer(

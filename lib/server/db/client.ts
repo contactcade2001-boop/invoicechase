@@ -12,9 +12,38 @@ CREATE TABLE IF NOT EXISTS organizations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   owner_user_id INTEGER NOT NULL,
+  autopilot_enabled INTEGER NOT NULL DEFAULT 0,
+  deposit_enabled INTEGER NOT NULL DEFAULT 0,
+  deposit_percent_bps INTEGER NOT NULL DEFAULT 5000,
+  deposit_threshold_score INTEGER NOT NULL DEFAULT 580,
+  digest_phone TEXT,
+  last_digest_at INTEGER,
+  last_deposit_poll_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS sms_conversations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT,
+  customer_phone TEXT NOT NULL,
+  customer_name TEXT,
+  last_message_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS sms_conversations_org_phone ON sms_conversations(organization_id, customer_phone);
+
+CREATE TABLE IF NOT EXISTS sms_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id INTEGER NOT NULL,
+  direction TEXT NOT NULL,
+  body TEXT NOT NULL,
+  twilio_sid TEXT,
+  autopilot INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS sms_messages_conv ON sms_messages(conversation_id, created_at);
 
 CREATE TABLE IF NOT EXISTS organization_invites (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -203,6 +232,24 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     sqlite.exec(
       "ALTER TABLE payments ADD COLUMN organization_id INTEGER NOT NULL DEFAULT 0",
     );
+  }
+
+  // Org settings columns added by S1/S2/S3.
+  for (const [col, def] of [
+    ["autopilot_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["deposit_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["deposit_percent_bps", "INTEGER NOT NULL DEFAULT 5000"],
+    ["deposit_threshold_score", "INTEGER NOT NULL DEFAULT 580"],
+    ["digest_phone", "TEXT"],
+    ["last_digest_at", "INTEGER"],
+    ["last_deposit_poll_at", "INTEGER"],
+  ]) {
+    if (
+      hasColumn(sqlite, "organizations", "id") &&
+      !hasColumn(sqlite, "organizations", col)
+    ) {
+      sqlite.exec(`ALTER TABLE organizations ADD COLUMN ${col} ${def}`);
+    }
   }
 
   // Backfill: each pre-existing user without an organization gets a personal

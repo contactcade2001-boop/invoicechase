@@ -5,8 +5,35 @@ export const organizations = sqliteTable("organizations", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   ownerUserId: integer("owner_user_id").notNull(),
+  autopilotEnabled: integer("autopilot_enabled").notNull().default(0),
+  depositEnabled: integer("deposit_enabled").notNull().default(0),
+  depositPercentBps: integer("deposit_percent_bps").notNull().default(5000),
+  depositThresholdScore: integer("deposit_threshold_score").notNull().default(580),
+  digestPhone: text("digest_phone"),
+  lastDigestAt: integer("last_digest_at"),
+  lastDepositPollAt: integer("last_deposit_poll_at"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
+});
+
+export const smsConversations = sqliteTable("sms_conversations", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id"),
+  customerPhone: text("customer_phone").notNull(),
+  customerName: text("customer_name"),
+  lastMessageAt: integer("last_message_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const smsMessages = sqliteTable("sms_messages", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  conversationId: integer("conversation_id").notNull(),
+  direction: text("direction").notNull(),
+  body: text("body").notNull(),
+  twilioSid: text("twilio_sid"),
+  autopilot: integer("autopilot").notNull().default(0),
+  createdAt: integer("created_at").notNull(),
 });
 
 export const organizationInvites = sqliteTable("organization_invites", {
@@ -112,6 +139,8 @@ export const qboConnections = sqliteTable("qbo_connections", {
 
 export type OrganizationRow = typeof organizations.$inferSelect;
 export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
+export type SmsConversationRow = typeof smsConversations.$inferSelect;
+export type SmsMessageRow = typeof smsMessages.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;

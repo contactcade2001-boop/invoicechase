@@ -10,6 +10,26 @@ export type SmsContext = {
   payUrl: string;
 };
 
+export async function sendRawSms(input: {
+  to: string;
+  body: string;
+}): Promise<{ sid: string | null }> {
+  if (!input.to) throw new Error("Missing to number");
+  if (useMockSms()) {
+    console.log(
+      `[sms:mock] to=${input.to} body=${JSON.stringify(input.body)}`,
+    );
+    return { sid: null };
+  }
+  const { fromNumber } = getTwilioConfig();
+  const msg = await getTwilio().messages.create({
+    from: fromNumber,
+    to: input.to,
+    body: input.body,
+  });
+  return { sid: msg.sid ?? null };
+}
+
 export async function sendInvoiceSms(
   customer: Customer,
   ctx: SmsContext,

@@ -40,6 +40,72 @@ export function getOrgById(id: number): OrganizationRow | null {
   );
 }
 
+export function listOrgsWithQboConnection(): OrganizationRow[] {
+  const db = getDb();
+  return db.select().from(organizations).all();
+}
+
+export function setOrgFlag(
+  organizationId: number,
+  field: "autopilotEnabled" | "depositEnabled",
+  value: boolean,
+): void {
+  const db = getDb();
+  db.update(organizations)
+    .set({ [field]: value ? 1 : 0, updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function setOrgDepositConfig(
+  organizationId: number,
+  fields: {
+    depositPercentBps?: number;
+    depositThresholdScore?: number;
+  },
+): void {
+  const db = getDb();
+  const set: Record<string, unknown> = { updatedAt: Date.now() };
+  if (fields.depositPercentBps != null) {
+    set.depositPercentBps = fields.depositPercentBps;
+  }
+  if (fields.depositThresholdScore != null) {
+    set.depositThresholdScore = fields.depositThresholdScore;
+  }
+  if (Object.keys(set).length === 1) return;
+  db.update(organizations)
+    .set(set)
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function setOrgDigestPhone(
+  organizationId: number,
+  phone: string | null,
+): void {
+  const db = getDb();
+  db.update(organizations)
+    .set({ digestPhone: phone, updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function markDigestSent(organizationId: number): void {
+  const db = getDb();
+  db.update(organizations)
+    .set({ lastDigestAt: Date.now(), updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function markDepositPolled(organizationId: number): void {
+  const db = getDb();
+  db.update(organizations)
+    .set({ lastDepositPollAt: Date.now(), updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
 export function getOrgForUser(user: UserRow): OrganizationRow | null {
   if (!user.organizationId) return null;
   return getOrgById(user.organizationId);

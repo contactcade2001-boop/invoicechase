@@ -48,6 +48,11 @@ export function getTwilioConfig() {
   };
 }
 
+export function getAnthropicApiKey(): string | null {
+  const key = process.env.ANTHROPIC_API_KEY?.trim();
+  return key && key.length > 0 ? key : null;
+}
+
 export function useMockData(): boolean {
   return process.env.USE_MOCK_DATA === "1";
 }
