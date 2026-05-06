@@ -117,6 +117,7 @@ export async function POST(req: NextRequest) {
     });
     logWebhookEvent({
       source: "twilio",
+      organizationId: org.id,
       eventId: twilioSid,
       type: "sms.inbound",
       status: "processed",
@@ -125,6 +126,7 @@ export async function POST(req: NextRequest) {
     console.error("[sms-inbound] handler failed", err);
     logWebhookEvent({
       source: "twilio",
+      organizationId: org.id,
       eventId: twilioSid,
       type: "sms.inbound",
       status: "errored",

@@ -52,16 +52,32 @@ export default async function SettingsPage() {
         </section>
 
         {isOwner ? (
-          <AutomationSettings
-            initial={{
-              autopilotEnabled: org.autopilotEnabled === 1,
-              depositEnabled: org.depositEnabled === 1,
-              depositPercentBps: org.depositPercentBps,
-              depositThresholdScore: org.depositThresholdScore,
-              digestPhone: org.digestPhone ?? "",
-              twilioPhone: org.twilioPhoneNumber ?? "",
-            }}
-          />
+          <>
+            <AutomationSettings
+              initial={{
+                autopilotEnabled: org.autopilotEnabled === 1,
+                depositEnabled: org.depositEnabled === 1,
+                depositPercentBps: org.depositPercentBps,
+                depositThresholdScore: org.depositThresholdScore,
+                digestPhone: org.digestPhone ?? "",
+                twilioPhone: org.twilioPhoneNumber ?? "",
+              }}
+            />
+            <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <h2 className="text-lg font-semibold">Webhook events</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Inspect every Stripe + Twilio webhook delivered to your
+                organization for the last 30 days. Useful when a payment
+                doesn&apos;t mark in QuickBooks or autopilot misses a reply.
+              </p>
+              <a
+                href="/webhook-events"
+                className="mt-4 inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+              >
+                Open event log
+              </a>
+            </section>
+          </>
         ) : null}
       </main>
     </div>

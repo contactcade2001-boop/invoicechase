@@ -55,6 +55,7 @@ export const inboxReads = sqliteTable("inbox_reads", {
 export const webhookEvents = sqliteTable("webhook_events", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   source: text("source").notNull(),
+  organizationId: integer("organization_id"),
   eventId: text("event_id"),
   type: text("type"),
   status: text("status").notNull(),

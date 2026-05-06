@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { getDb } from "./client";
 import { webhookEvents, type WebhookEventRow } from "./schema";
 
@@ -18,6 +18,7 @@ function digest(payload: string): string {
 
 export function logWebhookEvent(input: {
   source: WebhookSource;
+  organizationId?: number | null;
   eventId?: string | null;
   type?: string | null;
   status: WebhookStatus;
@@ -29,6 +30,7 @@ export function logWebhookEvent(input: {
     .insert(webhookEvents)
     .values({
       source: input.source,
+      organizationId: input.organizationId ?? null,
       eventId: input.eventId ?? null,
       type: input.type ?? null,
       status: input.status,
@@ -66,4 +68,52 @@ export function listRecentWebhookEvents(
     .orderBy(desc(webhookEvents.createdAt))
     .limit(limit)
     .all();
+}
+
+export function listWebhookEventsForOrg(
+  organizationId: number,
+  options: { limit?: number; offset?: number } = {},
+): WebhookEventRow[] {
+  const db = getDb();
+  const limit = options.limit ?? 200;
+  const offset = options.offset ?? 0;
+  return db
+    .select()
+    .from(webhookEvents)
+    .where(eq(webhookEvents.organizationId, organizationId))
+    .orderBy(desc(webhookEvents.createdAt))
+    .limit(limit)
+    .offset(offset)
+    .all();
+}
+
+export function pruneWebhookEventsOlderThan(cutoffMs: number): number {
+  const db = getDb();
+  const result = db
+    .delete(webhookEvents)
+    .where(lt(webhookEvents.createdAt, cutoffMs))
+    .run();
+  return Number(result.changes ?? 0);
+}
+
+// Best-effort: if the caller knows both org and event id, prefer the most
+// recent matching row (rejected/received gets overwritten by processed).
+export function findWebhookEventForOrgByEventId(
+  organizationId: number,
+  eventId: string,
+): WebhookEventRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(webhookEvents)
+    .where(
+      and(
+        eq(webhookEvents.organizationId, organizationId),
+        eq(webhookEvents.eventId, eventId),
+      ),
+    )
+    .orderBy(desc(webhookEvents.createdAt))
+    .limit(1)
+    .get();
+  return row ?? null;
 }
