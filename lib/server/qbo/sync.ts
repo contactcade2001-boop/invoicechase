@@ -6,6 +6,7 @@ import { getConnectionForUser } from "../db/connections";
 import {
   listCustomers,
   listOpenInvoices,
+  listOpenInvoicesForCustomer,
   listPaidInvoicesSince,
   listPaymentsSince,
   type QboCustomer,
@@ -23,6 +24,25 @@ export type DashboardData =
 
 export type CustomerLookup =
   | { ok: true; customer: Customer; companyName: string }
+  | { ok: false; reason: "not_connected" | "customer_not_found" };
+
+export type OpenInvoiceLine = {
+  id: string;
+  number: string | null;
+  txnDate: string;
+  dueDate: string | null;
+  totalCents: number;
+  balanceCents: number;
+  daysLate: number;
+};
+
+export type CustomerDetail =
+  | {
+      ok: true;
+      customer: Customer;
+      companyName: string;
+      invoices: OpenInvoiceLine[];
+    }
   | { ok: false; reason: "not_connected" | "customer_not_found" };
 
 const HISTORY_WINDOW_DAYS = 730;
@@ -145,4 +165,68 @@ export async function lookupCustomerForUser(
   const customer = data.customers.find((c) => c.id === customerId);
   if (!customer) return { ok: false, reason: "customer_not_found" };
   return { ok: true, customer, companyName: data.companyName };
+}
+
+function mockInvoicesFor(customer: Customer): OpenInvoiceLine[] {
+  if (customer.amountOwed <= 0) return [];
+  const today = new Date();
+  const dueDate = new Date(
+    today.getTime() - customer.daysLate * MS_PER_DAY,
+  );
+  const txnDate = new Date(dueDate.getTime() - 30 * MS_PER_DAY);
+  return [
+    {
+      id: `mock-inv-${customer.id}`,
+      number: `INV-${customer.id.slice(-3).toUpperCase()}`,
+      txnDate: txnDate.toISOString().slice(0, 10),
+      dueDate: dueDate.toISOString().slice(0, 10),
+      totalCents: customer.amountOwed,
+      balanceCents: customer.amountOwed,
+      daysLate: customer.daysLate,
+    },
+  ];
+}
+
+function toLine(inv: QboInvoice, today: Date): OpenInvoiceLine {
+  const dueOrTxn = inv.DueDate ?? inv.TxnDate;
+  return {
+    id: inv.Id,
+    number: inv.DocNumber ?? null,
+    txnDate: inv.TxnDate,
+    dueDate: inv.DueDate ?? null,
+    totalCents: Math.round(inv.TotalAmt * 100),
+    balanceCents: Math.round(inv.Balance * 100),
+    daysLate: daysBetween(dueOrTxn, today),
+  };
+}
+
+export async function getCustomerDetail(
+  userId: number,
+  customerId: string,
+): Promise<CustomerDetail> {
+  const lookup = await lookupCustomerForUser(userId, customerId);
+  if (!lookup.ok) return lookup;
+
+  if (useMockData()) {
+    return {
+      ok: true,
+      customer: lookup.customer,
+      companyName: lookup.companyName,
+      invoices: mockInvoicesFor(lookup.customer),
+    };
+  }
+
+  const conn = getConnectionForUser(userId);
+  if (!conn) return { ok: false, reason: "not_connected" };
+  const today = new Date();
+  const invoices = (await listOpenInvoicesForCustomer(conn, customerId))
+    .map((inv) => toLine(inv, today))
+    .sort((a, b) => b.daysLate - a.daysLate);
+
+  return {
+    ok: true,
+    customer: lookup.customer,
+    companyName: lookup.companyName,
+    invoices,
+  };
 }

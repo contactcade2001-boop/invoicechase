@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { CreditCard, MessageSquare } from "lucide-react";
+import Link from "next/link";
 import { getPayLinkUrl } from "@/app/actions/pay";
 import { sendTextToCustomer, type SmsResult } from "@/app/actions/sms";
 import { describeDays, formatCurrency } from "@/lib/format";
@@ -43,7 +44,12 @@ export function CustomerRow({ customer }: { customer: Customer }) {
   return (
     <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 last:border-b-0 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-center md:gap-4 md:px-6">
       <div className="flex flex-col gap-1.5">
-        <div className="font-medium text-slate-900">{customer.name}</div>
+        <Link
+          href={`/dashboard/customer/${customer.id}`}
+          className="font-medium text-slate-900 underline-offset-2 hover:underline"
+        >
+          {customer.name}
+        </Link>
         <ReputationMeter score={customer.reputationScore} />
       </div>
 
