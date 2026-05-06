@@ -26,7 +26,7 @@ async function fetchCompanyName(
 }
 
 function errorRedirect(req: NextRequest, message: string) {
-  const url = new URL("/", req.url);
+  const url = new URL("/dashboard", req.url);
   url.searchParams.set("qbo_error", message);
   return NextResponse.redirect(url);
 }
@@ -70,7 +70,9 @@ export async function GET(req: NextRequest) {
     refreshTokenExpiresAt: now + tokens.x_refresh_token_expires_in * 1000,
   });
 
-  const res = NextResponse.redirect(new URL("/?qbo_connected=1", req.url));
+  const res = NextResponse.redirect(
+    new URL("/dashboard?qbo_connected=1", req.url),
+  );
   res.cookies.delete(STATE_COOKIE);
   return res;
 }

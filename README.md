@@ -37,11 +37,18 @@ Set `USE_MOCK_DATA=1` in `.env.local` to render the dashboard with hard-coded sa
 - **`./data/app.db`** — SQLite, gitignored. Holds one row per connected QBO company with the access/refresh tokens **encrypted at rest** (AES-256-GCM, key from `APP_ENCRYPTION_KEY`).
 - The schema is created on first DB access; no migration step needed.
 
+## Routes
+
+- `/` — public landing page (hero, how-it-works, pricing, FAQ)
+- `/dashboard` — the app itself (renders `ConnectPrompt` if no QBO connection, otherwise the live dashboard)
+- `/api/qbo/connect`, `/callback`, `/disconnect` — OAuth lifecycle
+
 ## Architecture (today)
 
 ```
 app/
-  page.tsx                           server component; routes to ConnectPrompt or Dashboard
+  page.tsx                           landing page (server)
+  dashboard/page.tsx                 server component; routes to ConnectPrompt or Dashboard
   api/qbo/
     connect/route.ts                 → Intuit authorize URL, sets state cookie
     callback/route.ts                exchange code, store encrypted tokens

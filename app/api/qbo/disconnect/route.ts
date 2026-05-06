@@ -18,5 +18,5 @@ export async function POST(req: Request) {
     }
     deleteConnection(conn.realmId);
   }
-  return NextResponse.redirect(new URL("/", req.url), { status: 303 });
+  return NextResponse.redirect(new URL("/dashboard", req.url), { status: 303 });
 }
