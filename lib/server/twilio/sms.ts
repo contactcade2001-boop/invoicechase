@@ -1,5 +1,6 @@
 import "server-only";
 import type { Customer } from "@/lib/types";
+import { getOrgById } from "../db/organizations";
 import { getTwilioConfig, useMockSms } from "../env";
 import { renderSmsBody } from "@/lib/smsTemplate";
 import { getTwilio } from "./client";
@@ -8,22 +9,34 @@ export type SmsContext = {
   template: string | null | undefined;
   businessName: string;
   payUrl: string;
+  organizationId?: number;
 };
+
+function fromNumberFor(organizationId?: number): string {
+  if (organizationId) {
+    const org = getOrgById(organizationId);
+    if (org?.twilioPhoneNumber && org.twilioPhoneNumber.trim().length > 0) {
+      return org.twilioPhoneNumber.trim();
+    }
+  }
+  return getTwilioConfig().fromNumber;
+}
 
 export async function sendRawSms(input: {
   to: string;
   body: string;
+  organizationId?: number;
 }): Promise<{ sid: string | null }> {
   if (!input.to) throw new Error("Missing to number");
   if (useMockSms()) {
     console.log(
-      `[sms:mock] to=${input.to} body=${JSON.stringify(input.body)}`,
+      `[sms:mock] org=${input.organizationId ?? "platform"} to=${input.to} body=${JSON.stringify(input.body)}`,
     );
     return { sid: null };
   }
-  const { fromNumber } = getTwilioConfig();
+  const from = fromNumberFor(input.organizationId);
   const msg = await getTwilio().messages.create({
-    from: fromNumber,
+    from,
     to: input.to,
     body: input.body,
   });
@@ -45,13 +58,13 @@ export async function sendInvoiceSms(
   });
   if (useMockSms()) {
     console.log(
-      `[sms:mock] to=${customer.phone} body=${JSON.stringify(body)}`,
+      `[sms:mock] org=${ctx.organizationId ?? "platform"} to=${customer.phone} body=${JSON.stringify(body)}`,
     );
     return;
   }
-  const { fromNumber } = getTwilioConfig();
+  const from = fromNumberFor(ctx.organizationId);
   await getTwilio().messages.create({
-    from: fromNumber,
+    from,
     to: customer.phone,
     body,
   });

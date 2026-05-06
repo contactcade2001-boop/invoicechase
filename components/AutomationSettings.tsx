@@ -5,6 +5,7 @@ import { Bot, Loader2 } from "lucide-react";
 import {
   saveDepositConfig,
   saveDigestPhone,
+  saveTwilioPhone,
   setAutopilotEnabled,
   setDepositEnabled,
 } from "@/app/actions/org";
@@ -18,6 +19,7 @@ export function AutomationSettings({
     depositPercentBps: number;
     depositThresholdScore: number;
     digestPhone: string;
+    twilioPhone: string;
   };
 }) {
   const [autopilot, setAutopilot] = useState(initial.autopilotEnabled);
@@ -29,6 +31,8 @@ export function AutomationSettings({
     String(initial.depositThresholdScore),
   );
   const [phone, setPhone] = useState(initial.digestPhone);
+  const [twilioPhone, setTwilioPhoneState] = useState(initial.twilioPhone);
+  const [twilioError, setTwilioError] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const [savedTag, setSavedTag] = useState<string | null>(null);
 
@@ -62,6 +66,24 @@ export function AutomationSettings({
 
   function onSavePhone() {
     flagPending("phone", () => saveDigestPhone(phone));
+  }
+
+  function onSaveTwilioPhone() {
+    setTwilioError(null);
+    setSavedTag(null);
+    start(async () => {
+      const r = await saveTwilioPhone(twilioPhone);
+      if (r.ok) {
+        setSavedTag("twilio-phone");
+        setTimeout(() => setSavedTag(null), 2500);
+      } else {
+        setTwilioError(
+          r.error === "invalid_phone"
+            ? "Use E.164 format, e.g. +14155551234."
+            : r.error,
+        );
+      }
+    });
   }
 
   return (
@@ -198,6 +220,44 @@ export function AutomationSettings({
         <p className="mt-2 text-xs text-slate-500">
           Leave blank to disable digests. Use E.164 format (e.g. +15125551234).
         </p>
+      </section>
+
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <h2 className="text-lg font-semibold">Your Twilio number</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Use a dedicated Twilio number for your business. We&apos;ll send
+          customer texts from this number and route inbound replies (with
+          autopilot) back to your account. Leave blank to use the platform
+          shared number.
+        </p>
+        <p className="mt-2 text-xs text-slate-500">
+          Point this number&apos;s &ldquo;A message comes in&rdquo; webhook at{" "}
+          <code className="font-mono">{`{APP_BASE_URL}/api/sms/inbound`}</code>{" "}
+          in the Twilio console.
+        </p>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+          <input
+            type="tel"
+            value={twilioPhone}
+            onChange={(e) => setTwilioPhoneState(e.target.value)}
+            placeholder="+14155551234"
+            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+          />
+          <button
+            type="button"
+            onClick={onSaveTwilioPhone}
+            disabled={pending}
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+          >
+            Save number
+          </button>
+        </div>
+        {twilioError ? (
+          <p className="mt-2 text-xs text-red-700">{twilioError}</p>
+        ) : null}
+        {savedTag === "twilio-phone" ? (
+          <p className="mt-2 text-xs text-emerald-700">Saved</p>
+        ) : null}
       </section>
     </div>
   );

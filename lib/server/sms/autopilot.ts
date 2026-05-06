@@ -85,6 +85,7 @@ export async function recordInboundAndMaybeReply(input: {
     const sent = await sendRawSms({
       to: input.fromPhone,
       body: result.reply,
+      organizationId: input.org.id,
     });
     appendMessage({
       conversationId: conversation.id,

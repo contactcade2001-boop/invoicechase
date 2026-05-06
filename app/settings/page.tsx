@@ -59,6 +59,7 @@ export default async function SettingsPage() {
               depositPercentBps: org.depositPercentBps,
               depositThresholdScore: org.depositThresholdScore,
               digestPhone: org.digestPhone ?? "",
+              twilioPhone: org.twilioPhoneNumber ?? "",
             }}
           />
         ) : null}

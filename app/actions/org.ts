@@ -6,6 +6,7 @@ import {
   setOrgDepositConfig,
   setOrgDigestPhone,
   setOrgFlag,
+  setOrgTwilioPhone,
 } from "@/lib/server/db/organizations";
 
 export type OrgUpdateResult =
@@ -62,6 +63,24 @@ export async function saveDigestPhone(
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   const trimmed = phone.trim();
   setOrgDigestPhone(user.organizationId!, trimmed.length === 0 ? null : trimmed);
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function saveTwilioPhone(
+  phone: string,
+): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const trimmed = phone.trim();
+  if (trimmed.length > 0 && !/^\+\d{6,15}$/.test(trimmed)) {
+    return { ok: false, error: "invalid_phone" };
+  }
+  setOrgTwilioPhone(
+    user.organizationId!,
+    trimmed.length === 0 ? null : trimmed,
+  );
   revalidatePath("/settings");
   return { ok: true };
 }

@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/server/db/client";
-import { getOrgById } from "@/lib/server/db/organizations";
 import {
-  smsConversations,
-} from "@/lib/server/db/schema";
+  findOrgByTwilioPhone,
+  getOrgById,
+} from "@/lib/server/db/organizations";
+import { smsConversations } from "@/lib/server/db/schema";
 import { recordInboundAndMaybeReply } from "@/lib/server/sms/autopilot";
 import { verifyTwilioSignature } from "@/lib/server/twilio/verify";
 
@@ -19,17 +20,16 @@ function twiml(body: string): NextResponse {
   );
 }
 
-function findOrgIdForFromPhone(fromPhone: string): number | null {
+function findOrgIdByConversationHistory(fromPhone: string): number | null {
   const db = getDb();
-  const row = db
+  const rows = db
     .select()
     .from(smsConversations)
     .where(eq(smsConversations.customerPhone, fromPhone))
     .all();
-  if (row.length === 0) return null;
-  // Most recent conversation wins.
-  row.sort((a, b) => b.lastMessageAt - a.lastMessageAt);
-  return row[0].organizationId;
+  if (rows.length === 0) return null;
+  rows.sort((a, b) => b.lastMessageAt - a.lastMessageAt);
+  return rows[0].organizationId;
 }
 
 export async function POST(req: NextRequest) {
@@ -38,15 +38,11 @@ export async function POST(req: NextRequest) {
   const formObj: Record<string, string> = {};
   for (const [k, v] of params.entries()) formObj[k] = v;
 
-  // Twilio sends X-Forwarded-Proto so we have to reconstruct the URL it
-  // signed. APP_BASE_URL is the canonical public URL we configured Twilio
-  // to point at.
   const baseUrl =
     process.env.APP_BASE_URL?.replace(/\/$/, "") ?? req.nextUrl.origin;
   const url = `${baseUrl}${req.nextUrl.pathname}`;
   const signature = req.headers.get("x-twilio-signature");
 
-  // Skip verification when no auth token is configured (dev / tests).
   let verified = false;
   try {
     verified = verifyTwilioSignature({
@@ -62,6 +58,7 @@ export async function POST(req: NextRequest) {
   }
 
   const fromPhone = formObj["From"] ?? "";
+  const toPhone = formObj["To"] ?? "";
   const body = (formObj["Body"] ?? "").trim();
   const twilioSid = formObj["MessageSid"] ?? null;
 
@@ -69,13 +66,24 @@ export async function POST(req: NextRequest) {
     return twiml("");
   }
 
-  const orgId = findOrgIdForFromPhone(fromPhone);
-  if (!orgId) {
-    console.warn("[sms-inbound] no org for phone", fromPhone);
+  // 1) Per-org Twilio number: if the message came in to a number an org
+  //    has claimed, that org owns it. The right answer for multi-tenant.
+  let org = toPhone ? findOrgByTwilioPhone(toPhone) : null;
+  // 2) Fallback: if we've already had a conversation with this customer
+  //    on the platform's shared number, route to that org. Lets new
+  //    deployments work before any org claims their own number.
+  if (!org) {
+    const orgId = findOrgIdByConversationHistory(fromPhone);
+    if (orgId) org = getOrgById(orgId);
+  }
+  if (!org) {
+    console.warn(
+      "[sms-inbound] no org for from=%s to=%s",
+      fromPhone,
+      toPhone,
+    );
     return twiml("");
   }
-  const org = getOrgById(orgId);
-  if (!org) return twiml("");
 
   try {
     await recordInboundAndMaybeReply({
@@ -88,7 +96,5 @@ export async function POST(req: NextRequest) {
     console.error("[sms-inbound] handler failed", err);
   }
 
-  // Reply with empty TwiML — we send any reply ourselves via the Twilio REST
-  // API so it shows up in the same conversation thread.
   return twiml("");
 }

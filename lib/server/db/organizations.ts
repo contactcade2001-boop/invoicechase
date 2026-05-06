@@ -90,6 +90,29 @@ export function setOrgDigestPhone(
     .run();
 }
 
+export function setOrgTwilioPhone(
+  organizationId: number,
+  phone: string | null,
+): void {
+  const db = getDb();
+  db.update(organizations)
+    .set({ twilioPhoneNumber: phone, updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function findOrgByTwilioPhone(
+  phone: string,
+): OrganizationRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.twilioPhoneNumber, phone))
+    .get();
+  return row ?? null;
+}
+
 export function markDigestSent(organizationId: number): void {
   const db = getDb();
   db.update(organizations)

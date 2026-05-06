@@ -56,6 +56,7 @@ async function sendOne(
     template: loaded.user.smsTemplate,
     businessName: loaded.businessName,
     payUrl: url,
+    organizationId: loaded.organizationId,
   });
   if (customer.phone) {
     const conv = getOrCreateConversation({

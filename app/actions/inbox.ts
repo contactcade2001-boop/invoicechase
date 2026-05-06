@@ -48,6 +48,7 @@ export async function sendManualReply(input: {
     const sent = await sendRawSms({
       to: conv.customerPhone,
       body: trimmed,
+      organizationId: orgId,
     });
     appendMessage({
       conversationId: conv.id,

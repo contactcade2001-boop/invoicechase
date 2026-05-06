@@ -82,7 +82,11 @@ export async function runWeeklyDigest(): Promise<DigestRunResult> {
         topDebtorName: top?.name ?? null,
         topDebtorCents: top?.amountOwed ?? 0,
       });
-      await sendRawSms({ to: org.digestPhone, body });
+      await sendRawSms({
+        to: org.digestPhone,
+        body,
+        organizationId: org.id,
+      });
       markDigestSent(orgId);
       result.delivered++;
     } catch (err) {

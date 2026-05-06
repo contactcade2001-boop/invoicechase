@@ -116,6 +116,7 @@ export async function runDepositAutomation(): Promise<DepositRunResult> {
               amountCents: cents,
               payUrl: url,
             }),
+            organizationId: org.id,
           });
           handledThisRun.add(customerId);
           result.textsSent++;
