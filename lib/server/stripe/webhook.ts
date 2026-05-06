@@ -92,6 +92,12 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
 }
 
 function applyConnectAccount(account: Stripe.Account): void {
+  // Partner-payout accounts ride the same Stripe account-updated firehose,
+  // but they belong on the partners table — no per-org row to upsert.
+  // Acknowledge silently; transfer attempts handle readiness on demand.
+  if (account.metadata?.role === "partner_payouts") {
+    return;
+  }
   const organizationId =
     intMeta(account.metadata, "organizationId") ??
     getConnectAccountByStripeId(account.id)?.organizationId ??

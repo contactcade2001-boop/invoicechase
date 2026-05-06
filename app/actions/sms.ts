@@ -207,6 +207,83 @@ export async function saveEmailReminderTemplate(
   return { ok: true };
 }
 
+export type BulkEmailResult =
+  | { ok: true; sentCount: number; failedCount: number; skippedCount: number }
+  | { ok: false; error: string };
+
+async function sendOneEmail(
+  loaded: Loaded,
+  customer: Customer,
+): Promise<{ status: "sent" | "skipped" | "failed"; reason?: unknown }> {
+  if (!customer.email) return { status: "skipped" };
+  try {
+    const { url } = getOrCreatePayLink(loaded.organizationId, customer.id);
+    const rendered = renderEmailReminder(
+      { subject: null, body: loaded.user.emailReminderTemplate },
+      {
+        amountCents: customer.amountOwed,
+        payUrl: url,
+        customerName: customer.name,
+        businessName: loaded.businessName,
+      },
+    );
+    await sendEmail({
+      to: customer.email,
+      subject: rendered.subject,
+      text: rendered.text,
+      html: rendered.html,
+    });
+    return { status: "sent" };
+  } catch (err) {
+    return { status: "failed", reason: err };
+  }
+}
+
+export async function bulkEmailOverdue(): Promise<BulkEmailResult> {
+  const loaded = await loadCustomers();
+  if ("error" in loaded) return { ok: false, error: loaded.error };
+  if (loaded.user.role === "technician") {
+    return { ok: false, error: "forbidden" };
+  }
+  const bulk = checkRateLimit(
+    `email:bulk:${loaded.organizationId}`,
+    LIMITS.bulkSmsPerMinute.max,
+    LIMITS.bulkSmsPerMinute.windowMs,
+  );
+  if (!bulk.allowed) return { ok: false, error: "rate_limited" };
+  const overdue = loaded.customers.filter((c) => c.daysLate > 0);
+  if (overdue.length === 0) {
+    return { ok: false, error: "no_overdue" };
+  }
+  const results = await Promise.all(
+    overdue.map((c) => sendOneEmail(loaded, c)),
+  );
+  let sent = 0;
+  let failed = 0;
+  let skipped = 0;
+  for (const r of results) {
+    if (r.status === "sent") sent++;
+    else if (r.status === "skipped") skipped++;
+    else {
+      failed++;
+      console.error("[email] bulk item failed", r.reason);
+    }
+  }
+  logAuditEvent({
+    organizationId: loaded.organizationId,
+    userId: loaded.user.id,
+    actorEmail: loaded.user.email,
+    kind: "email.bulk_reminder_sent",
+    metadata: {
+      sentCount: sent,
+      failedCount: failed,
+      skippedNoEmail: skipped,
+      totalAttempted: overdue.length,
+    },
+  });
+  return { ok: true, sentCount: sent, failedCount: failed, skippedCount: skipped };
+}
+
 export async function sendEmailReminderToCustomer(
   customerId: string,
 ): Promise<EmailResult> {

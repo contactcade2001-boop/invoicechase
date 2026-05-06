@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { BulkEmailButton } from "@/components/BulkEmailButton";
 import { BulkTextButton } from "@/components/BulkTextButton";
 import { CustomerTable } from "@/components/CustomerTable";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -66,7 +67,10 @@ export function Dashboard({
 
       <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center sm:justify-between">
         <FilterTabs active={filter} counts={counts} onChange={setFilter} />
-        <BulkTextButton overdue={overdue} />
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row">
+          <BulkEmailButton overdue={overdue} />
+          <BulkTextButton overdue={overdue} />
+        </div>
       </div>
 
       <CustomerTable customers={visible} />

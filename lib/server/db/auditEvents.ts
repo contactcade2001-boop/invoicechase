@@ -28,6 +28,7 @@ export type AuditKind =
   | "sms.autopilot_paused"
   | "sms.autopilot_resumed"
   | "email.reminder_sent"
+  | "email.bulk_reminder_sent"
   | "partner.applied"
   | "partner.commission_paid"
   | "partner.connect_started"

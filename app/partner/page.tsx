@@ -290,13 +290,14 @@ export default async function PartnerDashboardPage() {
                         <div className="flex flex-wrap items-center justify-end gap-2">
                           <StatusBadge status={c.status} />
                           {c.status === "pending" ? (
-                            <>
+                            partner.stripeAccountId ? (
                               <TransferCommissionButton
                                 commissionId={c.id}
-                                enabled={!!partner.stripeAccountId}
+                                enabled={true}
                               />
+                            ) : (
                               <MarkPaidButton commissionId={c.id} />
-                            </>
+                            )
                           ) : null}
                         </div>
                       </td>
