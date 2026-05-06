@@ -65,6 +65,7 @@ export function setOrgQboAccounts(
   fields: {
     qboDepositToAccountId?: string | null;
     qboRefundAccountId?: string | null;
+    qboRefundItemId?: string | null;
   },
 ): void {
   const db = getDb();
@@ -74,6 +75,9 @@ export function setOrgQboAccounts(
   }
   if (fields.qboRefundAccountId !== undefined) {
     set.qboRefundAccountId = fields.qboRefundAccountId;
+  }
+  if (fields.qboRefundItemId !== undefined) {
+    set.qboRefundItemId = fields.qboRefundItemId;
   }
   if (Object.keys(set).length === 1) return;
   db.update(organizations)

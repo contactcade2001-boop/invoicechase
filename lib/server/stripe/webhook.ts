@@ -22,6 +22,7 @@ import {
 } from "../db/subscriptions";
 import { getStripeConfig } from "../env";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
+import { createQboRefundReceipt } from "../qbo/refundReceipt";
 import { voidQboPayment } from "../qbo/voidPayment";
 import { getStripe } from "./client";
 
@@ -215,11 +216,37 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
       const newStatus = fullyRefunded ? "refunded" : "partially_refunded";
       setRefundedAmount(paymentIntentId, refundedCents, newStatus);
 
-      // Only auto-void in QBO on a full refund. Partial refunds need
-      // merchant-configurable accounts (deposit-to, refund category) so we
-      // surface the partial state in /payments and let the owner reconcile
-      // manually.
-      if (!fullyRefunded) return;
+      // Partial refund path: try to post a RefundReceipt to QBO when the org
+      // has configured the deposit-to account + refund item in /settings.
+      // Otherwise (or if the call fails) the partial state is surfaced in
+      // /payments for manual reconciliation.
+      if (!fullyRefunded) {
+        const partial = findPaymentByIntent(paymentIntentId);
+        if (partial?.organizationId && partial?.customerId && refundedCents > 0) {
+          try {
+            const r = await createQboRefundReceipt({
+              organizationId: partial.organizationId,
+              customerId: partial.customerId,
+              amountCents: refundedCents,
+              noteRef: paymentIntentId,
+            });
+            if (!r.ok && r.error !== "accounts_not_configured") {
+              console.error(
+                "[qbo] refundreceipt failed for",
+                paymentIntentId,
+                r.error,
+              );
+            }
+          } catch (err) {
+            console.error(
+              "[qbo] refundreceipt threw for",
+              paymentIntentId,
+              err,
+            );
+          }
+        }
+        return;
+      }
 
       const payment = findPaymentByIntent(paymentIntentId);
       if (payment?.qboPaymentId && payment.organizationId) {

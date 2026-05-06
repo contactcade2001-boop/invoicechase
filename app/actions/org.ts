@@ -6,6 +6,7 @@ import {
   setOrgDepositConfig,
   setOrgDigestPhone,
   setOrgFlag,
+  setOrgQboAccounts,
   setOrgTwilioPhone,
 } from "@/lib/server/db/organizations";
 import {
@@ -47,6 +48,23 @@ export async function setCustomReceiptsEnabled(
   if (!user) return { ok: false, error: "not_signed_in" };
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   setOrgFlag(user.organizationId!, "customReceiptsEnabled", enabled);
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function saveQboRefundAccounts(input: {
+  depositToAccountId: string;
+  refundItemId: string;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const depositToId = input.depositToAccountId.trim() || null;
+  const itemId = input.refundItemId.trim() || null;
+  setOrgQboAccounts(user.organizationId!, {
+    qboDepositToAccountId: depositToId,
+    qboRefundItemId: itemId,
+  });
   revalidatePath("/settings");
   return { ok: true };
 }

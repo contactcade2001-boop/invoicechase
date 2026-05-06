@@ -12,6 +12,7 @@ export const organizations = sqliteTable("organizations", {
   customReceiptsEnabled: integer("custom_receipts_enabled").notNull().default(0),
   qboDepositToAccountId: text("qbo_deposit_to_account_id"),
   qboRefundAccountId: text("qbo_refund_account_id"),
+  qboRefundItemId: text("qbo_refund_item_id"),
   digestPhone: text("digest_phone"),
   twilioPhoneNumber: text("twilio_phone_number"),
   lastDigestAt: integer("last_digest_at"),

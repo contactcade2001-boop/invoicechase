@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { AutomationSettings } from "@/components/AutomationSettings";
+import {
+  QboRefundAccounts,
+  type QboPickItem,
+} from "@/components/QboRefundAccounts";
 import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
@@ -9,6 +13,7 @@ import {
   getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
+import { listBankAccounts, listItems } from "@/lib/server/qbo/client";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +31,23 @@ export default async function SettingsPage() {
   const conn = getConnectionForOrg(orgId);
   const businessName = conn?.companyName ?? "Your business";
   const isOwner = user.role === "owner";
+
+  let bankAccounts: QboPickItem[] = [];
+  let qboItems: QboPickItem[] = [];
+  let qboLoadError: string | null = null;
+  if (isOwner && conn) {
+    try {
+      const [accts, items] = await Promise.all([
+        listBankAccounts(conn),
+        listItems(conn),
+      ]);
+      bankAccounts = accts.map((a) => ({ id: a.Id, name: a.Name }));
+      qboItems = items.map((i) => ({ id: i.Id, name: i.Name }));
+    } catch (err) {
+      console.error("[settings] qbo accounts load failed", err);
+      qboLoadError = "QuickBooks API call failed";
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -64,6 +86,30 @@ export default async function SettingsPage() {
                 customReceiptsEnabled: org.customReceiptsEnabled === 1,
               }}
             />
+            {conn ? (
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+                <h2 className="text-lg font-semibold">
+                  Refund accounting (QuickBooks)
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  Tell us where partial-refund money came from + which line
+                  item to use, and we&apos;ll auto-post a RefundReceipt to
+                  QuickBooks whenever a Stripe partial refund fires.
+                </p>
+                <div className="mt-4">
+                  <QboRefundAccounts
+                    accounts={bankAccounts}
+                    items={qboItems}
+                    initial={{
+                      depositToAccountId: org.qboDepositToAccountId ?? "",
+                      refundItemId: org.qboRefundItemId ?? "",
+                    }}
+                    loadError={qboLoadError}
+                  />
+                </div>
+              </section>
+            ) : null}
+
             <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
               <h2 className="text-lg font-semibold">Webhook events</h2>
               <p className="mt-1 text-sm text-slate-600">

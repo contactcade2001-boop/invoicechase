@@ -263,6 +263,41 @@ export async function listPaidInvoicesSince(
   );
 }
 
+export type QboAccount = {
+  Id: string;
+  Name: string;
+  AccountType?: string;
+  AccountSubType?: string;
+  Active?: boolean;
+};
+
+export async function listBankAccounts(
+  conn: QboConnectionRow,
+): Promise<QboAccount[]> {
+  return paginate<"Account", QboAccount>(
+    conn,
+    "Account",
+    "SELECT Id, Name, AccountType, AccountSubType, Active FROM Account WHERE AccountType = 'Bank' AND Active = true",
+  );
+}
+
+export type QboItem = {
+  Id: string;
+  Name: string;
+  Active?: boolean;
+  Type?: string;
+};
+
+export async function listItems(
+  conn: QboConnectionRow,
+): Promise<QboItem[]> {
+  return paginate<"Item", QboItem>(
+    conn,
+    "Item",
+    "SELECT Id, Name, Active, Type FROM Item WHERE Active = true",
+  );
+}
+
 export async function listPaymentsSince(
   conn: QboConnectionRow,
   sinceIso: string,
