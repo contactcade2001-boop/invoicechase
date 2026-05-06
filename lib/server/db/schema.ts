@@ -45,6 +45,13 @@ export const rateLimitEvents = sqliteTable("rate_limit_events", {
   hitAt: integer("hit_at").notNull(),
 });
 
+export const inboxReads = sqliteTable("inbox_reads", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull(),
+  conversationId: integer("conversation_id").notNull(),
+  lastReadAt: integer("last_read_at").notNull(),
+});
+
 export const organizationInvites = sqliteTable("organization_invites", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   organizationId: integer("organization_id").notNull(),
@@ -151,6 +158,7 @@ export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
 export type SmsConversationRow = typeof smsConversations.$inferSelect;
 export type SmsMessageRow = typeof smsMessages.$inferSelect;
 export type RateLimitEventRow = typeof rateLimitEvents.$inferSelect;
+export type InboxReadRow = typeof inboxReads.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;

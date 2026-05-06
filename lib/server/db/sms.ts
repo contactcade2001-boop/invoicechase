@@ -142,16 +142,28 @@ export function findConversationById(
 
 export function listConversationsForOrg(
   organizationId: number,
-  limit = 50,
+  options: { limit?: number; offset?: number } = {},
 ): SmsConversationRow[] {
   const db = getDb();
+  const limit = options.limit ?? 50;
+  const offset = options.offset ?? 0;
   return db
     .select()
     .from(smsConversations)
     .where(eq(smsConversations.organizationId, organizationId))
     .orderBy(desc(smsConversations.lastMessageAt))
     .limit(limit)
+    .offset(offset)
     .all();
+}
+
+export function countConversationsForOrg(organizationId: number): number {
+  const db = getDb();
+  return db
+    .select()
+    .from(smsConversations)
+    .where(eq(smsConversations.organizationId, organizationId))
+    .all().length;
 }
 
 export function listAllMessagesForConv(

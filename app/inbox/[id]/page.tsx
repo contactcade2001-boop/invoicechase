@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { InboxThread } from "@/components/InboxThread";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { markConversationRead } from "@/lib/server/db/inboxReads";
 import {
   findConversationById,
   listAllMessagesForConv,
@@ -37,6 +38,7 @@ export default async function InboxThreadPage({
 
   const conversation = findConversationById(conversationId, orgId);
   if (!conversation) notFound();
+  markConversationRead(user.id, conversation.id);
   const messages = listAllMessagesForConv(conversation.id);
 
   return (

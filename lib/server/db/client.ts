@@ -56,6 +56,14 @@ CREATE TABLE IF NOT EXISTS rate_limit_events (
 );
 CREATE INDEX IF NOT EXISTS rate_limit_events_bucket_hit ON rate_limit_events(bucket, hit_at);
 
+CREATE TABLE IF NOT EXISTS inbox_reads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  conversation_id INTEGER NOT NULL,
+  last_read_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS inbox_reads_user_conv ON inbox_reads(user_id, conversation_id);
+
 CREATE TABLE IF NOT EXISTS organization_invites (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id INTEGER NOT NULL,

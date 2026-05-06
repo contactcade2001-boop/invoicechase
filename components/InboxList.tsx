@@ -9,6 +9,7 @@ import type {
 export type InboxListEntry = {
   conversation: SmsConversationRow;
   lastMessage: SmsMessageRow | null;
+  unread: boolean;
 };
 
 export function InboxList({ entries }: { entries: InboxListEntry[] }) {
@@ -26,20 +27,23 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-      {entries.map(({ conversation, lastMessage }) => {
-        const inboundLatest = lastMessage?.direction === "inbound";
+      {entries.map(({ conversation, lastMessage, unread }) => {
         const paused = conversation.autopilotPaused === 1;
         return (
           <Link
             key={conversation.id}
             href={`/inbox/${conversation.id}`}
-            className="flex items-start justify-between gap-3 border-b border-slate-100 px-4 py-3 transition last:border-b-0 hover:bg-slate-50"
+            className={`flex items-start justify-between gap-3 border-b border-slate-100 px-4 py-3 transition last:border-b-0 hover:bg-slate-50 ${
+              unread ? "bg-emerald-50/30" : ""
+            }`}
           >
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <span
-                  className={`truncate text-sm font-medium ${
-                    inboundLatest ? "text-slate-900" : "text-slate-700"
+                  className={`truncate text-sm ${
+                    unread
+                      ? "font-semibold text-slate-900"
+                      : "font-medium text-slate-700"
                   }`}
                 >
                   {conversation.customerName ?? conversation.customerPhone}
@@ -53,15 +57,19 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
                     paused
                   </span>
                 ) : null}
-                {inboundLatest ? (
+                {unread ? (
                   <span
                     className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"
                     aria-hidden
-                    title="Latest message inbound"
+                    title="Unread"
                   />
                 ) : null}
               </div>
-              <p className="mt-0.5 truncate text-sm text-slate-500">
+              <p
+                className={`mt-0.5 truncate text-sm ${
+                  unread ? "text-slate-700" : "text-slate-500"
+                }`}
+              >
                 {lastMessage
                   ? `${lastMessage.direction === "inbound" ? "" : "You: "}${truncate(lastMessage.body)}`
                   : "(no messages yet)"}
