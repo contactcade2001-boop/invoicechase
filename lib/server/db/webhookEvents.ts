@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import { and, desc, eq, lt } from "drizzle-orm";
+import { and, desc, eq, gte, like, lt } from "drizzle-orm";
 import { getDb } from "./client";
 import { webhookEvents, type WebhookEventRow } from "./schema";
 
@@ -70,17 +70,33 @@ export function listRecentWebhookEvents(
     .all();
 }
 
+export type WebhookEventFilters = {
+  source?: WebhookSource;
+  status?: WebhookStatus;
+  typeQuery?: string;
+  sinceMs?: number;
+};
+
 export function listWebhookEventsForOrg(
   organizationId: number,
-  options: { limit?: number; offset?: number } = {},
+  options: { limit?: number; offset?: number } & WebhookEventFilters = {},
 ): WebhookEventRow[] {
   const db = getDb();
   const limit = options.limit ?? 200;
   const offset = options.offset ?? 0;
+  const filters = [eq(webhookEvents.organizationId, organizationId)];
+  if (options.source) filters.push(eq(webhookEvents.source, options.source));
+  if (options.status) filters.push(eq(webhookEvents.status, options.status));
+  if (options.typeQuery && options.typeQuery.trim()) {
+    filters.push(like(webhookEvents.type, `%${options.typeQuery.trim()}%`));
+  }
+  if (options.sinceMs && options.sinceMs > 0) {
+    filters.push(gte(webhookEvents.createdAt, options.sinceMs));
+  }
   return db
     .select()
     .from(webhookEvents)
-    .where(eq(webhookEvents.organizationId, organizationId))
+    .where(and(...filters))
     .orderBy(desc(webhookEvents.createdAt))
     .limit(limit)
     .offset(offset)

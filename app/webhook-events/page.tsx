@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { WebhookEventControls } from "@/components/WebhookEventControls";
 import { getCurrentUser } from "@/lib/server/auth/session";
-import { listWebhookEventsForOrg } from "@/lib/server/db/webhookEvents";
+import {
+  listWebhookEventsForOrg,
+  type WebhookEventFilters,
+} from "@/lib/server/db/webhookEvents";
 import { formatRelativeTime } from "@/lib/inboxFormat";
 
 export const dynamic = "force-dynamic";
@@ -28,18 +32,73 @@ function StatusPill({ status }: { status: string }) {
   );
 }
 
-export default async function WebhookEventsPage() {
+const SINCE_MS: Record<string, number> = {
+  "1h": 60 * 60 * 1000,
+  "24h": 24 * 60 * 60 * 1000,
+  "7d": 7 * 24 * 60 * 60 * 1000,
+};
+
+type SearchParams = Promise<{
+  source?: string;
+  status?: string;
+  type?: string;
+  since?: string;
+}>;
+
+export function buildFilters(sp: {
+  source?: string;
+  status?: string;
+  type?: string;
+  since?: string;
+}): WebhookEventFilters {
+  const filters: WebhookEventFilters = {};
+  if (sp.source === "stripe" || sp.source === "twilio") {
+    filters.source = sp.source;
+  }
+  if (
+    sp.status === "received" ||
+    sp.status === "processed" ||
+    sp.status === "ignored" ||
+    sp.status === "rejected" ||
+    sp.status === "errored"
+  ) {
+    filters.status = sp.status;
+  }
+  if (sp.type) filters.typeQuery = sp.type;
+  if (sp.since && SINCE_MS[sp.since]) {
+    filters.sinceMs = Date.now() - SINCE_MS[sp.since];
+  }
+  return filters;
+}
+
+export default async function WebhookEventsPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const sp = await searchParams;
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   if (user.role !== "owner") redirect("/dashboard");
   const orgId = user.organizationId!;
 
-  const events = listWebhookEventsForOrg(orgId, { limit: PAGE_SIZE });
+  const filters = buildFilters(sp);
+  const events = listWebhookEventsForOrg(orgId, {
+    limit: PAGE_SIZE,
+    ...filters,
+  });
+
+  const exportQs = new URLSearchParams();
+  if (sp.source) exportQs.set("source", sp.source);
+  if (sp.status) exportQs.set("status", sp.status);
+  if (sp.type) exportQs.set("type", sp.type);
+  if (sp.since) exportQs.set("since", sp.since);
+  const exportHref = `/webhook-events/export.csv${exportQs.toString() ? `?${exportQs}` : ""}`;
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <AppHeader user={user} current="settings" />
-      <main className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8 sm:py-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-8 sm:py-10">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Webhook events</h1>
           <p className="mt-1 text-sm text-slate-600">
@@ -47,11 +106,20 @@ export default async function WebhookEventsPage() {
             for debugging billing or autopilot issues.
           </p>
         </div>
+        <WebhookEventControls
+          initial={{
+            source: sp.source ?? "",
+            status: sp.status ?? "",
+            type: sp.type ?? "",
+            since: sp.since ?? "",
+          }}
+          exportHref={exportHref}
+        />
         {events.length === 0 ? (
           <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
             <p className="text-sm text-slate-600">
-              No webhooks logged yet. Stripe + Twilio events show up here as
-              they arrive.
+              No matching events. Adjust the filters or wait for new webhooks
+              to arrive.
             </p>
           </div>
         ) : (
