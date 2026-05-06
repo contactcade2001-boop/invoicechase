@@ -8,10 +8,12 @@ import {
   setOrgDepositConfig,
   setOrgDigestPhone,
   setOrgFlag,
+  setOrgLogoUrl,
   setOrgPortalBranding,
   setOrgQboAccounts,
   setOrgTwilioPhone,
 } from "@/lib/server/db/organizations";
+import { upsertA2pRegistration } from "@/lib/server/db/a2p";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -79,6 +81,7 @@ export async function setCustomReceiptsEnabled(
 export async function savePortalBranding(input: {
   slug: string;
   accentColor: string;
+  logoUrl?: string;
 }): Promise<OrgUpdateResult> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, error: "not_signed_in" };
@@ -97,10 +100,17 @@ export async function savePortalBranding(input: {
   if (color.length > 0 && !/^#[0-9a-fA-F]{6}$/.test(color)) {
     return { ok: false, error: "invalid_color" };
   }
+  const logo = (input.logoUrl ?? "").trim();
+  if (logo.length > 0) {
+    if (logo.length > 500 || !/^https:\/\/[^\s]+$/i.test(logo)) {
+      return { ok: false, error: "invalid_logo_url" };
+    }
+  }
   setOrgPortalBranding(user.organizationId!, {
     portalSlug: slug.length === 0 ? null : slug,
     portalAccentColor: color.length === 0 ? null : color,
   });
+  setOrgLogoUrl(user.organizationId!, logo.length === 0 ? null : logo);
   revalidatePath("/settings");
   return { ok: true };
 }
@@ -168,6 +178,53 @@ export async function saveTwilioPhone(
     user.organizationId!,
     trimmed.length === 0 ? null : trimmed,
   );
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function saveA2pRegistration(input: {
+  legalBusinessName: string;
+  businessEin: string;
+  brandId: string;
+  campaignId: string;
+  brandStatus: string;
+  campaignStatus: string;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const allowed = new Set([
+    "not_started",
+    "submitted",
+    "in_review",
+    "approved",
+    "rejected",
+  ]);
+  if (
+    !allowed.has(input.brandStatus) ||
+    !allowed.has(input.campaignStatus)
+  ) {
+    return { ok: false, error: "invalid_status" };
+  }
+  upsertA2pRegistration({
+    organizationId: user.organizationId!,
+    legalBusinessName: input.legalBusinessName.trim() || null,
+    businessEin: input.businessEin.trim() || null,
+    brandId: input.brandId.trim() || null,
+    campaignId: input.campaignId.trim() || null,
+    brandStatus: input.brandStatus as
+      | "not_started"
+      | "submitted"
+      | "in_review"
+      | "approved"
+      | "rejected",
+    campaignStatus: input.campaignStatus as
+      | "not_started"
+      | "submitted"
+      | "in_review"
+      | "approved"
+      | "rejected",
+  });
   revalidatePath("/settings");
   return { ok: true };
 }

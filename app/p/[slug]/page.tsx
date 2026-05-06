@@ -45,9 +45,13 @@ export default async function BrandedPortalLoginPage({
         <div className="mx-auto flex h-14 max-w-3xl items-center px-4">
           <Link
             href={`/p/${slug}`}
-            className="text-lg font-bold tracking-tight"
+            className="flex items-center gap-2 text-lg font-bold tracking-tight"
             style={{ color: accent }}
           >
+            {org.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={org.logoUrl} alt={org.name} className="h-7 w-auto" />
+            ) : null}
             {org.name}
           </Link>
           <span className="ml-2 text-xs uppercase tracking-wide text-slate-400">

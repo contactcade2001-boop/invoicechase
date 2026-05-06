@@ -244,6 +244,12 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 text-sm text-slate-500 sm:flex-row">
           <span className="font-semibold text-slate-700">Invoice Chase</span>
           <div className="flex flex-wrap items-center gap-4">
+            <Link href="/help" className="hover:text-slate-700">
+              Help
+            </Link>
+            <Link href="/changelog" className="hover:text-slate-700">
+              Changelog
+            </Link>
             <Link href="/privacy" className="hover:text-slate-700">
               Privacy
             </Link>

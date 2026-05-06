@@ -20,6 +20,9 @@ export const organizations = sqliteTable("organizations", {
   lastDigestAt: integer("last_digest_at"),
   lastDepositPollAt: integer("last_deposit_poll_at"),
   lastInvoiceCdcAt: integer("last_invoice_cdc_at"),
+  logoUrl: text("logo_url"),
+  customerReferralCode: text("customer_referral_code"),
+  referredByOrgId: integer("referred_by_org_id"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -122,6 +125,7 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   emailVerifiedAt: integer("email_verified_at"),
   smsTemplate: text("sms_template"),
+  emailReminderTemplate: text("email_reminder_template"),
   ownerPhone: text("owner_phone"),
   organizationId: integer("organization_id"),
   role: text("role").notNull().default("owner"),
@@ -225,6 +229,7 @@ export const partners = sqliteTable("partners", {
   referralCode: text("referral_code").notNull().unique(),
   commissionPercentBps: integer("commission_percent_bps").notNull().default(2000),
   payoutEmail: text("payout_email"),
+  stripeAccountId: text("stripe_account_id"),
   status: text("status").notNull().default("active"),
   welcomeEmailSentAt: integer("welcome_email_sent_at"),
   createdAt: integer("created_at").notNull(),
@@ -253,8 +258,57 @@ export const partnerCommissions = sqliteTable("partner_commissions", {
   status: text("status").notNull().default("pending"),
   paidAt: integer("paid_at"),
   payoutReference: text("payout_reference"),
+  stripeTransferId: text("stripe_transfer_id"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
+});
+
+export const a2pRegistrations = sqliteTable("a2p_registrations", {
+  organizationId: integer("organization_id").primaryKey(),
+  brandId: text("brand_id"),
+  campaignId: text("campaign_id"),
+  brandStatus: text("brand_status").notNull().default("not_started"),
+  campaignStatus: text("campaign_status").notNull().default("not_started"),
+  legalBusinessName: text("legal_business_name"),
+  businessEin: text("business_ein"),
+  submittedAt: integer("submitted_at"),
+  approvedAt: integer("approved_at"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const orgReferrals = sqliteTable("org_referrals", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  referrerOrgId: integer("referrer_org_id").notNull(),
+  refereeOrgId: integer("referee_org_id").notNull().unique(),
+  creditStatus: text("credit_status").notNull().default("pending"),
+  creditedAt: integer("credited_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const paymentPlans = sqliteTable("payment_plans", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  totalCents: integer("total_cents").notNull(),
+  installmentCount: integer("installment_count").notNull(),
+  frequencyDays: integer("frequency_days").notNull(),
+  status: text("status").notNull().default("active"),
+  note: text("note"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const paymentPlanInstallments = sqliteTable("payment_plan_installments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  planId: integer("plan_id").notNull(),
+  sequence: integer("sequence").notNull(),
+  dueDate: text("due_date").notNull(),
+  amountCents: integer("amount_cents").notNull(),
+  payLinkToken: text("pay_link_token"),
+  status: text("status").notNull().default("pending"),
+  paidAt: integer("paid_at"),
+  createdAt: integer("created_at").notNull(),
 });
 
 export type OrganizationRow = typeof organizations.$inferSelect;
@@ -281,3 +335,7 @@ export type QboDashboardCacheRow = typeof qboDashboardCache.$inferSelect;
 export type PartnerRow = typeof partners.$inferSelect;
 export type PartnerReferralRow = typeof partnerReferrals.$inferSelect;
 export type PartnerCommissionRow = typeof partnerCommissions.$inferSelect;
+export type A2pRegistrationRow = typeof a2pRegistrations.$inferSelect;
+export type OrgReferralRow = typeof orgReferrals.$inferSelect;
+export type PaymentPlanRow = typeof paymentPlans.$inferSelect;
+export type PaymentPlanInstallmentRow = typeof paymentPlanInstallments.$inferSelect;

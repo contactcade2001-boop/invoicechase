@@ -45,6 +45,52 @@ export function listOrgsWithQboConnection(): OrganizationRow[] {
   return db.select().from(organizations).all();
 }
 
+export function listAllOrgs(): OrganizationRow[] {
+  return getDb().select().from(organizations).all();
+}
+
+export function findOrgByCustomerReferralCode(
+  code: string,
+): OrganizationRow | null {
+  return (
+    getDb()
+      .select()
+      .from(organizations)
+      .where(eq(organizations.customerReferralCode, code))
+      .get() ?? null
+  );
+}
+
+export function setOrgLogoUrl(
+  orgId: number,
+  logoUrl: string | null,
+): void {
+  getDb()
+    .update(organizations)
+    .set({ logoUrl, updatedAt: Date.now() })
+    .where(eq(organizations.id, orgId))
+    .run();
+}
+
+export function setOrgCustomerReferralCode(
+  orgId: number,
+  code: string,
+): void {
+  getDb()
+    .update(organizations)
+    .set({ customerReferralCode: code, updatedAt: Date.now() })
+    .where(eq(organizations.id, orgId))
+    .run();
+}
+
+export function setReferredBy(orgId: number, referrerOrgId: number): void {
+  getDb()
+    .update(organizations)
+    .set({ referredByOrgId: referrerOrgId, updatedAt: Date.now() })
+    .where(eq(organizations.id, orgId))
+    .run();
+}
+
 export function setOrgFlag(
   organizationId: number,
   field:

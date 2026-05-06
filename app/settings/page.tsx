@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { A2pRegistration } from "@/components/A2pRegistration";
 import { AppHeader } from "@/components/AppHeader";
 import { AutomationSettings } from "@/components/AutomationSettings";
 import { PortalBranding } from "@/components/PortalBranding";
@@ -8,6 +9,7 @@ import {
 } from "@/components/QboRefundAccounts";
 import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { getA2pRegistration } from "@/lib/server/db/a2p";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
 import { getOrgById } from "@/lib/server/db/organizations";
 import {
@@ -33,6 +35,7 @@ export default async function SettingsPage() {
   const conn = getConnectionForOrg(orgId);
   const businessName = conn?.companyName ?? "Your business";
   const isOwner = user.role === "owner";
+  const a2p = getA2pRegistration(orgId);
 
   let bankAccounts: QboPickItem[] = [];
   let qboItems: QboPickItem[] = [];
@@ -101,8 +104,25 @@ export default async function SettingsPage() {
                   initial={{
                     slug: org.portalSlug ?? "",
                     accentColor: org.portalAccentColor ?? "",
+                    logoUrl: org.logoUrl ?? "",
                   }}
                   baseUrl={getAppBaseUrl()}
+                />
+              </div>
+            </section>
+
+            <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <h2 className="text-lg font-semibold">SMS compliance (A2P 10DLC)</h2>
+              <div className="mt-4">
+                <A2pRegistration
+                  initial={{
+                    legalBusinessName: a2p?.legalBusinessName ?? "",
+                    businessEin: a2p?.businessEin ?? "",
+                    brandId: a2p?.brandId ?? "",
+                    campaignId: a2p?.campaignId ?? "",
+                    brandStatus: a2p?.brandStatus ?? "not_started",
+                    campaignStatus: a2p?.campaignStatus ?? "not_started",
+                  }}
                 />
               </div>
             </section>

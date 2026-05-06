@@ -11,6 +11,7 @@ export type ReceiptInput = {
   paidAtMs: number;
   reference: string; // short charge / payment intent identifier
   portalSlug?: string | null;
+  logoUrl?: string | null;
 };
 
 function formatDate(ms: number): string {
@@ -42,8 +43,12 @@ export async function sendReceiptEmail(
     `Questions? Reply to this email and ${input.businessName} will get back to you.`,
   ].join("\n");
 
+  const logoBlock = input.logoUrl
+    ? `<img src="${escapeHtml(input.logoUrl)}" alt="${escapeHtml(input.businessName)}" style="height:32px;width:auto;margin:0 0 16px" />`
+    : "";
   const html = `
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:520px;margin:0 auto;padding:32px 24px;color:#0f172a">
+      ${logoBlock}
       <p style="font-size:14px;color:#475569;margin:0 0 16px">Receipt</p>
       <h1 style="font-size:22px;margin:0 0 8px">${escapeHtml(input.businessName)} received ${escapeHtml(amount)}</h1>
       <p style="font-size:14px;line-height:1.5;color:#475569;margin:0 0 20px">

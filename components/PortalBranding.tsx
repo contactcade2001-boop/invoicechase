@@ -7,11 +7,12 @@ export function PortalBranding({
   initial,
   baseUrl,
 }: {
-  initial: { slug: string; accentColor: string };
+  initial: { slug: string; accentColor: string; logoUrl: string };
   baseUrl: string;
 }) {
   const [slug, setSlug] = useState(initial.slug);
   const [color, setColor] = useState(initial.accentColor);
+  const [logoUrl, setLogoUrl] = useState(initial.logoUrl);
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -22,6 +23,7 @@ export function PortalBranding({
       const r = await savePortalBranding({
         slug,
         accentColor: color,
+        logoUrl,
       });
       if (r.ok) {
         setSavedAt(Date.now());
@@ -31,6 +33,7 @@ export function PortalBranding({
             "Slug must be 3-30 characters: lowercase letters, numbers, dashes (no leading/trailing dash).",
           slug_taken: "That slug is already in use by another organization.",
           invalid_color: "Color must be a #RRGGBB hex value.",
+          invalid_logo_url: "Logo URL must be a valid https:// URL.",
           forbidden: "Only the owner can change branding.",
         };
         setError(messages[r.error] ?? r.error);
@@ -89,6 +92,28 @@ export function PortalBranding({
           </div>
         </label>
       </div>
+      <label className="block">
+        <span className="text-sm font-medium text-slate-700">Logo URL</span>
+        <p className="text-xs text-slate-500">
+          Direct https:// URL to your logo image (PNG/SVG/JPG).
+        </p>
+        <input
+          type="url"
+          value={logoUrl}
+          onChange={(e) => setLogoUrl(e.target.value.trim())}
+          placeholder="https://yourcompany.com/logo.png"
+          maxLength={400}
+          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+        />
+        {logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt="Logo preview"
+            className="mt-2 h-12 w-auto rounded ring-1 ring-slate-200"
+          />
+        ) : null}
+      </label>
       {portalUrl ? (
         <p className="text-xs text-slate-500">
           Customers can sign in at:{" "}

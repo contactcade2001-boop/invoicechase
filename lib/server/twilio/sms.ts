@@ -3,6 +3,7 @@ import type { Customer } from "@/lib/types";
 import { getOrgById } from "../db/organizations";
 import { getTwilioConfig, useMockSms } from "../env";
 import { renderSmsBody } from "@/lib/smsTemplate";
+import { isA2pApproved } from "../db/a2p";
 import { isOptedOut } from "../sms/optOut";
 import { getTwilio } from "./client";
 
@@ -10,6 +11,29 @@ export class OptedOutError extends Error {
   constructor(public readonly phone: string) {
     super(`Recipient ${phone} has opted out of SMS`);
     this.name = "OptedOutError";
+  }
+}
+
+export class A2pNotApprovedError extends Error {
+  constructor() {
+    super("A2P 10DLC registration not yet approved for this organization");
+    this.name = "A2pNotApprovedError";
+  }
+}
+
+function a2pRequired(): boolean {
+  return (process.env.REQUIRE_A2P ?? "").toLowerCase() === "true";
+}
+
+function assertA2pApproved(
+  organizationId: number | undefined,
+  bypass: boolean,
+): void {
+  if (bypass) return;
+  if (!a2pRequired()) return;
+  if (!organizationId) return;
+  if (!isA2pApproved(organizationId)) {
+    throw new A2pNotApprovedError();
   }
 }
 
@@ -52,6 +76,7 @@ export async function sendRawSms(input: {
 }): Promise<{ sid: string | null }> {
   if (!input.to) throw new Error("Missing to number");
   assertNotOptedOut(input.organizationId, input.to, !!input.bypassOptOut);
+  assertA2pApproved(input.organizationId, !!input.bypassOptOut);
   if (useMockSms()) {
     console.log(
       `[sms:mock] org=${input.organizationId ?? "platform"} to=${input.to} body=${JSON.stringify(input.body)}`,
@@ -75,6 +100,7 @@ export async function sendInvoiceSms(
     throw new Error("Customer has no phone number on file");
   }
   assertNotOptedOut(ctx.organizationId, customer.phone, false);
+  assertA2pApproved(ctx.organizationId, false);
   const body = renderSmsBody(ctx.template, {
     amountCents: customer.amountOwed,
     payUrl: ctx.payUrl,

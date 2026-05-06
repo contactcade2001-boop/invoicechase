@@ -279,6 +279,7 @@ CREATE TABLE IF NOT EXISTS partner_commissions (
   status TEXT NOT NULL DEFAULT 'pending',
   paid_at INTEGER,
   payout_reference TEXT,
+  stripe_transfer_id TEXT,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
@@ -286,6 +287,57 @@ CREATE INDEX IF NOT EXISTS partner_commissions_partner_period
   ON partner_commissions(partner_id, period_start);
 CREATE UNIQUE INDEX IF NOT EXISTS partner_commissions_unique_period
   ON partner_commissions(partner_id, organization_id, period_start, source);
+
+CREATE TABLE IF NOT EXISTS a2p_registrations (
+  organization_id INTEGER PRIMARY KEY,
+  brand_id TEXT,
+  campaign_id TEXT,
+  brand_status TEXT NOT NULL DEFAULT 'not_started',
+  campaign_status TEXT NOT NULL DEFAULT 'not_started',
+  legal_business_name TEXT,
+  business_ein TEXT,
+  submitted_at INTEGER,
+  approved_at INTEGER,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS org_referrals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  referrer_org_id INTEGER NOT NULL,
+  referee_org_id INTEGER NOT NULL UNIQUE,
+  credit_status TEXT NOT NULL DEFAULT 'pending',
+  credited_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS org_referrals_referrer ON org_referrals(referrer_org_id);
+
+CREATE TABLE IF NOT EXISTS payment_plans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  total_cents INTEGER NOT NULL,
+  installment_count INTEGER NOT NULL,
+  frequency_days INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'active',
+  note TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS payment_plans_org ON payment_plans(organization_id);
+
+CREATE TABLE IF NOT EXISTS payment_plan_installments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  plan_id INTEGER NOT NULL,
+  sequence INTEGER NOT NULL,
+  due_date TEXT NOT NULL,
+  amount_cents INTEGER NOT NULL,
+  pay_link_token TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  paid_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS payment_plan_installments_plan ON payment_plan_installments(plan_id);
 `;
 
 function hasColumn(
@@ -403,6 +455,9 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["last_digest_at", "INTEGER"],
     ["last_deposit_poll_at", "INTEGER"],
     ["last_invoice_cdc_at", "INTEGER"],
+    ["logo_url", "TEXT"],
+    ["customer_referral_code", "TEXT"],
+    ["referred_by_org_id", "INTEGER"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&
@@ -410,6 +465,38 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ) {
       sqlite.exec(`ALTER TABLE organizations ADD COLUMN ${col} ${def}`);
     }
+  }
+  // Add late-stage columns to existing tables.
+  if (
+    hasColumn(sqlite, "users", "id") &&
+    !hasColumn(sqlite, "users", "email_reminder_template")
+  ) {
+    sqlite.exec("ALTER TABLE users ADD COLUMN email_reminder_template TEXT");
+  }
+  if (
+    hasColumn(sqlite, "partners", "id") &&
+    !hasColumn(sqlite, "partners", "stripe_account_id")
+  ) {
+    sqlite.exec("ALTER TABLE partners ADD COLUMN stripe_account_id TEXT");
+  }
+  if (
+    hasColumn(sqlite, "partner_commissions", "id") &&
+    !hasColumn(sqlite, "partner_commissions", "stripe_transfer_id")
+  ) {
+    sqlite.exec(
+      "ALTER TABLE partner_commissions ADD COLUMN stripe_transfer_id TEXT",
+    );
+  }
+  // Unique index for customer referral code (only when non-null).
+  try {
+    sqlite.exec(
+      "CREATE UNIQUE INDEX IF NOT EXISTS organizations_customer_referral_code ON organizations(customer_referral_code) WHERE customer_referral_code IS NOT NULL",
+    );
+  } catch {
+    // Older SQLite without partial-index support — fall back to plain index.
+    sqlite.exec(
+      "CREATE INDEX IF NOT EXISTS organizations_customer_referral_code ON organizations(customer_referral_code)",
+    );
   }
   for (const [col, def] of [
     ["customer_email", "TEXT"],
