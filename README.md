@@ -33,11 +33,12 @@ openssl rand -base64 32
 
 Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
 
-### 2. QuickBooks (sandbox)
+### 2. QuickBooks
 
 1. Create an app at https://developer.intuit.com/ → QuickBooks Online API.
 2. Add `${APP_BASE_URL}/api/qbo/callback` to redirect URIs (match port to your dev server).
 3. Copy sandbox client ID/secret into `QBO_CLIENT_ID` / `QBO_CLIENT_SECRET`.
+4. `QBO_ENVIRONMENT=sandbox` (default) hits `https://sandbox-quickbooks.api.intuit.com`. Set to `production` to use `https://quickbooks.api.intuit.com` with production credentials.
 
 ### 3. Stripe (test mode)
 

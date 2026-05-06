@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { encryptToken } from "@/lib/server/crypto";
 import { upsertConnection } from "@/lib/server/db/connections";
-import { QBO_API_BASE, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
+import { getQboApiBase, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
 import { exchangeCodeForTokens } from "@/lib/server/qbo/oauth";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ async function fetchCompanyName(
   accessToken: string,
   realmId: string,
 ): Promise<string | null> {
-  const url = `${QBO_API_BASE}/v3/company/${realmId}/companyinfo/${realmId}?minorversion=${QBO_MINOR_VERSION}`;
+  const url = `${getQboApiBase()}/v3/company/${realmId}/companyinfo/${realmId}?minorversion=${QBO_MINOR_VERSION}`;
   const res = await fetch(url, {
     headers: {
       Accept: "application/json",

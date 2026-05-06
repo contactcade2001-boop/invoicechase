@@ -2,7 +2,11 @@ import "server-only";
 import { decryptToken, encryptToken } from "../crypto";
 import { upsertConnection } from "../db/connections";
 import type { QboConnectionRow } from "../db/schema";
-import { QBO_API_BASE, QBO_MINOR_VERSION } from "./config";
+import {
+  QBO_MINOR_VERSION,
+  QBO_PAGE_SIZE,
+  getQboApiBase,
+} from "./config";
 import { refreshAccessToken } from "./oauth";
 
 const REFRESH_BUFFER_MS = 60_000;
@@ -30,7 +34,7 @@ export async function qboQuery<T>(
   query: string,
 ): Promise<T> {
   const token = await getValidAccessToken(conn);
-  const url = new URL(`${QBO_API_BASE}/v3/company/${conn.realmId}/query`);
+  const url = new URL(`${getQboApiBase()}/v3/company/${conn.realmId}/query`);
   url.searchParams.set("query", query);
   url.searchParams.set("minorversion", QBO_MINOR_VERSION);
   const res = await fetch(url, {
@@ -52,7 +56,7 @@ export async function qboPost<T>(
   body: unknown,
 ): Promise<T> {
   const token = await getValidAccessToken(conn);
-  const url = new URL(`${QBO_API_BASE}/v3/company/${conn.realmId}${path}`);
+  const url = new URL(`${getQboApiBase()}/v3/company/${conn.realmId}${path}`);
   url.searchParams.set("minorversion", QBO_MINOR_VERSION);
   const res = await fetch(url, {
     method: "POST",
@@ -86,6 +90,7 @@ export type QboCustomer = {
 
 export type QboInvoice = {
   Id: string;
+  DocNumber?: string;
   CustomerRef: { value: string; name?: string };
   Balance: number;
   TotalAmt: number;
@@ -107,27 +112,51 @@ export type QboPayment = {
 };
 
 type QueryResponse<K extends string, T> = {
-  QueryResponse: { [P in K]?: T[] } & { startPosition?: number; maxResults?: number };
+  QueryResponse: { [P in K]?: T[] } & {
+    startPosition?: number;
+    maxResults?: number;
+  };
 };
+
+const MAX_PAGES = 50;
+
+async function paginate<K extends string, T>(
+  conn: QboConnectionRow,
+  key: K,
+  selectQuery: string,
+): Promise<T[]> {
+  const out: T[] = [];
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const start = page * QBO_PAGE_SIZE + 1;
+    const data = await qboQuery<QueryResponse<K, T>>(
+      conn,
+      `${selectQuery} STARTPOSITION ${start} MAXRESULTS ${QBO_PAGE_SIZE}`,
+    );
+    const rows = (data.QueryResponse[key] ?? []) as T[];
+    out.push(...rows);
+    if (rows.length < QBO_PAGE_SIZE) break;
+  }
+  return out;
+}
 
 export async function listCustomers(
   conn: QboConnectionRow,
 ): Promise<QboCustomer[]> {
-  const data = await qboQuery<QueryResponse<"Customer", QboCustomer>>(
+  return paginate<"Customer", QboCustomer>(
     conn,
-    "SELECT Id, DisplayName, Active, PrimaryPhone, Mobile FROM Customer WHERE Active = true MAXRESULTS 1000",
+    "Customer",
+    "SELECT Id, DisplayName, Active, PrimaryPhone, Mobile FROM Customer WHERE Active = true",
   );
-  return data.QueryResponse.Customer ?? [];
 }
 
 export async function listOpenInvoices(
   conn: QboConnectionRow,
 ): Promise<QboInvoice[]> {
-  const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
+  return paginate<"Invoice", QboInvoice>(
     conn,
-    "SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' MAXRESULTS 1000",
+    "Invoice",
+    "SELECT Id, DocNumber, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0'",
   );
-  return data.QueryResponse.Invoice ?? [];
 }
 
 export async function listOpenInvoicesForCustomer(
@@ -135,31 +164,31 @@ export async function listOpenInvoicesForCustomer(
   customerId: string,
 ): Promise<QboInvoice[]> {
   const safeId = safeQboId(customerId);
-  const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
+  return paginate<"Invoice", QboInvoice>(
     conn,
-    `SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' AND CustomerRef = '${safeId}' ORDERBY TxnDate ASC MAXRESULTS 100`,
+    "Invoice",
+    `SELECT Id, DocNumber, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' AND CustomerRef = '${safeId}' ORDERBY TxnDate ASC`,
   );
-  return data.QueryResponse.Invoice ?? [];
 }
 
 export async function listPaidInvoicesSince(
   conn: QboConnectionRow,
   sinceIso: string,
 ): Promise<QboInvoice[]> {
-  const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
+  return paginate<"Invoice", QboInvoice>(
     conn,
-    `SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance = '0' AND TxnDate >= '${sinceIso}' MAXRESULTS 1000`,
+    "Invoice",
+    `SELECT Id, DocNumber, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance = '0' AND TxnDate >= '${sinceIso}'`,
   );
-  return data.QueryResponse.Invoice ?? [];
 }
 
 export async function listPaymentsSince(
   conn: QboConnectionRow,
   sinceIso: string,
 ): Promise<QboPayment[]> {
-  const data = await qboQuery<QueryResponse<"Payment", QboPayment>>(
+  return paginate<"Payment", QboPayment>(
     conn,
-    `SELECT Id, CustomerRef, TxnDate, TotalAmt, Line FROM Payment WHERE TxnDate >= '${sinceIso}' MAXRESULTS 1000`,
+    "Payment",
+    `SELECT Id, CustomerRef, TxnDate, TotalAmt, Line FROM Payment WHERE TxnDate >= '${sinceIso}'`,
   );
-  return data.QueryResponse.Payment ?? [];
 }
