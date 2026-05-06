@@ -1,6 +1,7 @@
 import "server-only";
-
-const buckets = new Map<string, number[]>();
+import { and, eq, gt, lt } from "drizzle-orm";
+import { getDb } from "./db/client";
+import { rateLimitEvents } from "./db/schema";
 
 export type RateLimitResult = {
   allowed: boolean;
@@ -8,35 +9,56 @@ export type RateLimitResult = {
   retryAfterMs: number;
 };
 
+// Sliding-window limiter persisted to SQLite. Survives process restarts and
+// (when the DB is shared) works across multiple instances. Also prunes old
+// rows opportunistically each call so the table stays small.
 export function checkRateLimit(
   key: string,
   max: number,
   windowMs: number,
   now: number = Date.now(),
 ): RateLimitResult {
+  const db = getDb();
   const cutoff = now - windowMs;
-  const arr = (buckets.get(key) ?? []).filter((t) => t > cutoff);
-  if (arr.length >= max) {
-    buckets.set(key, arr);
-    const oldest = arr[0];
+
+  // Prune anything older than the cutoff for this bucket.
+  db.delete(rateLimitEvents)
+    .where(and(eq(rateLimitEvents.bucket, key), lt(rateLimitEvents.hitAt, cutoff)))
+    .run();
+
+  const current = db
+    .select()
+    .from(rateLimitEvents)
+    .where(and(eq(rateLimitEvents.bucket, key), gt(rateLimitEvents.hitAt, cutoff)))
+    .all();
+
+  if (current.length >= max) {
+    const oldest = current.reduce(
+      (m, r) => (r.hitAt < m ? r.hitAt : m),
+      current[0].hitAt,
+    );
     return {
       allowed: false,
       remaining: 0,
       retryAfterMs: Math.max(0, windowMs - (now - oldest)),
     };
   }
-  arr.push(now);
-  buckets.set(key, arr);
+
+  db.insert(rateLimitEvents)
+    .values({ bucket: key, hitAt: now })
+    .run();
+
   return {
     allowed: true,
-    remaining: max - arr.length,
+    remaining: max - current.length - 1,
     retryAfterMs: 0,
   };
 }
 
-// Test/utility helper: clear all buckets.
+// Test/utility helper: clear all events.
 export function _resetRateLimit(): void {
-  buckets.clear();
+  const db = getDb();
+  db.delete(rateLimitEvents).run();
 }
 
 // Predefined limits used across the app.

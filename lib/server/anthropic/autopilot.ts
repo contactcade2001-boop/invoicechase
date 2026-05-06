@@ -20,6 +20,7 @@ export type AutopilotContext = {
   daysLate: number;
   payUrl: string | null;
   history: SmsMessageRow[];
+  totalMessageCount?: number;
 };
 
 const SYSTEM_PROMPT = `You are a polite, professional collections assistant texting on behalf of a small business.
@@ -51,14 +52,21 @@ function buildUserPrompt(ctx: AutopilotContext): string {
         `${m.direction === "inbound" ? "Customer" : ctx.businessName}: ${m.body}`,
     )
     .join("\n");
+  const truncated =
+    ctx.totalMessageCount && ctx.totalMessageCount > ctx.history.length
+      ? ctx.totalMessageCount - ctx.history.length
+      : 0;
   return [
     `Business: ${ctx.businessName}`,
     ctx.customerName ? `Customer: ${ctx.customerName}` : null,
     `Amount currently owed: ${formatCurrency(ctx.amountCentsOwed)}`,
     `Days late: ${ctx.daysLate}`,
     ctx.payUrl ? `Active payment link: ${ctx.payUrl}` : null,
+    truncated > 0
+      ? `(Earlier in this thread: ${truncated} prior message${truncated === 1 ? "" : "s"} not shown.)`
+      : null,
     "",
-    prior ? `Conversation so far:\n${prior}\n` : null,
+    prior ? `Recent conversation:\n${prior}\n` : null,
     `Latest message from the customer: "${last?.body ?? ""}"`,
     "",
     "Write a short SMS reply (under 160 characters when possible).",

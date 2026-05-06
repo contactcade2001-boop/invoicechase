@@ -17,11 +17,14 @@ CREATE TABLE IF NOT EXISTS organizations (
   deposit_percent_bps INTEGER NOT NULL DEFAULT 5000,
   deposit_threshold_score INTEGER NOT NULL DEFAULT 580,
   digest_phone TEXT,
+  twilio_phone_number TEXT,
   last_digest_at INTEGER,
   last_deposit_poll_at INTEGER,
+  last_invoice_cdc_at INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
+CREATE INDEX IF NOT EXISTS organizations_twilio_phone ON organizations(twilio_phone_number);
 
 CREATE TABLE IF NOT EXISTS sms_conversations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,6 +32,7 @@ CREATE TABLE IF NOT EXISTS sms_conversations (
   customer_id TEXT,
   customer_phone TEXT NOT NULL,
   customer_name TEXT,
+  autopilot_paused INTEGER NOT NULL DEFAULT 0,
   last_message_at INTEGER NOT NULL,
   created_at INTEGER NOT NULL
 );
@@ -44,6 +48,13 @@ CREATE TABLE IF NOT EXISTS sms_messages (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS sms_messages_conv ON sms_messages(conversation_id, created_at);
+
+CREATE TABLE IF NOT EXISTS rate_limit_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  bucket TEXT NOT NULL,
+  hit_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS rate_limit_events_bucket_hit ON rate_limit_events(bucket, hit_at);
 
 CREATE TABLE IF NOT EXISTS organization_invites (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -241,8 +252,10 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["deposit_percent_bps", "INTEGER NOT NULL DEFAULT 5000"],
     ["deposit_threshold_score", "INTEGER NOT NULL DEFAULT 580"],
     ["digest_phone", "TEXT"],
+    ["twilio_phone_number", "TEXT"],
     ["last_digest_at", "INTEGER"],
     ["last_deposit_poll_at", "INTEGER"],
+    ["last_invoice_cdc_at", "INTEGER"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&
@@ -250,6 +263,14 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ) {
       sqlite.exec(`ALTER TABLE organizations ADD COLUMN ${col} ${def}`);
     }
+  }
+  if (
+    hasColumn(sqlite, "sms_conversations", "id") &&
+    !hasColumn(sqlite, "sms_conversations", "autopilot_paused")
+  ) {
+    sqlite.exec(
+      "ALTER TABLE sms_conversations ADD COLUMN autopilot_paused INTEGER NOT NULL DEFAULT 0",
+    );
   }
 
   // Backfill: each pre-existing user without an organization gets a personal

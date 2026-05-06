@@ -5,6 +5,7 @@ import {
 } from "../anthropic/autopilot";
 import {
   appendMessage,
+  countMessagesInConversation,
   getOrCreateConversation,
   recentMessages,
 } from "../db/sms";
@@ -16,6 +17,8 @@ import type {
   OrganizationRow,
   SmsConversationRow,
 } from "../db/schema";
+
+const HISTORY_DEPTH = 30;
 
 export async function recordInboundAndMaybeReply(input: {
   org: OrganizationRow;
@@ -53,6 +56,9 @@ export async function recordInboundAndMaybeReply(input: {
   if (input.org.autopilotEnabled !== 1) {
     return { conversation, replied: false, reason: "autopilot_disabled" };
   }
+  if (conversation.autopilotPaused === 1) {
+    return { conversation, replied: false, reason: "autopilot_paused" };
+  }
 
   const businessName = data.connected ? data.companyName : input.org.name;
   const payUrl =
@@ -66,7 +72,8 @@ export async function recordInboundAndMaybeReply(input: {
     amountCentsOwed: customer?.amountOwed ?? 0,
     daysLate: customer?.daysLate ?? 0,
     payUrl,
-    history: recentMessages(conversation.id, 10),
+    history: recentMessages(conversation.id, HISTORY_DEPTH),
+    totalMessageCount: countMessagesInConversation(conversation.id),
   };
 
   const result = await generateAutopilotReply(ctx);

@@ -10,8 +10,10 @@ export const organizations = sqliteTable("organizations", {
   depositPercentBps: integer("deposit_percent_bps").notNull().default(5000),
   depositThresholdScore: integer("deposit_threshold_score").notNull().default(580),
   digestPhone: text("digest_phone"),
+  twilioPhoneNumber: text("twilio_phone_number"),
   lastDigestAt: integer("last_digest_at"),
   lastDepositPollAt: integer("last_deposit_poll_at"),
+  lastInvoiceCdcAt: integer("last_invoice_cdc_at"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -22,6 +24,7 @@ export const smsConversations = sqliteTable("sms_conversations", {
   customerId: text("customer_id"),
   customerPhone: text("customer_phone").notNull(),
   customerName: text("customer_name"),
+  autopilotPaused: integer("autopilot_paused").notNull().default(0),
   lastMessageAt: integer("last_message_at").notNull(),
   createdAt: integer("created_at").notNull(),
 });
@@ -34,6 +37,12 @@ export const smsMessages = sqliteTable("sms_messages", {
   twilioSid: text("twilio_sid"),
   autopilot: integer("autopilot").notNull().default(0),
   createdAt: integer("created_at").notNull(),
+});
+
+export const rateLimitEvents = sqliteTable("rate_limit_events", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  bucket: text("bucket").notNull(),
+  hitAt: integer("hit_at").notNull(),
 });
 
 export const organizationInvites = sqliteTable("organization_invites", {
@@ -141,6 +150,7 @@ export type OrganizationRow = typeof organizations.$inferSelect;
 export type OrganizationInviteRow = typeof organizationInvites.$inferSelect;
 export type SmsConversationRow = typeof smsConversations.$inferSelect;
 export type SmsMessageRow = typeof smsMessages.$inferSelect;
+export type RateLimitEventRow = typeof rateLimitEvents.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;

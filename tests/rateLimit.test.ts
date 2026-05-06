@@ -1,11 +1,26 @@
-import { afterEach, describe, expect, it } from "vitest";
-import {
-  _resetRateLimit,
-  checkRateLimit,
-} from "@/lib/server/rateLimit";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+
+const tmpDir = mkdtempSync(join(tmpdir(), "ic-ratelimit-"));
+process.env.DB_PATH = join(tmpDir, "app.db");
+
+// Import after DB_PATH is set.
+const { _resetRateLimit, checkRateLimit } = await import(
+  "@/lib/server/rateLimit"
+);
+
+beforeAll(() => {
+  _resetRateLimit();
+});
 
 afterEach(() => {
   _resetRateLimit();
+});
+
+afterAll(() => {
+  rmSync(tmpDir, { recursive: true, force: true });
 });
 
 describe("checkRateLimit", () => {

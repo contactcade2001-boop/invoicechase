@@ -87,7 +87,7 @@ export function appendMessage(input: {
 
 export function recentMessages(
   conversationId: number,
-  limit = 20,
+  limit = 30,
 ): SmsMessageRow[] {
   const db = getDb();
   const rows = db
@@ -98,6 +98,46 @@ export function recentMessages(
     .limit(limit)
     .all();
   return rows.reverse();
+}
+
+export function countMessagesInConversation(
+  conversationId: number,
+): number {
+  const db = getDb();
+  return db
+    .select()
+    .from(smsMessages)
+    .where(eq(smsMessages.conversationId, conversationId))
+    .all().length;
+}
+
+export function setConversationAutopilotPaused(
+  conversationId: number,
+  paused: boolean,
+): void {
+  const db = getDb();
+  db.update(smsConversations)
+    .set({ autopilotPaused: paused ? 1 : 0 })
+    .where(eq(smsConversations.id, conversationId))
+    .run();
+}
+
+export function findConversationById(
+  id: number,
+  organizationId: number,
+): SmsConversationRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(smsConversations)
+    .where(
+      and(
+        eq(smsConversations.id, id),
+        eq(smsConversations.organizationId, organizationId),
+      ),
+    )
+    .get();
+  return row ?? null;
 }
 
 export function listConversationsForOrg(
