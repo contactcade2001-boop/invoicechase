@@ -61,6 +61,7 @@ export default async function SettingsPage() {
                 depositThresholdScore: org.depositThresholdScore,
                 digestPhone: org.digestPhone ?? "",
                 twilioPhone: org.twilioPhoneNumber ?? "",
+                customReceiptsEnabled: org.customReceiptsEnabled === 1,
               }}
             />
             <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">

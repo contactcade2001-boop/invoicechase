@@ -9,10 +9,13 @@ import {
   finalizePayment,
   findPaymentByIntent,
   findPaymentBySession,
+  markReceiptSent,
   setPaymentStatus,
   setRefundedAmount,
   upsertPaymentBySession,
 } from "../db/payments";
+import { getOrgById } from "../db/organizations";
+import { sendReceiptEmail } from "../email/receipt";
 import {
   getSubscriptionByStripeCustomerId,
   upsertSubscription,
@@ -107,10 +110,13 @@ async function applyOneTimePayment(
       : (session.payment_intent?.id ?? null);
   const succeeded = session.payment_status === "paid";
   const amountCents = session.amount_total ?? 0;
+  const customerEmail =
+    session.customer_details?.email ?? session.customer_email ?? null;
   upsertPaymentBySession({
     organizationId,
     customerId,
-    customerName: null,
+    customerName: session.customer_details?.name ?? null,
+    customerEmail,
     amountCents,
     applicationFeeCents:
       session.payment_intent && typeof session.payment_intent !== "string"
@@ -125,17 +131,41 @@ async function applyOneTimePayment(
   if (!succeeded) return;
 
   const existing = findPaymentBySession(session.id);
-  if (existing?.qboPaymentId) return;
-  try {
-    const result = await recordPaymentInQbo({
-      organizationId,
-      customerId,
-      amountCents,
-      noteRef: session.id,
-    });
-    finalizePayment(session.id, result);
-  } catch (err) {
-    console.error("[qbo] mark-paid failed for session", session.id, err);
+  if (!existing?.qboPaymentId) {
+    try {
+      const result = await recordPaymentInQbo({
+        organizationId,
+        customerId,
+        amountCents,
+        noteRef: session.id,
+      });
+      finalizePayment(session.id, result);
+    } catch (err) {
+      console.error("[qbo] mark-paid failed for session", session.id, err);
+    }
+  }
+
+  // Custom branded receipt: only when the org opted in, the customer's email
+  // is on the session, and we haven't already sent one for this session.
+  const org = getOrgById(organizationId);
+  if (
+    org?.customReceiptsEnabled === 1 &&
+    customerEmail &&
+    !existing?.receiptSentAt
+  ) {
+    try {
+      await sendReceiptEmail({
+        to: customerEmail,
+        businessName: org.name,
+        customerName: session.customer_details?.name ?? null,
+        amountCents,
+        paidAtMs: Date.now(),
+        reference: paymentIntentId ?? session.id,
+      });
+      markReceiptSent(session.id);
+    } catch (err) {
+      console.error("[receipt] send failed for session", session.id, err);
+    }
   }
 }
 

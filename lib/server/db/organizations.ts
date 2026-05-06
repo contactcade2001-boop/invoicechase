@@ -47,12 +47,37 @@ export function listOrgsWithQboConnection(): OrganizationRow[] {
 
 export function setOrgFlag(
   organizationId: number,
-  field: "autopilotEnabled" | "depositEnabled",
+  field:
+    | "autopilotEnabled"
+    | "depositEnabled"
+    | "customReceiptsEnabled",
   value: boolean,
 ): void {
   const db = getDb();
   db.update(organizations)
     .set({ [field]: value ? 1 : 0, updatedAt: Date.now() })
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
+export function setOrgQboAccounts(
+  organizationId: number,
+  fields: {
+    qboDepositToAccountId?: string | null;
+    qboRefundAccountId?: string | null;
+  },
+): void {
+  const db = getDb();
+  const set: Record<string, unknown> = { updatedAt: Date.now() };
+  if (fields.qboDepositToAccountId !== undefined) {
+    set.qboDepositToAccountId = fields.qboDepositToAccountId;
+  }
+  if (fields.qboRefundAccountId !== undefined) {
+    set.qboRefundAccountId = fields.qboRefundAccountId;
+  }
+  if (Object.keys(set).length === 1) return;
+  db.update(organizations)
+    .set(set)
     .where(eq(organizations.id, organizationId))
     .run();
 }

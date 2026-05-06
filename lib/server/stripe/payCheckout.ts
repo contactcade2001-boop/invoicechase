@@ -1,5 +1,6 @@
 import "server-only";
 import { canAcceptPayments, getConnectAccount } from "../db/connect";
+import { getOrgById } from "../db/organizations";
 import type { Customer } from "@/lib/types";
 import { getAppBaseUrl } from "../env";
 import { getStripe } from "./client";
@@ -55,7 +56,12 @@ export async function createPayCheckoutUrl(input: {
       transfer_data: {
         destination: account!.stripeAccountId,
       },
-      receipt_email: input.customer.email,
+      // When the org opts into custom receipts, suppress Stripe's auto-receipt
+      // so we don't send two. Otherwise let Stripe handle it.
+      receipt_email:
+        getOrgById(input.organizationId)?.customReceiptsEnabled === 1
+          ? undefined
+          : input.customer.email,
       metadata: {
         organizationId: String(input.organizationId),
         customerId: input.customer.id,

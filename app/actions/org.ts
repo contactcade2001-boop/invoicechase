@@ -40,6 +40,17 @@ export async function setDepositEnabled(
   return { ok: true };
 }
 
+export async function setCustomReceiptsEnabled(
+  enabled: boolean,
+): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  setOrgFlag(user.organizationId!, "customReceiptsEnabled", enabled);
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
 export async function saveDepositConfig(input: {
   percentBps: number;
   thresholdScore: number;

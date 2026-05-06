@@ -7,6 +7,7 @@ export type PaymentUpsert = {
   organizationId: number;
   customerId: string;
   customerName: string | null;
+  customerEmail?: string | null;
   amountCents: number;
   applicationFeeCents: number | null;
   stripeCheckoutSessionId: string | null;
@@ -24,6 +25,7 @@ export function upsertPaymentBySession(input: PaymentUpsert): void {
   db.insert(payments)
     .values({
       ...input,
+      customerEmail: input.customerEmail ?? null,
       createdAt: now,
       updatedAt: now,
     })
@@ -33,11 +35,20 @@ export function upsertPaymentBySession(input: PaymentUpsert): void {
         amountCents: input.amountCents,
         applicationFeeCents: input.applicationFeeCents,
         stripePaymentIntentId: input.stripePaymentIntentId,
+        customerEmail: input.customerEmail ?? null,
         status: input.status,
         paidAt: input.paidAt,
         updatedAt: now,
       },
     })
+    .run();
+}
+
+export function markReceiptSent(sessionId: string): void {
+  const db = getDb();
+  db.update(payments)
+    .set({ receiptSentAt: Date.now(), updatedAt: Date.now() })
+    .where(eq(payments.stripeCheckoutSessionId, sessionId))
     .run();
 }
 

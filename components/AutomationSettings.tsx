@@ -8,6 +8,7 @@ import {
   saveDigestPhone,
   saveTwilioPhone,
   setAutopilotEnabled,
+  setCustomReceiptsEnabled,
   setDepositEnabled,
 } from "@/app/actions/org";
 
@@ -21,10 +22,14 @@ export function AutomationSettings({
     depositThresholdScore: number;
     digestPhone: string;
     twilioPhone: string;
+    customReceiptsEnabled: boolean;
   };
 }) {
   const [autopilot, setAutopilot] = useState(initial.autopilotEnabled);
   const [deposit, setDeposit] = useState(initial.depositEnabled);
+  const [customReceipts, setCustomReceipts] = useState(
+    initial.customReceiptsEnabled,
+  );
   const [percent, setPercent] = useState(
     String(initial.depositPercentBps / 100),
   );
@@ -55,6 +60,11 @@ export function AutomationSettings({
   function onDeposit(next: boolean) {
     setDeposit(next);
     flagPending("deposit", () => setDepositEnabled(next));
+  }
+
+  function onCustomReceipts(next: boolean) {
+    setCustomReceipts(next);
+    flagPending("custom-receipts", () => setCustomReceiptsEnabled(next));
   }
 
   function onSaveDeposit() {
@@ -247,6 +257,32 @@ export function AutomationSettings({
         <p className="mt-2 text-xs text-slate-500">
           Leave blank to disable digests. Use E.164 format (e.g. +15125551234).
         </p>
+      </section>
+
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">Custom branded receipts</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              When on, Invoice Chase sends the customer a receipt email under
+              your business name (via Resend). Stripe&apos;s default receipt
+              is suppressed so you don&apos;t double-send.
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              Requires <code className="font-mono">RESEND_API_KEY</code> +{" "}
+              <code className="font-mono">RESEND_FROM_EMAIL</code> in the
+              server environment.
+            </p>
+          </div>
+          <Toggle
+            checked={customReceipts}
+            onChange={onCustomReceipts}
+            disabled={pending}
+          />
+        </div>
+        {savedTag === "custom-receipts" ? (
+          <p className="mt-2 text-xs text-emerald-700">Saved</p>
+        ) : null}
       </section>
 
       <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">

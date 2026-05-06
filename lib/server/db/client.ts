@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS organizations (
   deposit_enabled INTEGER NOT NULL DEFAULT 0,
   deposit_percent_bps INTEGER NOT NULL DEFAULT 5000,
   deposit_threshold_score INTEGER NOT NULL DEFAULT 580,
+  custom_receipts_enabled INTEGER NOT NULL DEFAULT 0,
+  qbo_deposit_to_account_id TEXT,
+  qbo_refund_account_id TEXT,
   digest_phone TEXT,
   twilio_phone_number TEXT,
   last_digest_at INTEGER,
@@ -159,12 +162,14 @@ CREATE TABLE IF NOT EXISTS payments (
   organization_id INTEGER NOT NULL,
   customer_id TEXT NOT NULL,
   customer_name TEXT,
+  customer_email TEXT,
   amount_cents INTEGER NOT NULL,
   application_fee_cents INTEGER,
   stripe_checkout_session_id TEXT UNIQUE,
   stripe_payment_intent_id TEXT UNIQUE,
   qbo_payment_id TEXT,
   refunded_amount_cents INTEGER NOT NULL DEFAULT 0,
+  receipt_sent_at INTEGER,
   status TEXT NOT NULL,
   paid_at INTEGER,
   created_at INTEGER NOT NULL,
@@ -291,6 +296,9 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["deposit_enabled", "INTEGER NOT NULL DEFAULT 0"],
     ["deposit_percent_bps", "INTEGER NOT NULL DEFAULT 5000"],
     ["deposit_threshold_score", "INTEGER NOT NULL DEFAULT 580"],
+    ["custom_receipts_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["qbo_deposit_to_account_id", "TEXT"],
+    ["qbo_refund_account_id", "TEXT"],
     ["digest_phone", "TEXT"],
     ["twilio_phone_number", "TEXT"],
     ["last_digest_at", "INTEGER"],
@@ -302,6 +310,17 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
       !hasColumn(sqlite, "organizations", col)
     ) {
       sqlite.exec(`ALTER TABLE organizations ADD COLUMN ${col} ${def}`);
+    }
+  }
+  for (const [col, def] of [
+    ["customer_email", "TEXT"],
+    ["receipt_sent_at", "INTEGER"],
+  ]) {
+    if (
+      hasColumn(sqlite, "payments", "id") &&
+      !hasColumn(sqlite, "payments", col)
+    ) {
+      sqlite.exec(`ALTER TABLE payments ADD COLUMN ${col} ${def}`);
     }
   }
   if (
