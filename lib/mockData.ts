@@ -11,6 +11,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 420000,
     daysLate: 47,
     riskTier: "high",
+    reputationScore: 482,
     phone: "+15125550101",
   },
   {
@@ -19,6 +20,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 285000,
     daysLate: 12,
     riskTier: "medium",
+    reputationScore: 658,
     phone: "+15125550102",
   },
   {
@@ -27,6 +29,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 87500,
     daysLate: 3,
     riskTier: "low",
+    reputationScore: 781,
     phone: "+15125550103",
   },
   {
@@ -35,6 +38,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 156000,
     daysLate: 92,
     riskTier: "high",
+    reputationScore: 384,
     phone: "+15125550104",
   },
   {
@@ -43,6 +47,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 34000,
     daysLate: -5,
     riskTier: "low",
+    reputationScore: 815,
     phone: "+15125550105",
   },
   {
@@ -51,6 +56,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 198000,
     daysLate: 28,
     riskTier: "medium",
+    reputationScore: 612,
     phone: "+15125550106",
   },
   {
@@ -59,6 +65,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 62000,
     daysLate: 0,
     riskTier: "low",
+    reputationScore: 745,
     phone: "+15125550107",
   },
   {
@@ -67,6 +74,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 113000,
     daysLate: 61,
     riskTier: "high",
+    reputationScore: 428,
     phone: "+15125550108",
   },
   {
@@ -75,6 +83,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 76500,
     daysLate: -12,
     riskTier: "low",
+    reputationScore: 802,
     phone: "+15125550109",
   },
   {
@@ -83,6 +92,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 144000,
     daysLate: 18,
     riskTier: "medium",
+    reputationScore: 681,
     phone: "+15125550110",
   },
   {
@@ -91,6 +101,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 28500,
     daysLate: 7,
     riskTier: "low",
+    reputationScore: 722,
     phone: "+15125550111",
   },
   {
@@ -99,6 +110,7 @@ export const mockCustomers: Customer[] = [
     amountOwed: 444000,
     daysLate: 35,
     riskTier: "high",
+    reputationScore: 511,
     phone: "+15125550112",
   },
 ];

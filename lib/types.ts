@@ -8,8 +8,12 @@ export type Customer = {
   amountOwed: number;
   daysLate: number;
   riskTier: RiskTier;
+  reputationScore: number;
   phone: string;
 };
+
+export const REPUTATION_MIN = 300;
+export const REPUTATION_MAX = 850;
 
 export type Business = {
   name: string;

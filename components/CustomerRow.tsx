@@ -7,7 +7,7 @@ import {
   formatCurrency,
   formatCurrencyDetailed,
 } from "@/lib/format";
-import { RiskBadge } from "./RiskBadge";
+import { ReputationMeter } from "./ReputationMeter";
 
 function handlePay(customer: Customer) {
   console.log(
@@ -26,14 +26,9 @@ export function CustomerRow({ customer }: { customer: Customer }) {
   const isOverdue = customer.daysLate > 0;
   return (
     <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 last:border-b-0 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-center md:gap-4 md:px-6">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         <div className="font-medium text-slate-900">{customer.name}</div>
-        <div className="md:hidden">
-          <RiskBadge tier={customer.riskTier} />
-        </div>
-        <div className="hidden md:block">
-          <RiskBadge tier={customer.riskTier} />
-        </div>
+        <ReputationMeter score={customer.reputationScore} />
       </div>
 
       <div className="flex flex-col">
