@@ -95,13 +95,37 @@ export function findPaymentById(
   return row ?? null;
 }
 
+export type PaymentStatus =
+  | "pending"
+  | "succeeded"
+  | "partially_refunded"
+  | "refunded"
+  | "disputed"
+  | "failed";
+
 export function setPaymentStatus(
   paymentIntentId: string,
-  status: "succeeded" | "refunded" | "disputed" | "failed",
+  status: PaymentStatus,
 ): void {
   const db = getDb();
   db.update(payments)
     .set({ status, updatedAt: Date.now() })
+    .where(eq(payments.stripePaymentIntentId, paymentIntentId))
+    .run();
+}
+
+export function setRefundedAmount(
+  paymentIntentId: string,
+  refundedAmountCents: number,
+  status: PaymentStatus,
+): void {
+  const db = getDb();
+  db.update(payments)
+    .set({
+      refundedAmountCents,
+      status,
+      updatedAt: Date.now(),
+    })
     .where(eq(payments.stripePaymentIntentId, paymentIntentId))
     .run();
 }

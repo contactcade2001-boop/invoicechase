@@ -31,22 +31,26 @@ function StatusBadge({ status }: { status: string }) {
     pending: "bg-amber-50 text-amber-700 ring-amber-200",
     failed: "bg-red-50 text-red-700 ring-red-200",
     refunded: "bg-slate-100 text-slate-700 ring-slate-200",
+    partially_refunded: "bg-amber-50 text-amber-700 ring-amber-200",
     disputed: "bg-red-50 text-red-700 ring-red-200",
   };
   const cls = styles[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+  const label = status === "partially_refunded" ? "partial refund" : status;
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}
     >
-      {status}
+      {label}
     </span>
   );
 }
 
 function PaymentRowView({ p }: { p: PaymentRow }) {
   const fee = p.applicationFeeCents ?? 0;
-  const net = p.amountCents - fee;
+  const refunded = p.refundedAmountCents ?? 0;
+  const net = p.amountCents - fee - refunded;
   const needsQboSync = p.status === "succeeded" && !p.qboPaymentId;
+  const partial = p.status === "partially_refunded" && refunded > 0;
   return (
     <tr className="border-b border-slate-100 last:border-b-0">
       <td className="px-4 py-3 text-sm text-slate-700">
@@ -57,6 +61,11 @@ function PaymentRowView({ p }: { p: PaymentRow }) {
       </td>
       <td className="px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
         {formatCurrencyDetailed(p.amountCents)}
+        {partial ? (
+          <div className="text-[11px] font-normal text-amber-700">
+            −{formatCurrencyDetailed(refunded)} refunded
+          </div>
+        ) : null}
       </td>
       <td className="px-4 py-3 text-right text-sm tabular-nums text-slate-600">
         {fee ? formatCurrencyDetailed(fee) : "—"}

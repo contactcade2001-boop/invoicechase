@@ -142,6 +142,7 @@ export const payments = sqliteTable("payments", {
   customerName: text("customer_name"),
   amountCents: integer("amount_cents").notNull(),
   applicationFeeCents: integer("application_fee_cents"),
+  refundedAmountCents: integer("refunded_amount_cents").notNull().default(0),
   stripeCheckoutSessionId: text("stripe_checkout_session_id").unique(),
   stripePaymentIntentId: text("stripe_payment_intent_id").unique(),
   qboPaymentId: text("qbo_payment_id"),

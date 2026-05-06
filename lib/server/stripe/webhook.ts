@@ -10,6 +10,7 @@ import {
   findPaymentByIntent,
   findPaymentBySession,
   setPaymentStatus,
+  setRefundedAmount,
   upsertPaymentBySession,
 } from "../db/payments";
 import {
@@ -179,13 +180,16 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
           : (charge.payment_intent?.id ?? null);
       if (!paymentIntentId) return;
 
-      // Stripe sets `refunded === true` only on full refunds. Partial refunds
-      // leave the charge in a refunded-amount state but `refunded` stays false
-      // — we keep status='succeeded' for those (the merchant can reconcile).
       const fullyRefunded = charge.refunded === true;
-      if (!fullyRefunded) return;
+      const refundedCents = charge.amount_refunded ?? 0;
+      const newStatus = fullyRefunded ? "refunded" : "partially_refunded";
+      setRefundedAmount(paymentIntentId, refundedCents, newStatus);
 
-      setPaymentStatus(paymentIntentId, "refunded");
+      // Only auto-void in QBO on a full refund. Partial refunds need
+      // merchant-configurable accounts (deposit-to, refund category) so we
+      // surface the partial state in /payments and let the owner reconcile
+      // manually.
+      if (!fullyRefunded) return;
 
       const payment = findPaymentByIntent(paymentIntentId);
       if (payment?.qboPaymentId && payment.organizationId) {

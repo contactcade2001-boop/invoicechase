@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS payments (
   stripe_checkout_session_id TEXT UNIQUE,
   stripe_payment_intent_id TEXT UNIQUE,
   qbo_payment_id TEXT,
+  refunded_amount_cents INTEGER NOT NULL DEFAULT 0,
   status TEXT NOT NULL,
   paid_at INTEGER,
   created_at INTEGER NOT NULL,
@@ -213,6 +214,14 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     !hasColumn(sqlite, "payments", "qbo_payment_id")
   ) {
     sqlite.exec("ALTER TABLE payments ADD COLUMN qbo_payment_id TEXT");
+  }
+  if (
+    hasColumn(sqlite, "payments", "id") &&
+    !hasColumn(sqlite, "payments", "refunded_amount_cents")
+  ) {
+    sqlite.exec(
+      "ALTER TABLE payments ADD COLUMN refunded_amount_cents INTEGER NOT NULL DEFAULT 0",
+    );
   }
   // users: sms_template (already shipped)
   if (
