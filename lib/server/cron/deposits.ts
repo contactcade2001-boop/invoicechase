@@ -9,7 +9,7 @@ import {
 import { findConversationByPhone } from "../db/sms";
 import { createDepositPayLink } from "../pay/links";
 import {
-  listInvoicesCreatedSince,
+  cdcInvoicesChangedSince,
   type QboInvoice,
 } from "../qbo/client";
 import { getDashboardData } from "../qbo/sync";
@@ -23,14 +23,23 @@ export type DepositRunResult = {
   errors: number;
 };
 
-const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-const SEVEN_DAYS_MS = 7 * ONE_DAY_MS;
+const ONE_HOUR_MS = 60 * 60 * 1000;
+const ONE_DAY_MS = 24 * ONE_HOUR_MS;
+const TWENTY_NINE_DAYS_MS = 29 * ONE_DAY_MS; // CDC window cap is ~30 days
 
-function pickWindow(lastPollAt: number | null): string {
+function pickWindowSinceIso(lastPollAt: number | null): string {
+  const overlapMs = ONE_HOUR_MS;
   const since = lastPollAt
-    ? new Date(lastPollAt - ONE_DAY_MS) // small overlap to catch late writes
-    : new Date(Date.now() - SEVEN_DAYS_MS);
-  return since.toISOString().slice(0, 10);
+    ? new Date(lastPollAt - overlapMs)
+    : new Date(Date.now() - TWENTY_NINE_DAYS_MS);
+  // CDC expects ISO 8601 with T and Z.
+  return since.toISOString();
+}
+
+function isoToEpoch(iso?: string): number {
+  if (!iso) return 0;
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? t : 0;
 }
 
 function customerHasRecentText(
@@ -82,9 +91,10 @@ export async function runDepositAutomation(): Promise<DepositRunResult> {
     result.attempted++;
 
     try {
-      const sinceIso = pickWindow(org.lastDepositPollAt);
-      const [recentInvoices, dashboard] = await Promise.all([
-        listInvoicesCreatedSince(conn, sinceIso),
+      const sinceIso = pickWindowSinceIso(org.lastDepositPollAt);
+      const sinceEpoch = Date.parse(sinceIso);
+      const [changedInvoices, dashboard] = await Promise.all([
+        cdcInvoicesChangedSince(conn, sinceIso),
         getDashboardData(org.id),
       ]);
       if (!dashboard.connected) {
@@ -95,8 +105,15 @@ export async function runDepositAutomation(): Promise<DepositRunResult> {
       for (const c of dashboard.customers) customersById.set(c.id, c);
       const businessName = dashboard.companyName;
 
+      // Keep only invoices that are actually new — ignore updates to pre-
+      // existing ones. CDC returns both create + update events; we only
+      // want creates so we don't re-deposit on every edit.
+      const newInvoices = changedInvoices.filter(
+        (inv) => isoToEpoch(inv.MetaData?.CreateTime) >= sinceEpoch,
+      );
+
       const handledThisRun = new Set<string>();
-      for (const invoice of recentInvoices) {
+      for (const invoice of newInvoices) {
         const customerId = invoice.CustomerRef.value;
         if (handledThisRun.has(customerId)) continue;
         const customer = customersById.get(customerId);

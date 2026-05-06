@@ -97,6 +97,10 @@ export type QboInvoice = {
   TotalAmt: number;
   TxnDate: string;
   DueDate?: string;
+  MetaData?: {
+    CreateTime?: string;
+    LastUpdatedTime?: string;
+  };
 };
 
 export type QboPaymentLine = {
@@ -172,6 +176,46 @@ export async function listInvoicesCreatedSince(
     "Invoice",
     `SELECT Id, DocNumber, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE TxnDate >= '${sinceIso}' AND Balance > '0'`,
   );
+}
+
+type CdcResponse = {
+  CDCResponse?: Array<{
+    QueryResponse?: Array<{
+      Invoice?: QboInvoice[];
+    }>;
+  }>;
+};
+
+// QBO Change Data Capture: detects entities created or updated since a
+// timestamp. Reliable for "newly created" invoices because it sees real
+// CreateTime, not just TxnDate. Intuit caps the window at ~30 days back.
+export async function cdcInvoicesChangedSince(
+  conn: QboConnectionRow,
+  sinceIso: string,
+): Promise<QboInvoice[]> {
+  const token = await getValidAccessToken(conn);
+  const url = new URL(`${getQboApiBase()}/v3/company/${conn.realmId}/cdc`);
+  url.searchParams.set("entities", "Invoice");
+  url.searchParams.set("changedSince", sinceIso);
+  url.searchParams.set("minorversion", QBO_MINOR_VERSION);
+  const res = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`QBO CDC failed: ${res.status} ${await res.text()}`);
+  }
+  const data = (await res.json()) as CdcResponse;
+  const out: QboInvoice[] = [];
+  for (const entry of data.CDCResponse ?? []) {
+    for (const q of entry.QueryResponse ?? []) {
+      for (const inv of q.Invoice ?? []) out.push(inv);
+    }
+  }
+  return out;
 }
 
 export async function listOpenInvoicesForCustomer(
