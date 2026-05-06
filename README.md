@@ -49,7 +49,7 @@ Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
    ```bash
    stripe listen \
      --forward-to localhost:3000/api/stripe/webhook \
-     --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,account.updated
+     --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,account.updated,charge.refunded,charge.dispute.created
    ```
    Copy the printed signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
 

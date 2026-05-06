@@ -14,6 +14,30 @@ export function setPaymentQboId(
     .run();
 }
 
+export function findPaymentById(
+  id: number,
+  userId: number,
+): PaymentRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(payments)
+    .where(and(eq(payments.id, id), eq(payments.userId, userId)))
+    .get();
+  return row ?? null;
+}
+
+export function setPaymentStatus(
+  paymentIntentId: string,
+  status: "succeeded" | "refunded" | "disputed" | "failed",
+): void {
+  const db = getDb();
+  db.update(payments)
+    .set({ status, updatedAt: Date.now() })
+    .where(eq(payments.stripePaymentIntentId, paymentIntentId))
+    .run();
+}
+
 export function finalizePayment(
   sessionId: string,
   fields: {

@@ -60,23 +60,19 @@ export async function recordPaymentInQbo(
   );
   const customerName = invoices[0]?.CustomerRef?.name ?? null;
 
-  if (invoices.length === 0) {
-    console.warn(
-      "[qbo] mark-paid: no open invoices for customer",
-      input.customerId,
-    );
-    return { qboPaymentId: null, customerName };
-  }
-
   const totalDollars = input.amountCents / 100;
   const lines = buildLines(invoices, totalDollars);
-  if (lines.length === 0) return { qboPaymentId: null, customerName };
+  // Surplus (paid > sum of open invoice balances) is intentionally allowed:
+  // QBO records the difference as customer credit (UnappliedAmt) when
+  // TotalAmt exceeds the sum of Line amounts.
 
   const body: Record<string, unknown> = {
     CustomerRef: { value: input.customerId },
     TotalAmt: Math.round(totalDollars * 100) / 100,
-    Line: lines,
   };
+  if (lines.length > 0) {
+    body.Line = lines;
+  }
   if (input.noteRef) {
     body.PrivateNote = `Invoice Chase payment: ${input.noteRef}`;
   }

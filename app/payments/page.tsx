@@ -1,6 +1,7 @@
 import { Inbox } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { RetrySyncButton } from "@/components/RetrySyncButton";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
   listPaymentsForUser,
@@ -29,6 +30,8 @@ function StatusBadge({ status }: { status: string }) {
     succeeded: "bg-emerald-50 text-emerald-700 ring-emerald-200",
     pending: "bg-amber-50 text-amber-700 ring-amber-200",
     failed: "bg-red-50 text-red-700 ring-red-200",
+    refunded: "bg-slate-100 text-slate-700 ring-slate-200",
+    disputed: "bg-red-50 text-red-700 ring-red-200",
   };
   const cls = styles[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
   return (
@@ -43,6 +46,7 @@ function StatusBadge({ status }: { status: string }) {
 function PaymentRowView({ p }: { p: PaymentRow }) {
   const fee = p.applicationFeeCents ?? 0;
   const net = p.amountCents - fee;
+  const needsQboSync = p.status === "succeeded" && !p.qboPaymentId;
   return (
     <tr className="border-b border-slate-100 last:border-b-0">
       <td className="px-4 py-3 text-sm text-slate-700">
@@ -61,7 +65,10 @@ function PaymentRowView({ p }: { p: PaymentRow }) {
         {formatCurrencyDetailed(net)}
       </td>
       <td className="px-4 py-3 text-right">
-        <StatusBadge status={p.status} />
+        <div className="flex items-center justify-end gap-2">
+          {needsQboSync ? <RetrySyncButton paymentId={p.id} /> : null}
+          <StatusBadge status={p.status} />
+        </div>
       </td>
     </tr>
   );

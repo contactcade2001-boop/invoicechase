@@ -7,6 +7,7 @@ import {
 import {
   finalizePayment,
   findPaymentBySession,
+  setPaymentStatus,
   upsertPaymentBySession,
 } from "../db/payments";
 import {
@@ -162,6 +163,28 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
     case "account.updated": {
       const account = event.data.object;
       applyConnectAccount(account);
+      return;
+    }
+    case "charge.refunded": {
+      const charge = event.data.object;
+      const paymentIntentId =
+        typeof charge.payment_intent === "string"
+          ? charge.payment_intent
+          : (charge.payment_intent?.id ?? null);
+      if (paymentIntentId) {
+        setPaymentStatus(paymentIntentId, "refunded");
+      }
+      return;
+    }
+    case "charge.dispute.created": {
+      const dispute = event.data.object;
+      const paymentIntentId =
+        typeof dispute.payment_intent === "string"
+          ? dispute.payment_intent
+          : (dispute.payment_intent?.id ?? null);
+      if (paymentIntentId) {
+        setPaymentStatus(paymentIntentId, "disputed");
+      }
       return;
     }
     default:
