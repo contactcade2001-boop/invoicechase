@@ -16,6 +16,7 @@
     "lucide-react": "0.471.1",
     "better-sqlite3": "11.7.0",
     "drizzle-orm": "0.45.2",
+    "resend": "6.12.2",
     "stripe": "22.1.0",
     "twilio": "5.13.1"
   },

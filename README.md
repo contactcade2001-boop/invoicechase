@@ -53,9 +53,11 @@ Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
    ```
    Copy the printed signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
 
-### 4. Magic-link emails
+### 4. Magic-link emails (Resend)
 
-In dev, magic links are **logged to the server console** (look for `[auth] Magic link for …`). For production, swap the TODO in `lib/server/auth/magic-link.ts` for a real email provider (Resend, Postmark, SES).
+For production, set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` (a verified sender, e.g. `Invoice Chase <login@yourdomain.com>`). Each magic link is then delivered by Resend.
+
+In dev, leave both blank — the link is still printed to the server console as `[auth] Magic link for …`. The console log fires regardless, so even when Resend is configured you have a fallback for debugging.
 
 ### 5. Twilio (SMS)
 
