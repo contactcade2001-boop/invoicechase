@@ -56,6 +56,22 @@ export const inboxReads = sqliteTable("inbox_reads", {
   lastReadAt: integer("last_read_at").notNull(),
 });
 
+export const customerSessions = sqliteTable("customer_sessions", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const customerMagicLinks = sqliteTable("customer_magic_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  email: text("email").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: integer("expires_at").notNull(),
+  usedAt: integer("used_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
 export const auditEvents = sqliteTable("audit_events", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   organizationId: integer("organization_id").notNull(),
@@ -192,6 +208,8 @@ export type RateLimitEventRow = typeof rateLimitEvents.$inferSelect;
 export type InboxReadRow = typeof inboxReads.$inferSelect;
 export type WebhookEventRow = typeof webhookEvents.$inferSelect;
 export type AuditEventRow = typeof auditEvents.$inferSelect;
+export type CustomerSessionRow = typeof customerSessions.$inferSelect;
+export type CustomerMagicLinkRow = typeof customerMagicLinks.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;

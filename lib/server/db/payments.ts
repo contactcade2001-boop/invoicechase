@@ -175,6 +175,20 @@ export function listPaymentsForOrg(
     .all();
 }
 
+export function listPaymentsForCustomerEmail(
+  email: string,
+  limit = 100,
+): PaymentRow[] {
+  const db = getDb();
+  return db
+    .select()
+    .from(payments)
+    .where(eq(payments.customerEmail, email.trim().toLowerCase()))
+    .orderBy(desc(payments.createdAt))
+    .limit(limit)
+    .all();
+}
+
 export type PaymentSummary = {
   lifetimeCents: number;
   lifetimeFeesCents: number;

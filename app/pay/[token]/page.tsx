@@ -87,12 +87,24 @@ export default async function PayPage({
   if (sp.paid === "1") {
     return (
       <PageShell>
-        <MessageCard
-          tone="success"
-          icon={<CheckCircle2 className="h-6 w-6 text-emerald-700" aria-hidden />}
-          title="Payment received"
-          body="Thanks. Your payment has been processed."
-        />
+        <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200">
+            <CheckCircle2
+              className="h-6 w-6 text-emerald-700"
+              aria-hidden
+            />
+          </div>
+          <h1 className="mt-4 text-2xl font-bold">Payment received</h1>
+          <p className="mt-2 text-sm text-slate-600">
+            Thanks. Your payment has been processed.
+          </p>
+          <Link
+            href="/portal"
+            className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-slate-700 underline-offset-2 hover:underline"
+          >
+            View your payment history →
+          </Link>
+        </div>
       </PageShell>
     );
   }

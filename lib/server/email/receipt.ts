@@ -1,5 +1,6 @@
 import "server-only";
 import { formatCurrencyDetailed } from "@/lib/format";
+import { getAppBaseUrl } from "../env";
 import { sendEmail } from "./resend";
 
 export type ReceiptInput = {
@@ -24,6 +25,7 @@ export async function sendReceiptEmail(
 ): Promise<{ delivered: boolean }> {
   const amount = formatCurrencyDetailed(input.amountCents);
   const subject = `Payment received from ${input.businessName}`;
+  const portalUrl = `${getAppBaseUrl()}/portal`;
 
   const text = [
     `Thanks${input.customerName ? `, ${input.customerName}` : ""}.`,
@@ -31,6 +33,8 @@ export async function sendReceiptEmail(
     `${input.businessName} received your payment of ${amount} on ${formatDate(input.paidAtMs)}.`,
     "",
     `Reference: ${input.reference}`,
+    "",
+    `View this and your past payments: ${portalUrl}`,
     "",
     `Questions? Reply to this email and ${input.businessName} will get back to you.`,
   ].join("\n");
@@ -58,6 +62,9 @@ export async function sendReceiptEmail(
           </tr>
         </tbody>
       </table>
+      <p style="font-size:13px;line-height:1.5;color:#475569;margin:0 0 16px">
+        <a href="${portalUrl}" style="color:#0f172a;font-weight:600">View this and your past payments →</a>
+      </p>
       <p style="font-size:12px;color:#94a3b8;line-height:1.5">
         Questions about this payment? Reply directly to this email and ${escapeHtml(input.businessName)} will get back to you.
       </p>
