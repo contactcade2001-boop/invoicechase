@@ -9,6 +9,7 @@ import type { UserRow } from "@/lib/server/db/schema";
 import { setSmsTemplate } from "@/lib/server/db/users";
 import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
+import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
 import { sendInvoiceSms } from "@/lib/server/twilio/sms";
 import type { Customer } from "@/lib/types";
 
@@ -54,6 +55,19 @@ export async function sendTextToCustomer(
 ): Promise<SmsResult> {
   const loaded = await loadCustomers();
   if ("error" in loaded) return { ok: false, error: loaded.error };
+  const minute = checkRateLimit(
+    `sms:min:${loaded.user.id}`,
+    LIMITS.smsPerMinute.max,
+    LIMITS.smsPerMinute.windowMs,
+  );
+  if (!minute.allowed) return { ok: false, error: "rate_limited" };
+  const hour = checkRateLimit(
+    `sms:hr:${loaded.user.id}`,
+    LIMITS.smsPerHour.max,
+    LIMITS.smsPerHour.windowMs,
+  );
+  if (!hour.allowed) return { ok: false, error: "rate_limited" };
+
   const customer = loaded.customers.find((c) => c.id === customerId);
   if (!customer) return { ok: false, error: "customer_not_found" };
   if (!customer.phone) return { ok: false, error: "no_phone" };
@@ -69,6 +83,12 @@ export async function sendTextToCustomer(
 export async function bulkTextOverdue(): Promise<SmsResult> {
   const loaded = await loadCustomers();
   if ("error" in loaded) return { ok: false, error: loaded.error };
+  const bulk = checkRateLimit(
+    `sms:bulk:${loaded.user.id}`,
+    LIMITS.bulkSmsPerMinute.max,
+    LIMITS.bulkSmsPerMinute.windowMs,
+  );
+  if (!bulk.allowed) return { ok: false, error: "rate_limited" };
   const overdue = loaded.customers.filter(
     (c) => c.daysLate > 0 && c.phone,
   );

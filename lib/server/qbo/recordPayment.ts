@@ -11,7 +11,7 @@ type QboPaymentLine = {
   LinkedTxn: Array<{ TxnId: string; TxnType: "Invoice" }>;
 };
 
-function buildLines(
+export function buildLines(
   invoices: QboInvoice[],
   totalDollars: number,
 ): QboPaymentLine[] {

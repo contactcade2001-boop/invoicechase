@@ -7,6 +7,7 @@ import {
 } from "@/lib/server/db/subscriptions";
 import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
+import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
 
 export type PayLinkActionResult =
   | { ok: true; url: string }
@@ -20,6 +21,13 @@ export async function getPayLinkUrl(
   if (!isActive(getSubscriptionByUserId(user.id))) {
     return { ok: false, error: "no_active_subscription" };
   }
+  const limit = checkRateLimit(
+    `pay-link:${user.id}`,
+    LIMITS.payLinkPerMinute.max,
+    LIMITS.payLinkPerMinute.windowMs,
+  );
+  if (!limit.allowed) return { ok: false, error: "rate_limited" };
+
   const data = await getDashboardData(user.id);
   if (!data.connected) return { ok: false, error: "not_connected" };
   const customer = data.customers.find((c) => c.id === customerId);

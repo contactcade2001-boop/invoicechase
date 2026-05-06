@@ -7,6 +7,7 @@ const messages: Record<string, string> = {
   no_overdue_with_phone:
     "No overdue customers with phone numbers to text right now.",
   send_failed: "SMS failed. Please try again.",
+  rate_limited: "Slow down — too many requests. Try again shortly.",
 };
 
 export function smsErrorMessage(code: string): string {
