@@ -21,11 +21,12 @@ export default async function DashboardPage({
   const sp = await searchParams;
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (user.role === "technician") redirect("/fast-pay");
 
   const orgId = user.organizationId!;
   const sub = getSubscriptionByOrgId(orgId);
   if (!isActive(sub)) {
-    if (user.role !== "owner") redirect("/dashboard?wait=billing");
+    if (user.role !== "owner") redirect("/fast-pay");
     redirect("/billing");
   }
 
