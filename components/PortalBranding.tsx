@@ -1,0 +1,118 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { savePortalBranding } from "@/app/actions/org";
+
+export function PortalBranding({
+  initial,
+  baseUrl,
+}: {
+  initial: { slug: string; accentColor: string };
+  baseUrl: string;
+}) {
+  const [slug, setSlug] = useState(initial.slug);
+  const [color, setColor] = useState(initial.accentColor);
+  const [pending, start] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+
+  function onSave() {
+    setError(null);
+    start(async () => {
+      const r = await savePortalBranding({
+        slug,
+        accentColor: color,
+      });
+      if (r.ok) {
+        setSavedAt(Date.now());
+      } else {
+        const messages: Record<string, string> = {
+          invalid_slug:
+            "Slug must be 3-30 characters: lowercase letters, numbers, dashes (no leading/trailing dash).",
+          slug_taken: "That slug is already in use by another organization.",
+          invalid_color: "Color must be a #RRGGBB hex value.",
+          forbidden: "Only the owner can change branding.",
+        };
+        setError(messages[r.error] ?? r.error);
+      }
+    });
+  }
+
+  const portalUrl = slug ? `${baseUrl}/p/${slug}` : null;
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
+        <label className="block">
+          <span className="text-sm font-medium text-slate-700">
+            Portal slug
+          </span>
+          <p className="text-xs text-slate-500">
+            Your customers will see this URL when paying or signing in.
+          </p>
+          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
+            <span className="inline-flex items-center rounded-l-md bg-slate-50 px-3 text-xs text-slate-500">
+              {baseUrl.replace(/^https?:\/\//, "")}/p/
+            </span>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) =>
+                setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
+              }
+              maxLength={30}
+              placeholder="acme-hvac"
+              className="block w-full rounded-r-md border-0 bg-transparent px-3 py-2 text-sm focus:outline-none"
+            />
+          </div>
+        </label>
+        <label className="block">
+          <span className="text-sm font-medium text-slate-700">
+            Accent color
+          </span>
+          <p className="text-xs text-slate-500">Used on buttons + headings.</p>
+          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
+            <input
+              type="color"
+              value={color || "#0f172a"}
+              onChange={(e) => setColor(e.target.value)}
+              className="h-10 w-10 cursor-pointer rounded-l-md border-0 bg-transparent p-0"
+            />
+            <input
+              type="text"
+              value={color}
+              onChange={(e) => setColor(e.target.value.trim())}
+              maxLength={7}
+              placeholder="#0f172a"
+              className="block w-28 rounded-r-md border-0 bg-transparent px-2 py-2 font-mono text-xs focus:outline-none"
+            />
+          </div>
+        </label>
+      </div>
+      {portalUrl ? (
+        <p className="text-xs text-slate-500">
+          Customers can sign in at:{" "}
+          <code className="font-mono text-slate-700">{portalUrl}</code>
+        </p>
+      ) : null}
+      {error ? (
+        <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-inset ring-red-200">
+          {error}
+        </div>
+      ) : null}
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onSave}
+          disabled={pending}
+          className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        >
+          {pending ? "Saving…" : "Save branding"}
+        </button>
+        {savedAt && Date.now() - savedAt < 4000 ? (
+          <span className="text-sm text-emerald-700">Saved</span>
+        ) : null}
+      </div>
+    </div>
+  );
+}

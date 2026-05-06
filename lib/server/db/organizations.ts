@@ -142,6 +142,38 @@ export function findOrgByTwilioPhone(
   return row ?? null;
 }
 
+export function findOrgByPortalSlug(
+  slug: string,
+): OrganizationRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(organizations)
+    .where(eq(organizations.portalSlug, slug))
+    .get();
+  return row ?? null;
+}
+
+export function setOrgPortalBranding(
+  organizationId: number,
+  fields: {
+    portalSlug?: string | null;
+    portalAccentColor?: string | null;
+  },
+): void {
+  const db = getDb();
+  const set: Record<string, unknown> = { updatedAt: Date.now() };
+  if (fields.portalSlug !== undefined) set.portalSlug = fields.portalSlug;
+  if (fields.portalAccentColor !== undefined) {
+    set.portalAccentColor = fields.portalAccentColor;
+  }
+  if (Object.keys(set).length === 1) return;
+  db.update(organizations)
+    .set(set)
+    .where(eq(organizations.id, organizationId))
+    .run();
+}
+
 export function markDigestSent(organizationId: number): void {
   const db = getDb();
   db.update(organizations)

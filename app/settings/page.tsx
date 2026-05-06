@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { AutomationSettings } from "@/components/AutomationSettings";
+import { PortalBranding } from "@/components/PortalBranding";
 import {
   QboRefundAccounts,
   type QboPickItem,
@@ -13,6 +14,7 @@ import {
   getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
+import { getAppBaseUrl } from "@/lib/server/env";
 import { listBankAccounts, listItems } from "@/lib/server/qbo/client";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +88,25 @@ export default async function SettingsPage() {
                 customReceiptsEnabled: org.customReceiptsEnabled === 1,
               }}
             />
+            <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <h2 className="text-lg font-semibold">Customer portal branding</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Pick a slug and accent color so your customers see a branded
+                portal at <code className="font-mono">/p/your-slug</code>{" "}
+                instead of the generic Invoice Chase one. Receipt emails
+                automatically link to the branded URL when set.
+              </p>
+              <div className="mt-4">
+                <PortalBranding
+                  initial={{
+                    slug: org.portalSlug ?? "",
+                    accentColor: org.portalAccentColor ?? "",
+                  }}
+                  baseUrl={getAppBaseUrl()}
+                />
+              </div>
+            </section>
+
             {conn ? (
               <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
                 <h2 className="text-lg font-semibold">

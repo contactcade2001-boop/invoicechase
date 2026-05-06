@@ -166,6 +166,7 @@ async function applyOneTimePayment(
         amountCents,
         paidAtMs: Date.now(),
         reference: paymentIntentId ?? session.id,
+        portalSlug: org.portalSlug,
       });
       markReceiptSent(session.id);
     } catch (err) {

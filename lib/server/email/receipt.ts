@@ -10,6 +10,7 @@ export type ReceiptInput = {
   amountCents: number;
   paidAtMs: number;
   reference: string; // short charge / payment intent identifier
+  portalSlug?: string | null;
 };
 
 function formatDate(ms: number): string {
@@ -25,7 +26,9 @@ export async function sendReceiptEmail(
 ): Promise<{ delivered: boolean }> {
   const amount = formatCurrencyDetailed(input.amountCents);
   const subject = `Payment received from ${input.businessName}`;
-  const portalUrl = `${getAppBaseUrl()}/portal`;
+  const portalUrl = input.portalSlug
+    ? `${getAppBaseUrl()}/p/${input.portalSlug}`
+    : `${getAppBaseUrl()}/portal`;
 
   const text = [
     `Thanks${input.customerName ? `, ${input.customerName}` : ""}.`,

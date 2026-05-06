@@ -4,9 +4,11 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
+  findOrgByPortalSlug,
   setOrgDepositConfig,
   setOrgDigestPhone,
   setOrgFlag,
+  setOrgPortalBranding,
   setOrgQboAccounts,
   setOrgTwilioPhone,
 } from "@/lib/server/db/organizations";
@@ -69,6 +71,35 @@ export async function setCustomReceiptsEnabled(
     actorEmail: user.email,
     kind: "settings.custom_receipts_toggled",
     metadata: { enabled },
+  });
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function savePortalBranding(input: {
+  slug: string;
+  accentColor: string;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const slug = input.slug.trim().toLowerCase();
+  if (slug.length > 0 && !/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(slug)) {
+    return { ok: false, error: "invalid_slug" };
+  }
+  if (slug.length > 0) {
+    const existing = findOrgByPortalSlug(slug);
+    if (existing && existing.id !== user.organizationId) {
+      return { ok: false, error: "slug_taken" };
+    }
+  }
+  const color = input.accentColor.trim();
+  if (color.length > 0 && !/^#[0-9a-fA-F]{6}$/.test(color)) {
+    return { ok: false, error: "invalid_color" };
+  }
+  setOrgPortalBranding(user.organizationId!, {
+    portalSlug: slug.length === 0 ? null : slug,
+    portalAccentColor: color.length === 0 ? null : color,
   });
   revalidatePath("/settings");
   return { ok: true };

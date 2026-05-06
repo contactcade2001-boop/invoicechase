@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS organizations (
   qbo_deposit_to_account_id TEXT,
   qbo_refund_account_id TEXT,
   qbo_refund_item_id TEXT,
+  portal_slug TEXT UNIQUE,
+  portal_accent_color TEXT,
   digest_phone TEXT,
   twilio_phone_number TEXT,
   last_digest_at INTEGER,
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS organizations (
   updated_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS organizations_twilio_phone ON organizations(twilio_phone_number);
+CREATE UNIQUE INDEX IF NOT EXISTS organizations_portal_slug ON organizations(portal_slug) WHERE portal_slug IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS sms_conversations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -331,6 +334,8 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["qbo_deposit_to_account_id", "TEXT"],
     ["qbo_refund_account_id", "TEXT"],
     ["qbo_refund_item_id", "TEXT"],
+    ["portal_slug", "TEXT"],
+    ["portal_accent_color", "TEXT"],
     ["digest_phone", "TEXT"],
     ["twilio_phone_number", "TEXT"],
     ["last_digest_at", "INTEGER"],

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { canAcceptPayments, getConnectAccount } from "@/lib/server/db/connect";
 import { findPayLinkByToken } from "@/lib/server/db/payLinks";
+import { getOrgById } from "@/lib/server/db/organizations";
 import { lookupCustomerForOrg } from "@/lib/server/qbo/sync";
 import { formatCurrencyDetailed } from "@/lib/format";
 
@@ -85,6 +86,16 @@ export default async function PayPage({
   const sp = await searchParams;
 
   if (sp.paid === "1") {
+    // Look up the merchant on the pay link so we can deep-link to their
+    // branded portal if they've set a slug. Token may be expired/missing —
+    // in that case fall back to the generic /portal.
+    const link = findPayLinkByToken(token);
+    const portalHref = link
+      ? (() => {
+          const org = getOrgById(link.organizationId);
+          return org?.portalSlug ? `/p/${org.portalSlug}` : "/portal";
+        })()
+      : "/portal";
     return (
       <PageShell>
         <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200">
@@ -99,7 +110,7 @@ export default async function PayPage({
             Thanks. Your payment has been processed.
           </p>
           <Link
-            href="/portal"
+            href={portalHref}
             className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-slate-700 underline-offset-2 hover:underline"
           >
             View your payment history →
