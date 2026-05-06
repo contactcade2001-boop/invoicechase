@@ -20,6 +20,7 @@
     "better-sqlite3": "11.7.0",
     "drizzle-orm": "0.45.2",
     "resend": "6.12.2",
+    "@sentry/nextjs": "10.51.0",
     "stripe": "22.1.0",
     "twilio": "5.13.1"
   },

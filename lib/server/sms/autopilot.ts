@@ -12,6 +12,7 @@ import {
 import { getOrCreatePayLink } from "../pay/links";
 import { getDashboardData } from "../qbo/sync";
 import { sendRawSms } from "../twilio/sms";
+import { captureException } from "../observability";
 import type { Customer } from "@/lib/types";
 import type {
   OrganizationRow,
@@ -96,7 +97,11 @@ export async function recordInboundAndMaybeReply(input: {
     });
     return { conversation, replied: true };
   } catch (err) {
-    console.error("[autopilot] send failed", err);
+    captureException(err, {
+      where: "autopilot.send",
+      organizationId: input.org.id,
+      conversationId: conversation.id,
+    });
     return { conversation, replied: false, reason: "send_failed" };
   }
 }

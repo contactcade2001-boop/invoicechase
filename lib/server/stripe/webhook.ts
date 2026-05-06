@@ -16,6 +16,7 @@ import {
 } from "../db/payments";
 import { getOrgById } from "../db/organizations";
 import { sendReceiptEmail } from "../email/receipt";
+import { captureException } from "../observability";
 import {
   getSubscriptionByStripeCustomerId,
   upsertSubscription,
@@ -142,7 +143,10 @@ async function applyOneTimePayment(
       });
       finalizePayment(session.id, result);
     } catch (err) {
-      console.error("[qbo] mark-paid failed for session", session.id, err);
+      captureException(err, {
+        where: "qbo.mark-paid",
+        sessionId: session.id,
+      });
     }
   }
 
@@ -165,7 +169,10 @@ async function applyOneTimePayment(
       });
       markReceiptSent(session.id);
     } catch (err) {
-      console.error("[receipt] send failed for session", session.id, err);
+      captureException(err, {
+        where: "receipt.send",
+        sessionId: session.id,
+      });
     }
   }
 }
