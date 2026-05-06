@@ -13,7 +13,7 @@ import {
   type QboInvoice,
 } from "../qbo/client";
 import { getDashboardData } from "../qbo/sync";
-import { sendRawSms } from "../twilio/sms";
+import { OptedOutError, sendRawSms } from "../twilio/sms";
 import type { Customer } from "@/lib/types";
 
 export type DepositRunResult = {
@@ -138,8 +138,12 @@ export async function runDepositAutomation(): Promise<DepositRunResult> {
           handledThisRun.add(customerId);
           result.textsSent++;
         } catch (err) {
-          console.error("[deposits] send failed", err);
-          result.errors++;
+          if (err instanceof OptedOutError) {
+            result.skipped++;
+          } else {
+            console.error("[deposits] send failed", err);
+            result.errors++;
+          }
         }
       }
       markDepositPolled(org.id);

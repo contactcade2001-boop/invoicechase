@@ -9,7 +9,7 @@ import {
   setConversationAutopilotPaused,
 } from "@/lib/server/db/sms";
 import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
-import { sendRawSms } from "@/lib/server/twilio/sms";
+import { OptedOutError, sendRawSms } from "@/lib/server/twilio/sms";
 
 export type InboxResult =
   | { ok: true }
@@ -71,6 +71,9 @@ export async function sendManualReply(input: {
     revalidatePath("/inbox");
     return { ok: true };
   } catch (err) {
+    if (err instanceof OptedOutError) {
+      return { ok: false, error: "opted_out" };
+    }
     console.error("[inbox] send failed", err);
     return { ok: false, error: "send_failed" };
   }

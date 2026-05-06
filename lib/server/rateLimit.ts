@@ -67,4 +67,6 @@ export const LIMITS = {
   smsPerHour: { max: 60, windowMs: 60 * 60_000 },
   bulkSmsPerMinute: { max: 1, windowMs: 60_000 },
   payLinkPerMinute: { max: 60, windowMs: 60_000 },
+  // Magic-link generation per email — caps email-bomb / brute-force.
+  magicLinkPerHour: { max: 5, windowMs: 60 * 60_000 },
 } as const;

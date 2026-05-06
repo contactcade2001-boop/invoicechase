@@ -3,7 +3,15 @@ import type { Customer } from "@/lib/types";
 import { getOrgById } from "../db/organizations";
 import { getTwilioConfig, useMockSms } from "../env";
 import { renderSmsBody } from "@/lib/smsTemplate";
+import { isOptedOut } from "../sms/optOut";
 import { getTwilio } from "./client";
+
+export class OptedOutError extends Error {
+  constructor(public readonly phone: string) {
+    super(`Recipient ${phone} has opted out of SMS`);
+    this.name = "OptedOutError";
+  }
+}
 
 export type SmsContext = {
   template: string | null | undefined;
@@ -22,12 +30,28 @@ function fromNumberFor(organizationId?: number): string {
   return getTwilioConfig().fromNumber;
 }
 
+function assertNotOptedOut(
+  organizationId: number | undefined,
+  phone: string,
+  bypass: boolean,
+): void {
+  if (bypass) return;
+  if (!organizationId) return;
+  if (isOptedOut(organizationId, phone)) {
+    throw new OptedOutError(phone);
+  }
+}
+
 export async function sendRawSms(input: {
   to: string;
   body: string;
   organizationId?: number;
+  // Set true ONLY for STOP/HELP/START acknowledgements — those bypass the
+  // opt-out check because they're carrier-mandated.
+  bypassOptOut?: boolean;
 }): Promise<{ sid: string | null }> {
   if (!input.to) throw new Error("Missing to number");
+  assertNotOptedOut(input.organizationId, input.to, !!input.bypassOptOut);
   if (useMockSms()) {
     console.log(
       `[sms:mock] org=${input.organizationId ?? "platform"} to=${input.to} body=${JSON.stringify(input.body)}`,
@@ -50,6 +74,7 @@ export async function sendInvoiceSms(
   if (!customer.phone) {
     throw new Error("Customer has no phone number on file");
   }
+  assertNotOptedOut(ctx.organizationId, customer.phone, false);
   const body = renderSmsBody(ctx.template, {
     amountCents: customer.amountOwed,
     payUrl: ctx.payUrl,

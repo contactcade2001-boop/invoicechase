@@ -102,6 +102,13 @@ export function SmsTemplateEditor({
         </p>
       </div>
 
+      <div className="rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-inset ring-amber-200">
+        Recipients can reply <span className="font-mono">STOP</span> to opt out
+        or <span className="font-mono">HELP</span> for instructions at any
+        time. We honor STOP automatically — no further texts will be sent to
+        that customer until they reply <span className="font-mono">START</span>.
+      </div>
+
       {error ? (
         <div className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-inset ring-red-200">
           {error}

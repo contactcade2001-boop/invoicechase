@@ -16,11 +16,11 @@ import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
 import { renderSmsBody } from "@/lib/smsTemplate";
-import { sendInvoiceSms } from "@/lib/server/twilio/sms";
+import { OptedOutError, sendInvoiceSms } from "@/lib/server/twilio/sms";
 import type { Customer } from "@/lib/types";
 
 export type SmsResult =
-  | { ok: true; sentCount: number; failedCount: number }
+  | { ok: true; sentCount: number; failedCount: number; skippedCount?: number }
   | { ok: false; error: string };
 
 type Loaded = {
@@ -113,6 +113,9 @@ export async function sendTextToCustomer(
     });
     return { ok: true, sentCount: 1, failedCount: 0 };
   } catch (err) {
+    if (err instanceof OptedOutError) {
+      return { ok: false, error: "opted_out" };
+    }
     console.error("[sms] send failed", err);
     return { ok: false, error: "send_failed" };
   }
@@ -141,8 +144,10 @@ export async function bulkTextOverdue(): Promise<SmsResult> {
   );
   let sent = 0;
   let failed = 0;
+  let skipped = 0;
   for (const r of results) {
     if (r.status === "fulfilled") sent++;
+    else if (r.reason instanceof OptedOutError) skipped++;
     else {
       failed++;
       console.error("[sms] bulk item failed", r.reason);
@@ -156,10 +161,11 @@ export async function bulkTextOverdue(): Promise<SmsResult> {
     metadata: {
       sentCount: sent,
       failedCount: failed,
+      skippedOptedOut: skipped,
       totalAttempted: overdue.length,
     },
   });
-  return { ok: true, sentCount: sent, failedCount: failed };
+  return { ok: true, sentCount: sent, failedCount: failed, skippedCount: skipped };
 }
 
 export async function saveSmsTemplate(

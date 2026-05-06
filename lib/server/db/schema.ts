@@ -65,6 +65,14 @@ export const customerSessions = sqliteTable("customer_sessions", {
   createdAt: integer("created_at").notNull(),
 });
 
+export const smsOptOuts = sqliteTable("sms_opt_outs", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  phone: text("phone").notNull(),
+  reason: text("reason"),
+  createdAt: integer("created_at").notNull(),
+});
+
 export const customerMagicLinks = sqliteTable("customer_magic_links", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   email: text("email").notNull(),
@@ -212,6 +220,7 @@ export type WebhookEventRow = typeof webhookEvents.$inferSelect;
 export type AuditEventRow = typeof auditEvents.$inferSelect;
 export type CustomerSessionRow = typeof customerSessions.$inferSelect;
 export type CustomerMagicLinkRow = typeof customerMagicLinks.$inferSelect;
+export type SmsOptOutRow = typeof smsOptOuts.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;

@@ -101,6 +101,15 @@ CREATE TABLE IF NOT EXISTS customer_magic_links (
   created_at INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS sms_opt_outs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  phone TEXT NOT NULL,
+  reason TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS sms_opt_outs_org_phone ON sms_opt_outs(organization_id, phone);
+
 CREATE TABLE IF NOT EXISTS webhook_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   source TEXT NOT NULL,

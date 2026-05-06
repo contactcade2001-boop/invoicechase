@@ -119,6 +119,18 @@ export default function LandingPage() {
           <p className="mt-4 text-xs text-slate-500">
             $49/month + 1.9% per collected payment. No setup fee.
           </p>
+          <p className="mt-3 text-xs text-slate-500">
+            By signing up you agree to our{" "}
+            <Link href="/terms" className="underline hover:text-slate-700">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="underline hover:text-slate-700">
+              Privacy Policy
+            </Link>
+            . Invoice Chase only texts customers you already have a business
+            relationship with. Recipients can reply STOP at any time.
+          </p>
         </section>
 
         <section
@@ -231,7 +243,15 @@ export default function LandingPage() {
       <footer className="border-t border-slate-200 bg-white py-8">
         <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 text-sm text-slate-500 sm:flex-row">
           <span className="font-semibold text-slate-700">Invoice Chase</span>
-          <span>&copy; {new Date().getFullYear()} Invoice Chase</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/privacy" className="hover:text-slate-700">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-slate-700">
+              Terms
+            </Link>
+            <span>&copy; {new Date().getFullYear()} Invoice Chase</span>
+          </div>
         </div>
       </footer>
     </div>

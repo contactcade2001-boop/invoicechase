@@ -24,11 +24,15 @@ export function BulkTextButton({ overdue }: { overdue: Customer[] }) {
         return;
       }
       const noun = result.sentCount === 1 ? "customer" : "customers";
+      const skippedNote =
+        (result.skippedCount ?? 0) > 0
+          ? ` Skipped ${result.skippedCount} who replied STOP.`
+          : "";
       const failedNote =
         result.failedCount > 0
           ? ` (${result.failedCount} failed — see logs)`
           : "";
-      alert(`Texted ${result.sentCount} ${noun}.${failedNote}`);
+      alert(`Texted ${result.sentCount} ${noun}.${skippedNote}${failedNote}`);
     });
   }
 

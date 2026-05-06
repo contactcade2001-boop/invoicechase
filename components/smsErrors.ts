@@ -10,6 +10,8 @@ const messages: Record<string, string> = {
   rate_limited: "Slow down — too many requests. Try again shortly.",
   forbidden: "You don't have permission for this action.",
   no_organization: "Account not yet set up. Refresh and try again.",
+  opted_out:
+    "This customer has replied STOP. Reach out another way — they can text START to opt back in.",
 };
 
 export function smsErrorMessage(code: string): string {
