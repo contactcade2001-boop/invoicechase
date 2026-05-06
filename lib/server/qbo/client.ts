@@ -46,6 +46,36 @@ export async function qboQuery<T>(
   return (await res.json()) as T;
 }
 
+export async function qboPost<T>(
+  conn: QboConnectionRow,
+  path: string,
+  body: unknown,
+): Promise<T> {
+  const token = await getValidAccessToken(conn);
+  const url = new URL(`${QBO_API_BASE}/v3/company/${conn.realmId}${path}`);
+  url.searchParams.set("minorversion", QBO_MINOR_VERSION);
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(
+      `QBO POST ${path} failed: ${res.status} ${await res.text()}`,
+    );
+  }
+  return (await res.json()) as T;
+}
+
+function safeQboId(id: string): string {
+  return id.replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
 export type QboCustomer = {
   Id: string;
   DisplayName: string;
@@ -96,6 +126,18 @@ export async function listOpenInvoices(
   const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
     conn,
     "SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' MAXRESULTS 1000",
+  );
+  return data.QueryResponse.Invoice ?? [];
+}
+
+export async function listOpenInvoicesForCustomer(
+  conn: QboConnectionRow,
+  customerId: string,
+): Promise<QboInvoice[]> {
+  const safeId = safeQboId(customerId);
+  const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
+    conn,
+    `SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' AND CustomerRef = '${safeId}' ORDERBY TxnDate ASC MAXRESULTS 100`,
   );
   return data.QueryResponse.Invoice ?? [];
 }

@@ -75,6 +75,7 @@ CREATE TABLE IF NOT EXISTS payments (
   application_fee_cents INTEGER,
   stripe_checkout_session_id TEXT UNIQUE,
   stripe_payment_intent_id TEXT UNIQUE,
+  qbo_payment_id TEXT,
   status TEXT NOT NULL,
   paid_at INTEGER,
   created_at INTEGER NOT NULL,
@@ -98,13 +99,22 @@ CREATE INDEX IF NOT EXISTS qbo_connections_user_id ON qbo_connections(user_id);
 `;
 
 function ensureLegacyMigrations(sqlite: Database.Database) {
-  const cols = sqlite
+  const qboCols = sqlite
     .prepare("PRAGMA table_info(qbo_connections)")
     .all() as Array<{ name: string }>;
-  if (!cols.some((c) => c.name === "user_id")) {
+  if (!qboCols.some((c) => c.name === "user_id")) {
     sqlite.exec(
       "ALTER TABLE qbo_connections ADD COLUMN user_id INTEGER NOT NULL DEFAULT 0",
     );
+  }
+  const paymentCols = sqlite
+    .prepare("PRAGMA table_info(payments)")
+    .all() as Array<{ name: string }>;
+  if (
+    paymentCols.length > 0 &&
+    !paymentCols.some((c) => c.name === "qbo_payment_id")
+  ) {
+    sqlite.exec("ALTER TABLE payments ADD COLUMN qbo_payment_id TEXT");
   }
 }
 

@@ -124,7 +124,7 @@ lib/
     auth/                            tokens, session, magic-link
     db/                              client, schema, users, sessions,
                                      subscriptions, connections
-    qbo/                             config, oauth, client, sync, reputation
+    qbo/                             config, oauth, client, sync, reputation, recordPayment
     stripe/                          client, checkout, connect, payCheckout, webhook
     twilio/                          client, sendInvoiceSms
     pay/                             pay-link helper
@@ -151,8 +151,10 @@ Each merchant onboards a Stripe Express account via `/billing` → "Connect Stri
 2. We re-query QBO for the customer's current open balance.
 3. If charges are enabled, we render a Pay button.
 4. On click, `/api/pay/[token]/checkout` creates a one-time Stripe Checkout session in `payment` mode with `transfer_data.destination` pointing at the merchant's Connect account and an `application_fee_amount` of 1.9% (190 bps via `applicationFeeCents` in `lib/server/stripe/connect.ts`).
-5. On success, the webhook records the payment in the `payments` table.
+5. On success, the webhook:
+   - Records the payment in the `payments` table.
+   - Posts a `Payment` to QuickBooks (`lib/server/qbo/recordPayment.ts`) that allocates the paid amount across the customer's open invoices oldest-first (FIFO by `TxnDate`). The returned QBO Payment ID is stored on the row to make the webhook idempotent — duplicate deliveries skip the QBO call.
 
 ## Out of scope
 
-Real email delivery, full pagination of QBO queries, marking the QBO invoice as paid via the QBO API after webhook success, password-based auth.
+Real email delivery, full pagination of QBO queries, password-based auth.

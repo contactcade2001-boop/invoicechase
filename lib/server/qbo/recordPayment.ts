@@ -1,0 +1,83 @@
+import "server-only";
+import { getConnectionForUser } from "../db/connections";
+import {
+  listOpenInvoicesForCustomer,
+  qboPost,
+  type QboInvoice,
+} from "./client";
+
+type QboPaymentLine = {
+  Amount: number;
+  LinkedTxn: Array<{ TxnId: string; TxnType: "Invoice" }>;
+};
+
+function buildLines(
+  invoices: QboInvoice[],
+  totalDollars: number,
+): QboPaymentLine[] {
+  const lines: QboPaymentLine[] = [];
+  let remaining = totalDollars;
+  for (const inv of invoices) {
+    if (remaining <= 0) break;
+    const applied = Math.min(remaining, inv.Balance);
+    if (applied <= 0) continue;
+    lines.push({
+      Amount: Math.round(applied * 100) / 100,
+      LinkedTxn: [{ TxnId: inv.Id, TxnType: "Invoice" }],
+    });
+    remaining -= applied;
+  }
+  return lines;
+}
+
+export type RecordPaymentInput = {
+  userId: number;
+  customerId: string;
+  amountCents: number;
+  noteRef?: string;
+};
+
+export async function recordPaymentInQbo(
+  input: RecordPaymentInput,
+): Promise<string | null> {
+  const conn = getConnectionForUser(input.userId);
+  if (!conn) {
+    console.warn(
+      "[qbo] mark-paid: no QBO connection for user",
+      input.userId,
+    );
+    return null;
+  }
+
+  const invoices = await listOpenInvoicesForCustomer(
+    conn,
+    input.customerId,
+  );
+  if (invoices.length === 0) {
+    console.warn(
+      "[qbo] mark-paid: no open invoices for customer",
+      input.customerId,
+    );
+    return null;
+  }
+
+  const totalDollars = input.amountCents / 100;
+  const lines = buildLines(invoices, totalDollars);
+  if (lines.length === 0) return null;
+
+  const body: Record<string, unknown> = {
+    CustomerRef: { value: input.customerId },
+    TotalAmt: Math.round(totalDollars * 100) / 100,
+    Line: lines,
+  };
+  if (input.noteRef) {
+    body.PrivateNote = `Invoice Chase payment: ${input.noteRef}`;
+  }
+
+  const result = await qboPost<{ Payment?: { Id?: string } }>(
+    conn,
+    "/payment",
+    body,
+  );
+  return result.Payment?.Id ?? null;
+}

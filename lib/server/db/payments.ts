@@ -3,6 +3,17 @@ import { eq } from "drizzle-orm";
 import { getDb } from "./client";
 import { payments, type PaymentRow } from "./schema";
 
+export function setPaymentQboId(
+  sessionId: string,
+  qboPaymentId: string,
+): void {
+  const db = getDb();
+  db.update(payments)
+    .set({ qboPaymentId, updatedAt: Date.now() })
+    .where(eq(payments.stripeCheckoutSessionId, sessionId))
+    .run();
+}
+
 export type PaymentUpsert = {
   userId: number;
   customerId: string;

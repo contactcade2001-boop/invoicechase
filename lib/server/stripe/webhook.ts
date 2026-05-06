@@ -4,12 +4,17 @@ import {
   getConnectAccountByStripeId,
   upsertConnectAccount,
 } from "../db/connect";
-import { upsertPaymentBySession } from "../db/payments";
+import {
+  findPaymentBySession,
+  setPaymentQboId,
+  upsertPaymentBySession,
+} from "../db/payments";
 import {
   getSubscriptionByStripeCustomerId,
   upsertSubscription,
 } from "../db/subscriptions";
 import { getStripeConfig } from "../env";
+import { recordPaymentInQbo } from "../qbo/recordPayment";
 import { getStripe } from "./client";
 
 export async function constructEvent(
@@ -76,7 +81,9 @@ function applyConnectAccount(account: Stripe.Account): void {
   });
 }
 
-function applyOneTimePayment(session: Stripe.Checkout.Session): void {
+async function applyOneTimePayment(
+  session: Stripe.Checkout.Session,
+): Promise<void> {
   const userId = userIdFrom(session.metadata);
   const customerId = session.metadata?.customerId ?? null;
   if (!userId || !customerId) {
@@ -87,20 +94,43 @@ function applyOneTimePayment(session: Stripe.Checkout.Session): void {
     typeof session.payment_intent === "string"
       ? session.payment_intent
       : (session.payment_intent?.id ?? null);
+  const succeeded = session.payment_status === "paid";
+  const amountCents = session.amount_total ?? 0;
   upsertPaymentBySession({
     userId,
     customerId,
     customerName: null,
-    amountCents: session.amount_total ?? 0,
-    applicationFeeCents: session.payment_intent &&
-      typeof session.payment_intent !== "string"
-      ? session.payment_intent.application_fee_amount ?? null
-      : null,
+    amountCents,
+    applicationFeeCents:
+      session.payment_intent && typeof session.payment_intent !== "string"
+        ? (session.payment_intent.application_fee_amount ?? null)
+        : null,
     stripeCheckoutSessionId: session.id,
     stripePaymentIntentId: paymentIntentId,
-    status: session.payment_status === "paid" ? "succeeded" : "pending",
-    paidAt: session.payment_status === "paid" ? Date.now() : null,
+    status: succeeded ? "succeeded" : "pending",
+    paidAt: succeeded ? Date.now() : null,
   });
+
+  if (!succeeded) return;
+
+  // Mark the QBO invoice paid. Idempotent: skip if we already pushed it.
+  // Failures are logged but never fail the webhook — Stripe has the money,
+  // the merchant can manually reconcile if QBO sync fails.
+  const existing = findPaymentBySession(session.id);
+  if (existing?.qboPaymentId) return;
+  try {
+    const qboPaymentId = await recordPaymentInQbo({
+      userId,
+      customerId,
+      amountCents,
+      noteRef: session.id,
+    });
+    if (qboPaymentId) {
+      setPaymentQboId(session.id, qboPaymentId);
+    }
+  } catch (err) {
+    console.error("[qbo] mark-paid failed for session", session.id, err);
+  }
 }
 
 export async function handleEvent(event: Stripe.Event): Promise<void> {
@@ -119,7 +149,7 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
         return;
       }
       if (session.mode === "payment") {
-        applyOneTimePayment(session);
+        await applyOneTimePayment(session);
         return;
       }
       return;
