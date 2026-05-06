@@ -28,6 +28,18 @@ export function getQboConfig() {
   };
 }
 
+export function getStripeConfig() {
+  return {
+    secretKey: required("STRIPE_SECRET_KEY"),
+    priceId: required("STRIPE_PRICE_ID"),
+    webhookSecret: required("STRIPE_WEBHOOK_SECRET"),
+  };
+}
+
+export function getAppBaseUrl(): string {
+  return required("APP_BASE_URL").replace(/\/$/, "");
+}
+
 export function useMockData(): boolean {
   return process.env.USE_MOCK_DATA === "1";
 }

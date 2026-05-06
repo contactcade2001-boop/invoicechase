@@ -1,9 +1,10 @@
 import "server-only";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "./client";
 import { qboConnections, type QboConnectionRow } from "./schema";
 
 export type ConnectionUpsert = {
+  userId: number;
   realmId: string;
   companyName: string | null;
   accessTokenEnc: string;
@@ -24,6 +25,7 @@ export function upsertConnection(input: ConnectionUpsert): void {
     .onConflictDoUpdate({
       target: qboConnections.realmId,
       set: {
+        userId: input.userId,
         companyName: input.companyName,
         accessTokenEnc: input.accessTokenEnc,
         refreshTokenEnc: input.refreshTokenEnc,
@@ -35,18 +37,31 @@ export function upsertConnection(input: ConnectionUpsert): void {
     .run();
 }
 
-export function getActiveConnection(): QboConnectionRow | null {
+export function getConnectionForUser(
+  userId: number,
+): QboConnectionRow | null {
   const db = getDb();
-  const rows = db
+  const row = db
     .select()
     .from(qboConnections)
+    .where(eq(qboConnections.userId, userId))
     .orderBy(desc(qboConnections.updatedAt))
     .limit(1)
-    .all();
-  return rows[0] ?? null;
+    .get();
+  return row ?? null;
 }
 
-export function deleteConnection(realmId: string): void {
+export function deleteConnectionForUser(
+  userId: number,
+  realmId: string,
+): void {
   const db = getDb();
-  db.delete(qboConnections).where(eq(qboConnections.realmId, realmId)).run();
+  db.delete(qboConnections)
+    .where(
+      and(
+        eq(qboConnections.userId, userId),
+        eq(qboConnections.realmId, realmId),
+      ),
+    )
+    .run();
 }

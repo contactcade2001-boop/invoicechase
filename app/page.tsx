@@ -78,7 +78,7 @@ export default function LandingPage() {
               </a>
             ))}
             <Link
-              href="/dashboard"
+              href="/login"
               className="inline-flex items-center gap-1 rounded-md bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
             >
               Get Started
@@ -103,7 +103,7 @@ export default function LandingPage() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/dashboard"
+              href="/login"
               className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-slate-800"
             >
               Get Started
@@ -180,7 +180,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="/dashboard"
+                href="/login"
                 className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
               >
                 Get Started
@@ -218,7 +218,7 @@ export default function LandingPage() {
               Connect QuickBooks in 60 seconds and see what you&apos;re owed.
             </p>
             <Link
-              href="/dashboard"
+              href="/login"
               className="mt-8 inline-flex items-center gap-2 rounded-md bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100"
             >
               Get Started

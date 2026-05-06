@@ -7,79 +7,117 @@ One-page dashboard for QuickBooks-using SMBs: see who owes you and collect with 
 ```bash
 npm install
 cp .env.local.example .env.local
-# fill in APP_ENCRYPTION_KEY, QBO_CLIENT_ID, QBO_CLIENT_SECRET (see below)
+# fill in APP_ENCRYPTION_KEY, QBO_*, STRIPE_* (see below)
 npm run dev
 ```
 
-Open http://localhost:3000 (or whatever port the CLI prints).
+Open http://localhost:3000.
 
-## Connecting QuickBooks (sandbox)
+The end-to-end funnel is:
 
-1. Go to https://developer.intuit.com/ and sign in.
-2. **Create an app** → choose the QuickBooks Online API. You'll get a sandbox client ID and client secret.
-3. In your app's *Keys & OAuth* tab, add this redirect URI:
-   `http://localhost:3030/api/qbo/callback`
-   (match the port to whatever you run the dev server on; update `QBO_REDIRECT_URI` to match.)
-4. Generate an encryption key for token storage:
+```
+/  →  /login  →  email magic link  →  /dashboard
+                                        ↓ (no active subscription)
+                                       /billing  →  Stripe Checkout  →  /dashboard
+                                        ↓ (connected)
+                                       Connect QuickBooks  →  Intuit  →  /dashboard with live data
+```
+
+## Setup
+
+### 1. App encryption key
+
+```bash
+openssl rand -base64 32
+```
+
+Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
+
+### 2. QuickBooks (sandbox)
+
+1. Create an app at https://developer.intuit.com/ → QuickBooks Online API.
+2. Add `${APP_BASE_URL}/api/qbo/callback` to redirect URIs (match port to your dev server).
+3. Copy sandbox client ID/secret into `QBO_CLIENT_ID` / `QBO_CLIENT_SECRET`.
+
+### 3. Stripe (test mode)
+
+1. Get test keys from https://dashboard.stripe.com/test/apikeys → `STRIPE_SECRET_KEY`.
+2. Create a recurring $49/month price in test mode → copy the `price_…` ID into `STRIPE_PRICE_ID`.
+3. For local webhooks, install the Stripe CLI and run:
    ```bash
-   openssl rand -base64 32
+   stripe listen --forward-to localhost:3000/api/stripe/webhook
    ```
-   Paste the output into `APP_ENCRYPTION_KEY`.
-5. Copy your sandbox client ID/secret into `QBO_CLIENT_ID` / `QBO_CLIENT_SECRET`.
-6. Run `npm run dev`, click **Connect QuickBooks**, sign in to your sandbox company, and you should land back on the dashboard with real data.
+   Copy the printed signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
 
-### Without QuickBooks credentials
+### 4. Magic-link emails
 
-Set `USE_MOCK_DATA=1` in `.env.local` to render the dashboard with hard-coded sample data — useful for UI iteration without an Intuit account.
+In dev, magic links are **logged to the server console** (look for `[auth] Magic link for …`). For production, swap the TODO in `lib/server/auth/magic-link.ts` for a real email provider (Resend, Postmark, SES).
 
-## What gets stored
+### `USE_MOCK_DATA=1`
 
-- **`./data/app.db`** — SQLite, gitignored. Holds one row per connected QBO company with the access/refresh tokens **encrypted at rest** (AES-256-GCM, key from `APP_ENCRYPTION_KEY`).
-- The schema is created on first DB access; no migration step needed.
+Renders the dashboard with hard-coded sample data instead of hitting QBO. Useful for UI iteration without an Intuit account. Subscription gate still applies.
 
 ## Routes
 
-- `/` — public landing page (hero, how-it-works, pricing, FAQ)
-- `/dashboard` — the app itself (renders `ConnectPrompt` if no QBO connection, otherwise the live dashboard)
-- `/api/qbo/connect`, `/callback`, `/disconnect` — OAuth lifecycle
+- `/` — public landing page
+- `/login` — magic-link sign-in / sign-up
+- `/dashboard` — the app (auth + active subscription required; renders `ConnectPrompt` when no QBO connection)
+- `/billing` — subscription management (auth required)
+- `/api/auth/{request,verify,logout}` — magic-link lifecycle
+- `/api/qbo/{connect,callback,disconnect}` — QuickBooks OAuth lifecycle
+- `/api/stripe/{checkout,portal,webhook}` — Stripe billing lifecycle
 
-## Architecture (today)
+## What gets stored
+
+`./data/app.db` (SQLite, gitignored):
+
+| Table | Holds |
+|---|---|
+| `users` | email + verified-at timestamp |
+| `sessions` | session cookie ↔ user |
+| `magic_links` | hashed one-time tokens, 15-min TTL |
+| `subscriptions` | one row per user with `stripe_customer_id`, `stripe_subscription_id`, status, current period end |
+| `qbo_connections` | one row per QBO company linked to a user; access/refresh tokens encrypted with AES-256-GCM |
+
+Schema is created (and idempotently migrated) on first DB access.
+
+## Architecture
 
 ```
 app/
-  page.tsx                           landing page (server)
-  dashboard/page.tsx                 server component; routes to ConnectPrompt or Dashboard
-  api/qbo/
-    connect/route.ts                 → Intuit authorize URL, sets state cookie
-    callback/route.ts                exchange code, store encrypted tokens
-    disconnect/route.ts              revoke token, delete row
+  page.tsx                           landing page
+  login/page.tsx                     magic-link form
+  dashboard/page.tsx                 auth + sub gate, live data
+  billing/page.tsx                   Checkout / Portal entry
+  api/
+    auth/{request,verify,logout}/    magic-link routes
+    qbo/{connect,callback,disconnect}/
+    stripe/{checkout,portal,webhook}/
 components/
-  Dashboard.tsx                      client component; filter state + composition
-  ConnectPrompt.tsx                  not-yet-connected card
-  ConnectionStatus.tsx               "Connected to {Company} · Disconnect"
-  DashboardHeader, FilterTabs, CustomerTable, CustomerRow, ReputationMeter, BulkTextButton
+  Dashboard, ConnectPrompt, ConnectionStatus,
+  DashboardHeader, FilterTabs, CustomerTable, CustomerRow,
+  ReputationMeter, BulkTextButton, AppHeader
 lib/
   types.ts, format.ts, mockData.ts
   server/
     env.ts                           lazy env reader
-    crypto.ts                        AES-256-GCM token encryption
-    db/                              SQLite + Drizzle (qbo_connections table)
-    qbo/
-      config.ts                      sandbox URLs, scopes
-      oauth.ts                       exchangeCodeForTokens, refreshAccessToken, revokeToken
-      client.ts                      authenticated query w/ auto-refresh
-      sync.ts                        getDashboardData() → mock | not-connected | live data
+    crypto.ts                        token encryption
+    auth/                            tokens, session, magic-link
+    db/                              client, schema, users, sessions,
+                                     subscriptions, connections
+    qbo/                             config, oauth, client, sync, reputation
+    stripe/                          client, checkout (+portal), webhook
 ```
 
 ## Reputation score
 
 Per-customer 300–850 score (`lib/server/qbo/reputation.ts`):
 
-- **With payment history** (≥ 2 paid invoices in the last 24 months): scored from the join of paid `Invoice` rows to their linked `Payment` rows. Formula combines average days-late, on-time rate, and tenure (number of paid invoices).
-- **Without payment history**: falls back to a coarse score derived from the oldest open invoice age, so brand-new customers still get a meaningful tier.
+- **With payment history** (≥ 2 paid invoices in the last 24 months): joins paid `Invoice` rows to their linked `Payment` rows; combines average days-late, on-time rate, and tenure.
+- **Without payment history**: falls back to a coarse score from the oldest open invoice age.
 
 Risk tier (`high` / `medium` / `low`) is derived from the score in `sync.ts`.
 
 ## Out of scope
 
-Stripe checkout, Twilio SMS, auth, multi-tenant billing — coming in later slices.
+Real email delivery, Stripe Connect for the 1.9% success fee, Twilio SMS for Pay/Text buttons, full pagination of QBO queries, password-based auth.

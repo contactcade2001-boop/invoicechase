@@ -2,7 +2,7 @@ import "server-only";
 import type { Customer, RiskTier } from "@/lib/types";
 import { mockBusiness, mockCustomers } from "@/lib/mockData";
 import { useMockData } from "../env";
-import { getActiveConnection } from "../db/connections";
+import { getConnectionForUser } from "../db/connections";
 import {
   listCustomers,
   listOpenInvoices,
@@ -101,7 +101,9 @@ function aggregate(
   return out;
 }
 
-export async function getDashboardData(): Promise<DashboardData> {
+export async function getDashboardData(
+  userId: number,
+): Promise<DashboardData> {
   if (useMockData()) {
     return {
       connected: true,
@@ -110,7 +112,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     };
   }
 
-  const conn = getActiveConnection();
+  const conn = getConnectionForUser(userId);
   if (!conn) return { connected: false };
 
   const since = isoDaysAgo(new Date(), HISTORY_WINDOW_DAYS);

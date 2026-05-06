@@ -1,11 +1,16 @@
 import { randomBytes } from "node:crypto";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { getCurrentUser } from "@/lib/server/auth/session";
 import { STATE_COOKIE } from "@/lib/server/qbo/config";
 import { buildAuthorizeUrl } from "@/lib/server/qbo/oauth";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
   const state = randomBytes(16).toString("hex");
   const res = NextResponse.redirect(buildAuthorizeUrl(state));
   res.cookies.set(STATE_COOKIE, state, {

@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getCurrentUser } from "@/lib/server/auth/session";
 import { encryptToken } from "@/lib/server/crypto";
 import { upsertConnection } from "@/lib/server/db/connections";
 import { QBO_API_BASE, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
@@ -32,6 +33,11 @@ function errorRedirect(req: NextRequest, message: string) {
 }
 
 export async function GET(req: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
   const params = req.nextUrl.searchParams;
   const code = params.get("code");
   const state = params.get("state");
@@ -62,6 +68,7 @@ export async function GET(req: NextRequest) {
 
   const now = Date.now();
   upsertConnection({
+    userId: user.id,
     realmId,
     companyName,
     accessTokenEnc: encryptToken(tokens.access_token),

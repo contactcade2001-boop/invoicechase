@@ -20,6 +20,7 @@ async function getValidAccessToken(conn: QboConnectionRow): Promise<string> {
     refreshTokenEnc: encryptToken(refreshed.refresh_token),
     accessTokenExpiresAt: now + refreshed.expires_in * 1000,
     refreshTokenExpiresAt: now + refreshed.x_refresh_token_expires_in * 1000,
+    userId: conn.userId,
   });
   return refreshed.access_token;
 }
