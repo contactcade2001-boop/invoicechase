@@ -6,15 +6,23 @@ import {
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { CopyReferralLink } from "@/components/CopyReferralLink";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
   canAcceptPayments,
   getConnectAccount,
 } from "@/lib/server/db/connect";
 import {
+  getOrgById,
+  setOrgCustomerReferralCode,
+} from "@/lib/server/db/organizations";
+import { listOrgReferralsForOrg } from "@/lib/server/db/orgReferrals";
+import {
   getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
+import { getAppBaseUrl } from "@/lib/server/env";
+import { generateUniqueOrgReferralCode } from "@/lib/server/partners/code";
 import { refreshConnectStatus } from "@/lib/server/stripe/connect";
 
 export const dynamic = "force-dynamic";
@@ -72,6 +80,22 @@ export default async function BillingPage({
   const acceptsPayments = canAcceptPayments(connectAccount);
   const errorMessage = sp.error ? errorMessages[sp.error] : null;
   const justCheckedOut = sp.checkout === "success";
+
+  // Lazily mint a customer-referral code on first /billing visit so existing
+  // orgs get a code without needing an explicit migration.
+  let org = getOrgById(orgId)!;
+  if (!org.customerReferralCode) {
+    const { findOrgByCustomerReferralCode } = await import(
+      "@/lib/server/db/organizations"
+    );
+    const fresh = generateUniqueOrgReferralCode(
+      (c) => !!findOrgByCustomerReferralCode(c),
+    );
+    setOrgCustomerReferralCode(orgId, fresh);
+    org = { ...org, customerReferralCode: fresh };
+  }
+  const orgReferrals = listOrgReferralsForOrg(orgId);
+  const referralUrl = `${getAppBaseUrl()}/r/biz/${org.customerReferralCode}`;
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -207,6 +231,24 @@ export default async function BillingPage({
               </form>
             </>
           )}
+        </section>
+
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold tracking-tight">
+            Refer another business
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Know another QuickBooks-using SMB? Send them this link. When they
+            subscribe, you both get a free month.
+          </p>
+          <div className="mt-4">
+            <CopyReferralLink url={referralUrl} />
+          </div>
+          <p className="mt-3 text-xs text-slate-500">
+            {orgReferrals.length === 0
+              ? "No referrals yet."
+              : `${orgReferrals.length} business${orgReferrals.length === 1 ? "" : "es"} referred · ${orgReferrals.filter((r) => r.creditStatus === "credited").length} credited.`}
+          </p>
         </section>
       </main>
     </div>

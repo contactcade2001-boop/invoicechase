@@ -229,6 +229,36 @@ export function markCommissionPaid(
     .run();
 }
 
+export function setPartnerStripeAccount(
+  partnerId: number,
+  stripeAccountId: string,
+): void {
+  const now = Date.now();
+  getDb()
+    .update(partners)
+    .set({ stripeAccountId, updatedAt: now })
+    .where(eq(partners.id, partnerId))
+    .run();
+}
+
+export function markCommissionTransferred(
+  commissionId: number,
+  stripeTransferId: string,
+): void {
+  const now = Date.now();
+  getDb()
+    .update(partnerCommissions)
+    .set({
+      status: "paid",
+      paidAt: now,
+      stripeTransferId,
+      payoutReference: stripeTransferId,
+      updatedAt: now,
+    })
+    .where(eq(partnerCommissions.id, commissionId))
+    .run();
+}
+
 export function partnerEarningsSummary(partnerId: number): {
   pendingCents: number;
   paidCents: number;

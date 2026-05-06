@@ -23,6 +23,11 @@ import {
 } from "../db/subscriptions";
 import { getStripeConfig } from "../env";
 import { markReferralFirstPaid } from "../db/partners";
+import { markOrgReferralCredited } from "../db/orgReferrals";
+import {
+  findInstallmentByPayLinkToken,
+  markInstallmentPaid,
+} from "../db/paymentPlans";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
 import { createQboRefundReceipt } from "../qbo/refundReceipt";
 import { invalidateDashboardCache } from "../qbo/sync";
@@ -80,6 +85,9 @@ async function applySubscription(sub: Stripe.Subscription): Promise<void> {
   // status — used as a quality signal in the partner dashboard.
   if (sub.status === "active" || sub.status === "trialing") {
     markReferralFirstPaid(organizationId, Date.now());
+    // Customer-to-customer referral: same trigger flips the credit status
+    // from pending to credited so /billing reflects it.
+    markOrgReferralCredited(organizationId);
   }
 }
 
@@ -142,6 +150,15 @@ async function applyOneTimePayment(
   // A balance just dropped to zero (or close to it) — bust the dashboard
   // cache so the merchant sees the updated total owed on their next load.
   invalidateDashboardCache(organizationId);
+
+  // If this checkout was tied to a payment-plan installment, mark it paid.
+  const payLinkToken = session.metadata?.payLinkToken ?? null;
+  if (payLinkToken) {
+    const installment = findInstallmentByPayLinkToken(payLinkToken);
+    if (installment && installment.status !== "paid") {
+      markInstallmentPaid(installment.id);
+    }
+  }
 
   const existing = findPaymentBySession(session.id);
   if (!existing?.qboPaymentId) {

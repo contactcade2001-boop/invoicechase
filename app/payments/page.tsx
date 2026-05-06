@@ -100,11 +100,19 @@ export default async function PaymentsPage() {
     <div className="flex min-h-screen flex-col bg-slate-50">
       <AppHeader user={user} current="payments" />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-4 py-8 sm:py-10">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Money collected through Invoice Chase.
-          </p>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Money collected through Invoice Chase.
+            </p>
+          </div>
+          <a
+            href="/payment-plans"
+            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+          >
+            Payment plans →
+          </a>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

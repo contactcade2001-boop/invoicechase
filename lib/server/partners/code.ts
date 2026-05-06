@@ -23,6 +23,16 @@ export function generateUniqueReferralCode(): string {
   return randomCode() + randomCode();
 }
 
+export function generateUniqueOrgReferralCode(
+  isTaken: (code: string) => boolean,
+): string {
+  for (let i = 0; i < 10; i++) {
+    const candidate = randomCode();
+    if (!isTaken(candidate)) return candidate;
+  }
+  return randomCode() + randomCode();
+}
+
 export function isValidCodeShape(code: string): boolean {
   if (code.length < 4 || code.length > 24) return false;
   return /^[a-z0-9]+$/.test(code);

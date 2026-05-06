@@ -15,6 +15,8 @@ import { formatCurrencyDetailed } from "@/lib/format";
 import { formatRelativeTime } from "@/lib/inboxFormat";
 import { CopyReferralLink } from "@/components/CopyReferralLink";
 import { MarkPaidButton } from "@/components/MarkPaidButton";
+import { PartnerStripeOnboard } from "@/components/PartnerStripeOnboard";
+import { TransferCommissionButton } from "@/components/TransferCommissionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -146,6 +148,22 @@ export default async function PartnerDashboardPage() {
 
         <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           <h2 className="text-lg font-semibold tracking-tight">
+            Stripe payouts
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">
+            {partner.stripeAccountId
+              ? "Connected. Use the Transfer button on a pending commission to push it to your bank via Stripe."
+              : "Connect a Stripe Express account so we can wire your monthly commissions automatically. Until you do, you can still self-acknowledge off-platform payouts."}
+          </p>
+          <div className="mt-4">
+            <PartnerStripeOnboard
+              connected={!!partner.stripeAccountId}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <h2 className="text-lg font-semibold tracking-tight">
             Your referral link
           </h2>
           <p className="mt-1 text-sm text-slate-600">
@@ -269,10 +287,16 @@ export default async function PartnerDashboardPage() {
                         {formatCurrencyDetailed(c.commissionCents)}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex flex-wrap items-center justify-end gap-2">
                           <StatusBadge status={c.status} />
                           {c.status === "pending" ? (
-                            <MarkPaidButton commissionId={c.id} />
+                            <>
+                              <TransferCommissionButton
+                                commissionId={c.id}
+                                enabled={!!partner.stripeAccountId}
+                              />
+                              <MarkPaidButton commissionId={c.id} />
+                            </>
                           ) : null}
                         </div>
                       </td>

@@ -1,6 +1,11 @@
 import "server-only";
 import { findPartnerByCode, recordReferral } from "../db/partners";
-import { ensureOrgForUser } from "../db/organizations";
+import {
+  ensureOrgForUser,
+  findOrgByCustomerReferralCode,
+  setReferredBy,
+} from "../db/organizations";
+import { recordOrgReferral } from "../db/orgReferrals";
 import { findUserById } from "../db/users";
 import { captureException } from "../observability";
 
@@ -9,16 +14,32 @@ import { captureException } from "../observability";
 export function attributeNewSignup(input: {
   userId: number;
   referralCode: string | null;
+  orgReferralCode?: string | null;
 }): void {
-  if (!input.referralCode) return;
   try {
-    const partner = findPartnerByCode(input.referralCode.toLowerCase());
-    if (!partner || partner.status !== "active") return;
     const user = findUserById(input.userId);
     if (!user) return;
     const org = ensureOrgForUser(user);
-    if (partner.userId === user.id) return; // self-referral guard
-    recordReferral({ partnerId: partner.id, organizationId: org.id });
+
+    if (input.referralCode) {
+      const partner = findPartnerByCode(input.referralCode.toLowerCase());
+      if (partner && partner.status === "active" && partner.userId !== user.id) {
+        recordReferral({ partnerId: partner.id, organizationId: org.id });
+      }
+    }
+
+    if (input.orgReferralCode) {
+      const referrer = findOrgByCustomerReferralCode(
+        input.orgReferralCode.toLowerCase(),
+      );
+      if (referrer && referrer.id !== org.id) {
+        recordOrgReferral({
+          referrerOrgId: referrer.id,
+          refereeOrgId: org.id,
+        });
+        setReferredBy(org.id, referrer.id);
+      }
+    }
   } catch (err) {
     captureException(err, {
       where: "partners.attribute",

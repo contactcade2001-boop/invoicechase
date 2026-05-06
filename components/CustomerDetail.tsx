@@ -1,7 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
-import { ArrowLeft, CreditCard, MessageSquare } from "lucide-react";
+import { useState, useTransition } from "react";
+import { ArrowLeft, CalendarClock, CreditCard, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { getPayLinkUrl } from "@/app/actions/pay";
 import { sendTextToCustomer } from "@/app/actions/sms";
@@ -12,6 +12,7 @@ import {
 } from "@/lib/format";
 import type { Customer } from "@/lib/types";
 import type { OpenInvoiceLine } from "@/lib/server/qbo/sync";
+import { NewPaymentPlanModal } from "./NewPaymentPlanModal";
 import { ReputationMeter } from "./ReputationMeter";
 import { payErrorMessage, smsErrorMessage } from "./smsErrors";
 
@@ -31,6 +32,7 @@ export function CustomerDetail({
   customer: Customer;
   invoices: OpenInvoiceLine[];
 }) {
+  const [planOpen, setPlanOpen] = useState(false);
   const [textPending, startText] = useTransition();
   const [payPending, startPay] = useTransition();
 
@@ -96,8 +98,28 @@ export function CustomerDetail({
               <MessageSquare className="h-4 w-4" aria-hidden />
               {textPending ? "Sending…" : "Text"}
             </button>
+            <button
+              type="button"
+              onClick={() => setPlanOpen(true)}
+              disabled={customer.amountOwed <= 0}
+              title={
+                customer.amountOwed <= 0
+                  ? "No outstanding balance"
+                  : "Split this balance into installments"
+              }
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <CalendarClock className="h-4 w-4" aria-hidden />
+              Payment plan
+            </button>
           </div>
         </div>
+
+        <NewPaymentPlanModal
+          open={planOpen}
+          onClose={() => setPlanOpen(false)}
+          customer={customer}
+        />
 
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
