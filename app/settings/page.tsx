@@ -111,18 +111,26 @@ export default async function SettingsPage() {
             ) : null}
 
             <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h2 className="text-lg font-semibold">Webhook events</h2>
+              <h2 className="text-lg font-semibold">Logs</h2>
               <p className="mt-1 text-sm text-slate-600">
-                Inspect every Stripe + Twilio webhook delivered to your
-                organization for the last 30 days. Useful when a payment
-                doesn&apos;t mark in QuickBooks or autopilot misses a reply.
+                Webhook events show every Stripe + Twilio delivery; the audit
+                log shows every action your team took inside Invoice Chase
+                (role changes, settings edits, manual replies, refund retries).
               </p>
-              <a
-                href="/webhook-events"
-                className="mt-4 inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-              >
-                Open event log
-              </a>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a
+                  href="/webhook-events"
+                  className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                >
+                  Webhook events
+                </a>
+                <a
+                  href="/audit-events"
+                  className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
+                >
+                  Audit log
+                </a>
+              </div>
             </section>
           </>
         ) : null}

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   finalizePayment,
   findPaymentById,
@@ -43,6 +44,17 @@ export async function retryQboSync(
       noteRef: payment.stripeCheckoutSessionId,
     });
     finalizePayment(payment.stripeCheckoutSessionId, result);
+    if (result.qboPaymentId) {
+      logAuditEvent({
+        organizationId: orgId,
+        userId: user.id,
+        actorEmail: user.email,
+        kind: "qbo.payment_retry_synced",
+        targetType: "payment",
+        targetId: String(payment.id),
+        metadata: { qboPaymentId: result.qboPaymentId },
+      });
+    }
     revalidatePath("/payments");
     return { ok: true, qboPaymentId: result.qboPaymentId };
   } catch (err) {

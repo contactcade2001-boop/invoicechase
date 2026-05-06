@@ -7,6 +7,7 @@ import {
 } from "@/lib/server/db/subscriptions";
 import type { UserRow } from "@/lib/server/db/schema";
 import { setSmsTemplate } from "@/lib/server/db/users";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   appendMessage,
   getOrCreateConversation,
@@ -101,6 +102,15 @@ export async function sendTextToCustomer(
   if (!customer.phone) return { ok: false, error: "no_phone" };
   try {
     await sendOne(loaded, customer);
+    logAuditEvent({
+      organizationId: loaded.organizationId,
+      userId: loaded.user.id,
+      actorEmail: loaded.user.email,
+      kind: "sms.text_sent",
+      targetType: "customer",
+      targetId: customer.id,
+      metadata: { name: customer.name, phone: customer.phone },
+    });
     return { ok: true, sentCount: 1, failedCount: 0 };
   } catch (err) {
     console.error("[sms] send failed", err);
@@ -138,6 +148,17 @@ export async function bulkTextOverdue(): Promise<SmsResult> {
       console.error("[sms] bulk item failed", r.reason);
     }
   }
+  logAuditEvent({
+    organizationId: loaded.organizationId,
+    userId: loaded.user.id,
+    actorEmail: loaded.user.email,
+    kind: "sms.bulk_text_sent",
+    metadata: {
+      sentCount: sent,
+      failedCount: failed,
+      totalAttempted: overdue.length,
+    },
+  });
   return { ok: true, sentCount: sent, failedCount: failed };
 }
 

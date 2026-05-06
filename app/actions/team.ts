@@ -8,6 +8,7 @@ import {
   requestOrgInvite,
   setUserRole,
 } from "@/lib/server/auth/invites";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   getOrgForUser,
   listOrgMembers,
@@ -42,6 +43,15 @@ export async function inviteMember(input: {
     role,
   });
   if (!result.ok) return result;
+  logAuditEvent({
+    organizationId: org.id,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "team.invite_sent",
+    targetType: "email",
+    targetId: input.email.trim().toLowerCase(),
+    metadata: { role },
+  });
   revalidatePath("/team");
   return { ok: true };
 }
@@ -65,6 +75,15 @@ export async function changeMemberRole(input: {
   const target = members.find((m) => m.id === input.userId);
   if (!target) return { ok: false, error: "not_in_org" };
   setUserRole(input.userId, role);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "team.role_changed",
+    targetType: "user",
+    targetId: String(input.userId),
+    metadata: { newRole: role, fromRole: target.role, email: target.email },
+  });
   revalidatePath("/team");
   return { ok: true };
 }
@@ -79,10 +98,20 @@ export async function removeMember(
     return { ok: false, error: "cant_remove_self" };
   }
   const members = listOrgMembers(user.organizationId!);
-  if (!members.some((m) => m.id === userId)) {
+  const target = members.find((m) => m.id === userId);
+  if (!target) {
     return { ok: false, error: "not_in_org" };
   }
   removeUserFromOrg(userId);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "team.member_removed",
+    targetType: "user",
+    targetId: String(userId),
+    metadata: { email: target.email, role: target.role },
+  });
   revalidatePath("/team");
   return { ok: true };
 }
@@ -94,6 +123,14 @@ export async function revokeInvite(
   if (!user) return { ok: false, error: "not_signed_in" };
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   deleteInvite(inviteId, user.organizationId!);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "team.invite_revoked",
+    targetType: "invite",
+    targetId: String(inviteId),
+  });
   revalidatePath("/team");
   return { ok: true };
 }

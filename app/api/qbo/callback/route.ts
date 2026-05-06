@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { encryptToken } from "@/lib/server/crypto";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import { upsertConnection } from "@/lib/server/db/connections";
 import { getQboApiBase, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
 import { exchangeCodeForTokens } from "@/lib/server/qbo/oauth";
@@ -79,6 +80,16 @@ export async function GET(req: NextRequest) {
     refreshTokenEnc: encryptToken(tokens.refresh_token),
     accessTokenExpiresAt: now + tokens.expires_in * 1000,
     refreshTokenExpiresAt: now + tokens.x_refresh_token_expires_in * 1000,
+  });
+
+  logAuditEvent({
+    organizationId: orgId,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "qbo.connected",
+    targetType: "realm",
+    targetId: realmId,
+    metadata: { companyName },
   });
 
   const res = NextResponse.redirect(

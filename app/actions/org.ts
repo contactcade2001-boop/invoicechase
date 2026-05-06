@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   setOrgDepositConfig,
   setOrgDigestPhone,
@@ -26,6 +27,13 @@ export async function setAutopilotEnabled(
   if (!user) return { ok: false, error: "not_signed_in" };
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   setOrgFlag(user.organizationId!, "autopilotEnabled", enabled);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "settings.autopilot_toggled",
+    metadata: { enabled },
+  });
   revalidatePath("/settings");
   return { ok: true };
 }
@@ -37,6 +45,13 @@ export async function setDepositEnabled(
   if (!user) return { ok: false, error: "not_signed_in" };
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   setOrgFlag(user.organizationId!, "depositEnabled", enabled);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "settings.deposit_toggled",
+    metadata: { enabled },
+  });
   revalidatePath("/settings");
   return { ok: true };
 }
@@ -48,6 +63,13 @@ export async function setCustomReceiptsEnabled(
   if (!user) return { ok: false, error: "not_signed_in" };
   if (user.role !== "owner") return { ok: false, error: "forbidden" };
   setOrgFlag(user.organizationId!, "customReceiptsEnabled", enabled);
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "settings.custom_receipts_toggled",
+    metadata: { enabled },
+  });
   revalidatePath("/settings");
   return { ok: true };
 }

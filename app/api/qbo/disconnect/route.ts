@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { decryptToken } from "@/lib/server/crypto";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   deleteConnectionForOrg,
   getConnectionForOrg,
@@ -28,6 +29,14 @@ export async function POST(req: NextRequest) {
       console.error("[qbo] revoke failed (deleting locally anyway)", err);
     }
     deleteConnectionForOrg(orgId, conn.realmId);
+    logAuditEvent({
+      organizationId: orgId,
+      userId: user.id,
+      actorEmail: user.email,
+      kind: "qbo.disconnected",
+      targetType: "realm",
+      targetId: conn.realmId,
+    });
   }
   return NextResponse.redirect(new URL("/dashboard", req.url), { status: 303 });
 }

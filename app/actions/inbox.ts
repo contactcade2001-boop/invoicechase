@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   appendMessage,
   findConversationById,
@@ -57,6 +58,15 @@ export async function sendManualReply(input: {
       twilioSid: sent.sid,
       autopilot: false,
     });
+    logAuditEvent({
+      organizationId: orgId,
+      userId: user.id,
+      actorEmail: user.email,
+      kind: "sms.manual_reply_sent",
+      targetType: "conversation",
+      targetId: String(conv.id),
+      metadata: { phone: conv.customerPhone },
+    });
     revalidatePath(`/inbox/${conv.id}`);
     revalidatePath("/inbox");
     return { ok: true };
@@ -78,6 +88,15 @@ export async function setAutopilotForConversation(input: {
   const conv = findConversationById(input.conversationId, orgId);
   if (!conv) return { ok: false, error: "not_found" };
   setConversationAutopilotPaused(conv.id, input.paused);
+  logAuditEvent({
+    organizationId: orgId,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: input.paused ? "sms.autopilot_paused" : "sms.autopilot_resumed",
+    targetType: "conversation",
+    targetId: String(conv.id),
+    metadata: { phone: conv.customerPhone },
+  });
   revalidatePath(`/inbox/${conv.id}`);
   revalidatePath("/inbox");
   return { ok: true };

@@ -56,6 +56,18 @@ export const inboxReads = sqliteTable("inbox_reads", {
   lastReadAt: integer("last_read_at").notNull(),
 });
 
+export const auditEvents = sqliteTable("audit_events", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  userId: integer("user_id"),
+  actorEmail: text("actor_email"),
+  kind: text("kind").notNull(),
+  targetType: text("target_type"),
+  targetId: text("target_id"),
+  metadataJson: text("metadata_json"),
+  createdAt: integer("created_at").notNull(),
+});
+
 export const webhookEvents = sqliteTable("webhook_events", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   source: text("source").notNull(),
@@ -179,6 +191,7 @@ export type SmsMessageRow = typeof smsMessages.$inferSelect;
 export type RateLimitEventRow = typeof rateLimitEvents.$inferSelect;
 export type InboxReadRow = typeof inboxReads.$inferSelect;
 export type WebhookEventRow = typeof webhookEvents.$inferSelect;
+export type AuditEventRow = typeof auditEvents.$inferSelect;
 export type UserRole = "owner" | "manager" | "technician";
 export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;
