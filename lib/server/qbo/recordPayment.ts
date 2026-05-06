@@ -37,33 +37,40 @@ export type RecordPaymentInput = {
   noteRef?: string;
 };
 
+export type RecordPaymentResult = {
+  qboPaymentId: string | null;
+  customerName: string | null;
+};
+
 export async function recordPaymentInQbo(
   input: RecordPaymentInput,
-): Promise<string | null> {
+): Promise<RecordPaymentResult> {
   const conn = getConnectionForUser(input.userId);
   if (!conn) {
     console.warn(
       "[qbo] mark-paid: no QBO connection for user",
       input.userId,
     );
-    return null;
+    return { qboPaymentId: null, customerName: null };
   }
 
   const invoices = await listOpenInvoicesForCustomer(
     conn,
     input.customerId,
   );
+  const customerName = invoices[0]?.CustomerRef?.name ?? null;
+
   if (invoices.length === 0) {
     console.warn(
       "[qbo] mark-paid: no open invoices for customer",
       input.customerId,
     );
-    return null;
+    return { qboPaymentId: null, customerName };
   }
 
   const totalDollars = input.amountCents / 100;
   const lines = buildLines(invoices, totalDollars);
-  if (lines.length === 0) return null;
+  if (lines.length === 0) return { qboPaymentId: null, customerName };
 
   const body: Record<string, unknown> = {
     CustomerRef: { value: input.customerId },
@@ -79,5 +86,8 @@ export async function recordPaymentInQbo(
     "/payment",
     body,
   );
-  return result.Payment?.Id ?? null;
+  return {
+    qboPaymentId: result.Payment?.Id ?? null,
+    customerName,
+  };
 }

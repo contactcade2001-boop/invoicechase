@@ -5,8 +5,8 @@ import {
   upsertConnectAccount,
 } from "../db/connect";
 import {
+  finalizePayment,
   findPaymentBySession,
-  setPaymentQboId,
   upsertPaymentBySession,
 } from "../db/payments";
 import {
@@ -119,15 +119,13 @@ async function applyOneTimePayment(
   const existing = findPaymentBySession(session.id);
   if (existing?.qboPaymentId) return;
   try {
-    const qboPaymentId = await recordPaymentInQbo({
+    const result = await recordPaymentInQbo({
       userId,
       customerId,
       amountCents,
       noteRef: session.id,
     });
-    if (qboPaymentId) {
-      setPaymentQboId(session.id, qboPaymentId);
-    }
+    finalizePayment(session.id, result);
   } catch (err) {
     console.error("[qbo] mark-paid failed for session", session.id, err);
   }
