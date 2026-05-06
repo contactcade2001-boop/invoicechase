@@ -2,7 +2,17 @@ import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { ConnectPrompt } from "@/components/ConnectPrompt";
 import { Dashboard } from "@/components/Dashboard";
+import {
+  OnboardingChecklist,
+  type OnboardingStep,
+} from "@/components/OnboardingChecklist";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import {
+  canAcceptPayments,
+  getConnectAccount,
+} from "@/lib/server/db/connect";
+import { getConnectionForOrg } from "@/lib/server/db/connections";
+import { listOrgMembers } from "@/lib/server/db/organizations";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -31,11 +41,47 @@ export default async function DashboardPage({
   }
 
   const data = await getDashboardData(orgId);
+  const connectAccount = getConnectAccount(orgId);
+  const qboConn = getConnectionForOrg(orgId);
+  const members = listOrgMembers(orgId);
+
+  const onboarding: OnboardingStep[] =
+    user.role === "owner"
+      ? [
+          {
+            key: "qbo",
+            title: "Connect QuickBooks",
+            body: "Pull your customers and unpaid invoices automatically.",
+            href: "/api/qbo/connect",
+            cta: "Connect",
+            done: !!qboConn,
+          },
+          {
+            key: "stripe",
+            title: "Connect Stripe to get paid",
+            body: "Onboard your Express account so customers can pay via Pay Now and SMS links.",
+            href: "/billing",
+            cta: "Set up",
+            done: canAcceptPayments(connectAccount),
+          },
+          {
+            key: "team",
+            title: "Invite teammates (optional)",
+            body: "Add managers or technicians so the office and field share the workload.",
+            href: "/team",
+            cta: "Invite",
+            done: members.length > 1,
+          },
+        ]
+      : [];
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <AppHeader user={user} current="dashboard" />
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:py-10">
+        {onboarding.length > 0 ? (
+          <OnboardingChecklist steps={onboarding} />
+        ) : null}
         {data.connected ? (
           <Dashboard
             companyName={data.companyName}
