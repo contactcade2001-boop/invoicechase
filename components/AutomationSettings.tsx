@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Bot, Loader2 } from "lucide-react";
 import {
+  provisionTwilioNumber,
   saveDepositConfig,
   saveDigestPhone,
   saveTwilioPhone,
@@ -33,6 +34,7 @@ export function AutomationSettings({
   const [phone, setPhone] = useState(initial.digestPhone);
   const [twilioPhone, setTwilioPhoneState] = useState(initial.twilioPhone);
   const [twilioError, setTwilioError] = useState<string | null>(null);
+  const [areaCode, setAreaCode] = useState("");
   const [pending, start] = useTransition();
   const [savedTag, setSavedTag] = useState<string | null>(null);
 
@@ -82,6 +84,31 @@ export function AutomationSettings({
             ? "Use E.164 format, e.g. +14155551234."
             : r.error,
         );
+      }
+    });
+  }
+
+  function onProvisionTwilio() {
+    setTwilioError(null);
+    setSavedTag(null);
+    start(async () => {
+      const r = await provisionTwilioNumber(areaCode || undefined);
+      if (r.ok) {
+        setTwilioPhoneState(r.phoneNumber);
+        setSavedTag("twilio-phone");
+        setTimeout(() => setSavedTag(null), 2500);
+      } else {
+        const message: Record<string, string> = {
+          no_active_subscription:
+            "Activate your subscription before provisioning a number.",
+          invalid_area_code: "Area code must be 3 digits (e.g. 415).",
+          search_failed: "Twilio search failed. Try a different area code.",
+          none_available:
+            "No SMS-capable numbers available for that area code right now.",
+          purchase_failed: "Twilio rejected the purchase. Check your account.",
+          forbidden: "Only the owner can provision a number.",
+        };
+        setTwilioError(message[r.error] ?? r.error);
       }
     });
   }
@@ -252,6 +279,43 @@ export function AutomationSettings({
             Save number
           </button>
         </div>
+        <div className="mt-5 rounded-xl bg-slate-50 p-4 ring-1 ring-inset ring-slate-200">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            Or have us provision one for you
+          </p>
+          <p className="mt-1 text-sm text-slate-600">
+            We&apos;ll search Twilio for an SMS-capable number, buy it on the
+            platform&apos;s account, and wire its inbound webhook
+            automatically. Costs about $1.15/month — billed through your
+            Invoice Chase subscription.
+          </p>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={3}
+              value={areaCode}
+              onChange={(e) =>
+                setAreaCode(e.target.value.replace(/\D/g, ""))
+              }
+              placeholder="Area code (e.g. 415)"
+              className="rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:w-48"
+            />
+            <button
+              type="button"
+              onClick={onProvisionTwilio}
+              disabled={pending}
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+            >
+              Provision number
+            </button>
+          </div>
+          <p className="mt-2 text-[11px] text-slate-500">
+            Production sending in the US still requires A2P 10DLC registration
+            in your Twilio account first.
+          </p>
+        </div>
+
         {twilioError ? (
           <p className="mt-2 text-xs text-red-700">{twilioError}</p>
         ) : null}
