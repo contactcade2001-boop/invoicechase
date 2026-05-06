@@ -6,26 +6,33 @@ import { getActiveConnection } from "../db/connections";
 import {
   listCustomers,
   listOpenInvoices,
+  listPaidInvoicesSince,
+  listPaymentsSince,
   type QboCustomer,
   type QboInvoice,
 } from "./client";
+import {
+  collectPaymentSignals,
+  reputationFor,
+  type PaymentSignal,
+} from "./reputation";
 
 export type DashboardData =
   | { connected: false }
   | { connected: true; companyName: string; customers: Customer[] };
 
+const HISTORY_WINDOW_DAYS = 730;
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
 function daysBetween(fromIso: string, today: Date): number {
   const from = new Date(fromIso + "T00:00:00Z");
   const ms = today.getTime() - from.getTime();
-  return Math.floor(ms / (1000 * 60 * 60 * 24));
+  return Math.floor(ms / MS_PER_DAY);
 }
 
-function reputationFromOldestDaysLate(daysLate: number): number {
-  if (daysLate > 60) return 420;
-  if (daysLate > 30) return 555;
-  if (daysLate > 7) return 645;
-  if (daysLate > 0) return 715;
-  return 770;
+function isoDaysAgo(today: Date, days: number): string {
+  const past = new Date(today.getTime() - days * MS_PER_DAY);
+  return past.toISOString().slice(0, 10);
 }
 
 function tierFromScore(score: number): RiskTier {
@@ -42,7 +49,8 @@ function pickPhone(c: QboCustomer): string {
 
 function aggregate(
   customers: QboCustomer[],
-  invoices: QboInvoice[],
+  openInvoices: QboInvoice[],
+  signalsByCustomer: Map<string, PaymentSignal[]>,
 ): Customer[] {
   const byId = new Map<string, QboCustomer>();
   for (const c of customers) byId.set(c.Id, c);
@@ -53,7 +61,7 @@ function aggregate(
     { totalCents: number; oldestDaysLate: number }
   >();
 
-  for (const inv of invoices) {
+  for (const inv of openInvoices) {
     if (!inv.Balance || inv.Balance <= 0) continue;
     const customerId = inv.CustomerRef.value;
     const dueOrTxn = inv.DueDate ?? inv.TxnDate;
@@ -75,7 +83,10 @@ function aggregate(
   for (const [id, agg] of grouped) {
     const qbo = byId.get(id);
     if (!qbo) continue;
-    const reputationScore = reputationFromOldestDaysLate(agg.oldestDaysLate);
+    const reputationScore = reputationFor(
+      signalsByCustomer.get(id),
+      agg.oldestDaysLate,
+    );
     out.push({
       id,
       name: qbo.DisplayName,
@@ -102,14 +113,19 @@ export async function getDashboardData(): Promise<DashboardData> {
   const conn = getActiveConnection();
   if (!conn) return { connected: false };
 
-  const [customers, invoices] = await Promise.all([
+  const since = isoDaysAgo(new Date(), HISTORY_WINDOW_DAYS);
+  const [customers, openInvoices, paidInvoices, payments] = await Promise.all([
     listCustomers(conn),
     listOpenInvoices(conn),
+    listPaidInvoicesSince(conn, since),
+    listPaymentsSince(conn, since),
   ]);
+
+  const signalsByCustomer = collectPaymentSignals(paidInvoices, payments);
 
   return {
     connected: true,
     companyName: conn.companyName ?? "Your business",
-    customers: aggregate(customers, invoices),
+    customers: aggregate(customers, openInvoices, signalsByCustomer),
   };
 }

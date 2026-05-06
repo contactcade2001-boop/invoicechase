@@ -62,6 +62,19 @@ export type QboInvoice = {
   DueDate?: string;
 };
 
+export type QboPaymentLine = {
+  Amount?: number;
+  LinkedTxn?: Array<{ TxnId: string; TxnType: string }>;
+};
+
+export type QboPayment = {
+  Id: string;
+  CustomerRef: { value: string };
+  TxnDate: string;
+  TotalAmt: number;
+  Line?: QboPaymentLine[];
+};
+
 type QueryResponse<K extends string, T> = {
   QueryResponse: { [P in K]?: T[] } & { startPosition?: number; maxResults?: number };
 };
@@ -84,4 +97,26 @@ export async function listOpenInvoices(
     "SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance > '0' MAXRESULTS 1000",
   );
   return data.QueryResponse.Invoice ?? [];
+}
+
+export async function listPaidInvoicesSince(
+  conn: QboConnectionRow,
+  sinceIso: string,
+): Promise<QboInvoice[]> {
+  const data = await qboQuery<QueryResponse<"Invoice", QboInvoice>>(
+    conn,
+    `SELECT Id, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE Balance = '0' AND TxnDate >= '${sinceIso}' MAXRESULTS 1000`,
+  );
+  return data.QueryResponse.Invoice ?? [];
+}
+
+export async function listPaymentsSince(
+  conn: QboConnectionRow,
+  sinceIso: string,
+): Promise<QboPayment[]> {
+  const data = await qboQuery<QueryResponse<"Payment", QboPayment>>(
+    conn,
+    `SELECT Id, CustomerRef, TxnDate, TotalAmt, Line FROM Payment WHERE TxnDate >= '${sinceIso}' MAXRESULTS 1000`,
+  );
+  return data.QueryResponse.Payment ?? [];
 }

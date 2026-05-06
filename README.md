@@ -71,9 +71,14 @@ lib/
       sync.ts                        getDashboardData() → mock | not-connected | live data
 ```
 
-## Reputation score (placeholder)
+## Reputation score
 
-`lib/server/qbo/sync.ts:reputationFromOldestDaysLate` derives a score from the oldest open invoice age. The full version will use paid-invoice payment history; this is enough for a meaningful initial color/tier per customer.
+Per-customer 300–850 score (`lib/server/qbo/reputation.ts`):
+
+- **With payment history** (≥ 2 paid invoices in the last 24 months): scored from the join of paid `Invoice` rows to their linked `Payment` rows. Formula combines average days-late, on-time rate, and tenure (number of paid invoices).
+- **Without payment history**: falls back to a coarse score derived from the oldest open invoice age, so brand-new customers still get a meaningful tier.
+
+Risk tier (`high` / `medium` / `low`) is derived from the score in `sync.ts`.
 
 ## Out of scope
 
