@@ -53,6 +53,11 @@ export function getAnthropicApiKey(): string | null {
   return key && key.length > 0 ? key : null;
 }
 
+export function getCronSecret(): string | null {
+  const s = process.env.CRON_SECRET?.trim();
+  return s && s.length > 0 ? s : null;
+}
+
 export function useMockData(): boolean {
   return process.env.USE_MOCK_DATA === "1";
 }

@@ -160,6 +160,20 @@ export async function listOpenInvoices(
   );
 }
 
+export async function listInvoicesCreatedSince(
+  conn: QboConnectionRow,
+  sinceIso: string,
+): Promise<QboInvoice[]> {
+  // QBO doesn't expose CreateTime through the SQL-ish query language for the
+  // top-level Invoice predicate — we filter by TxnDate (the invoice date)
+  // which is close enough for a daily/hourly poll.
+  return paginate<"Invoice", QboInvoice>(
+    conn,
+    "Invoice",
+    `SELECT Id, DocNumber, CustomerRef, Balance, TotalAmt, TxnDate, DueDate FROM Invoice WHERE TxnDate >= '${sinceIso}' AND Balance > '0'`,
+  );
+}
+
 export async function listOpenInvoicesForCustomer(
   conn: QboConnectionRow,
   customerId: string,
