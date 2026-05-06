@@ -5,7 +5,9 @@ import {
   upsertConnectAccount,
 } from "../db/connect";
 import {
+  clearPaymentQboId,
   finalizePayment,
+  findPaymentByIntent,
   findPaymentBySession,
   setPaymentStatus,
   upsertPaymentBySession,
@@ -16,6 +18,7 @@ import {
 } from "../db/subscriptions";
 import { getStripeConfig } from "../env";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
+import { voidQboPayment } from "../qbo/voidPayment";
 import { getStripe } from "./client";
 
 export async function constructEvent(
@@ -174,8 +177,33 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
         typeof charge.payment_intent === "string"
           ? charge.payment_intent
           : (charge.payment_intent?.id ?? null);
-      if (paymentIntentId) {
-        setPaymentStatus(paymentIntentId, "refunded");
+      if (!paymentIntentId) return;
+
+      // Stripe sets `refunded === true` only on full refunds. Partial refunds
+      // leave the charge in a refunded-amount state but `refunded` stays false
+      // — we keep status='succeeded' for those (the merchant can reconcile).
+      const fullyRefunded = charge.refunded === true;
+      if (!fullyRefunded) return;
+
+      setPaymentStatus(paymentIntentId, "refunded");
+
+      const payment = findPaymentByIntent(paymentIntentId);
+      if (payment?.qboPaymentId && payment.organizationId) {
+        try {
+          await voidQboPayment(
+            payment.organizationId,
+            payment.qboPaymentId,
+          );
+          // Once voided, drop the QBO ID so the manual "retry sync" UI
+          // doesn't try to undo the void.
+          clearPaymentQboId(paymentIntentId);
+        } catch (err) {
+          console.error(
+            "[qbo] void failed for payment",
+            payment.qboPaymentId,
+            err,
+          );
+        }
       }
       return;
     }

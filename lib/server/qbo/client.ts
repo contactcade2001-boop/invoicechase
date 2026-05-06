@@ -50,6 +50,28 @@ export async function qboQuery<T>(
   return (await res.json()) as T;
 }
 
+export async function qboGet<T>(
+  conn: QboConnectionRow,
+  path: string,
+): Promise<T> {
+  const token = await getValidAccessToken(conn);
+  const url = new URL(`${getQboApiBase()}/v3/company/${conn.realmId}${path}`);
+  url.searchParams.set("minorversion", QBO_MINOR_VERSION);
+  const res = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(
+      `QBO GET ${path} failed: ${res.status} ${await res.text()}`,
+    );
+  }
+  return (await res.json()) as T;
+}
+
 export async function qboPost<T>(
   conn: QboConnectionRow,
   path: string,

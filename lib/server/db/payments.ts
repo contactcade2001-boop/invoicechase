@@ -106,6 +106,26 @@ export function setPaymentStatus(
     .run();
 }
 
+export function findPaymentByIntent(
+  paymentIntentId: string,
+): PaymentRow | null {
+  const db = getDb();
+  const row = db
+    .select()
+    .from(payments)
+    .where(eq(payments.stripePaymentIntentId, paymentIntentId))
+    .get();
+  return row ?? null;
+}
+
+export function clearPaymentQboId(paymentIntentId: string): void {
+  const db = getDb();
+  db.update(payments)
+    .set({ qboPaymentId: null, updatedAt: Date.now() })
+    .where(eq(payments.stripePaymentIntentId, paymentIntentId))
+    .run();
+}
+
 export function listPaymentsForOrg(
   organizationId: number,
   limit = 100,
