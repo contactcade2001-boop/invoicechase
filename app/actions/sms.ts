@@ -15,12 +15,19 @@ import {
 import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
+import { renderEmailReminder } from "@/lib/emailReminderTemplate";
 import { renderSmsBody } from "@/lib/smsTemplate";
+import { sendEmail } from "@/lib/server/email/resend";
 import { OptedOutError, sendInvoiceSms } from "@/lib/server/twilio/sms";
+import { setEmailReminderTemplate } from "@/lib/server/db/users";
 import type { Customer } from "@/lib/types";
 
 export type SmsResult =
   | { ok: true; sentCount: number; failedCount: number; skippedCount?: number }
+  | { ok: false; error: string };
+
+export type EmailResult =
+  | { ok: true }
   | { ok: false; error: string };
 
 type Loaded = {
@@ -182,4 +189,72 @@ export async function saveSmsTemplate(
   }
   setSmsTemplate(user.id, trimmed.length === 0 ? null : trimmed);
   return { ok: true };
+}
+
+export async function saveEmailReminderTemplate(
+  template: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role === "technician") {
+    return { ok: false, error: "forbidden" };
+  }
+  const trimmed = template.trim();
+  if (trimmed.length > 4000) {
+    return { ok: false, error: "too_long" };
+  }
+  setEmailReminderTemplate(user.id, trimmed.length === 0 ? null : trimmed);
+  return { ok: true };
+}
+
+export async function sendEmailReminderToCustomer(
+  customerId: string,
+): Promise<EmailResult> {
+  const loaded = await loadCustomers();
+  if ("error" in loaded) return { ok: false, error: loaded.error };
+  const minute = checkRateLimit(
+    `email:min:${loaded.organizationId}`,
+    LIMITS.smsPerMinute.max,
+    LIMITS.smsPerMinute.windowMs,
+  );
+  if (!minute.allowed) return { ok: false, error: "rate_limited" };
+
+  const customer = loaded.customers.find((c) => c.id === customerId);
+  if (!customer) return { ok: false, error: "customer_not_found" };
+  if (!customer.email) return { ok: false, error: "no_email" };
+
+  const { url } = getOrCreatePayLink(loaded.organizationId, customer.id);
+  const rendered = renderEmailReminder(
+    {
+      subject: null,
+      body: loaded.user.emailReminderTemplate,
+    },
+    {
+      amountCents: customer.amountOwed,
+      payUrl: url,
+      customerName: customer.name,
+      businessName: loaded.businessName,
+    },
+  );
+  try {
+    await sendEmail({
+      to: customer.email,
+      subject: rendered.subject,
+      text: rendered.text,
+      html: rendered.html,
+    });
+    logAuditEvent({
+      organizationId: loaded.organizationId,
+      userId: loaded.user.id,
+      actorEmail: loaded.user.email,
+      kind: "email.reminder_sent",
+      targetType: "customer",
+      targetId: customer.id,
+      metadata: { name: customer.name, email: customer.email },
+    });
+    return { ok: true };
+  } catch (err) {
+    console.error("[email] reminder failed", err);
+    return { ok: false, error: "send_failed" };
+  }
 }

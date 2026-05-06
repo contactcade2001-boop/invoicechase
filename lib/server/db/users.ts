@@ -49,3 +49,14 @@ export function setSmsTemplate(
     .where(eq(users.id, userId))
     .run();
 }
+
+export function setEmailReminderTemplate(
+  userId: number,
+  template: string | null,
+): void {
+  const db = getDb();
+  db.update(users)
+    .set({ emailReminderTemplate: template, updatedAt: Date.now() })
+    .where(eq(users.id, userId))
+    .run();
+}

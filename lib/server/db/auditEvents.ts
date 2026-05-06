@@ -27,6 +27,15 @@ export type AuditKind =
   | "sms.manual_reply_sent"
   | "sms.autopilot_paused"
   | "sms.autopilot_resumed"
+  | "email.reminder_sent"
+  | "partner.applied"
+  | "partner.commission_paid"
+  | "partner.connect_started"
+  | "partner.payout_transferred"
+  | "org_referral.attributed"
+  | "org_referral.credited"
+  | "payment_plan.created"
+  | "payment_plan.installment_paid"
   | "pay.link_generated";
 
 export type LogAuditEventInput = {

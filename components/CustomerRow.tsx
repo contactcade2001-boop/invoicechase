@@ -1,10 +1,14 @@
 "use client";
 
 import { useTransition } from "react";
-import { CreditCard, MessageSquare } from "lucide-react";
+import { CreditCard, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { getPayLinkUrl } from "@/app/actions/pay";
-import { sendTextToCustomer, type SmsResult } from "@/app/actions/sms";
+import {
+  sendEmailReminderToCustomer,
+  sendTextToCustomer,
+  type SmsResult,
+} from "@/app/actions/sms";
 import { describeDays, formatCurrency } from "@/lib/format";
 import type { Customer } from "@/lib/types";
 import { ReputationMeter } from "./ReputationMeter";
@@ -21,6 +25,7 @@ function announceSms(result: SmsResult, customer: Customer) {
 export function CustomerRow({ customer }: { customer: Customer }) {
   const [textPending, startText] = useTransition();
   const [payPending, startPay] = useTransition();
+  const [emailPending, startEmail] = useTransition();
   const isOverdue = customer.daysLate > 0;
 
   function onText() {
@@ -37,6 +42,17 @@ export function CustomerRow({ customer }: { customer: Customer }) {
         window.open(result.url, "_blank", "noopener,noreferrer");
       } else {
         alert(payErrorMessage(result.error));
+      }
+    });
+  }
+
+  function onEmail() {
+    startEmail(async () => {
+      const result = await sendEmailReminderToCustomer(customer.id);
+      if (result.ok) {
+        alert(`Emailed ${customer.email}.`);
+      } else {
+        alert(smsErrorMessage(result.error));
       }
     });
   }
@@ -90,6 +106,16 @@ export function CustomerRow({ customer }: { customer: Customer }) {
         >
           <MessageSquare className="h-4 w-4" aria-hidden />
           {textPending ? "Sending…" : "Text"}
+        </button>
+        <button
+          type="button"
+          onClick={onEmail}
+          disabled={emailPending || !customer.email}
+          title={!customer.email ? "No email on file" : undefined}
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:flex-initial"
+        >
+          <Mail className="h-4 w-4" aria-hidden />
+          {emailPending ? "Sending…" : "Email"}
         </button>
       </div>
     </div>

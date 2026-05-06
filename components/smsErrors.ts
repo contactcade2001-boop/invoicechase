@@ -4,6 +4,7 @@ const messages: Record<string, string> = {
   not_connected: "Connect QuickBooks first.",
   customer_not_found: "This customer is no longer in QuickBooks.",
   no_phone: "No phone number on file for this customer.",
+  no_email: "No email on file for this customer.",
   no_overdue_with_phone:
     "No overdue customers with phone numbers to text right now.",
   send_failed: "SMS failed. Please try again.",
