@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@theme {
+  --color-risk-low: #16a34a;
+  --color-risk-medium: #d97706;
+  --color-risk-high: #dc2626;
+}
