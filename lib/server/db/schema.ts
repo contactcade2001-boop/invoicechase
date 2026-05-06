@@ -37,6 +37,41 @@ export const subscriptions = sqliteTable("subscriptions", {
   updatedAt: integer("updated_at").notNull(),
 });
 
+export const stripeConnectAccounts = sqliteTable("stripe_connect_accounts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().unique(),
+  stripeAccountId: text("stripe_account_id").notNull().unique(),
+  chargesEnabled: integer("charges_enabled").notNull().default(0),
+  payoutsEnabled: integer("payouts_enabled").notNull().default(0),
+  detailsSubmitted: integer("details_submitted").notNull().default(0),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const payLinks = sqliteTable("pay_links", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  token: text("token").notNull().unique(),
+  userId: integer("user_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const payments = sqliteTable("payments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  amountCents: integer("amount_cents").notNull(),
+  applicationFeeCents: integer("application_fee_cents"),
+  stripeCheckoutSessionId: text("stripe_checkout_session_id").unique(),
+  stripePaymentIntentId: text("stripe_payment_intent_id").unique(),
+  status: text("status").notNull(),
+  paidAt: integer("paid_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
 export const qboConnections = sqliteTable("qbo_connections", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   userId: integer("user_id").notNull(),
@@ -54,4 +89,7 @@ export type UserRow = typeof users.$inferSelect;
 export type SessionRow = typeof sessions.$inferSelect;
 export type MagicLinkRow = typeof magicLinks.$inferSelect;
 export type SubscriptionRow = typeof subscriptions.$inferSelect;
+export type StripeConnectAccountRow = typeof stripeConnectAccounts.$inferSelect;
+export type PayLinkRow = typeof payLinks.$inferSelect;
+export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;

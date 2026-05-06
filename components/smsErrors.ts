@@ -12,3 +12,7 @@ const messages: Record<string, string> = {
 export function smsErrorMessage(code: string): string {
   return messages[code] ?? "Couldn't send. Please try again.";
 }
+
+export function payErrorMessage(code: string): string {
+  return messages[code] ?? "Couldn't open the payment link. Please try again.";
+}

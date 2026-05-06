@@ -21,6 +21,10 @@ export type DashboardData =
   | { connected: false }
   | { connected: true; companyName: string; customers: Customer[] };
 
+export type CustomerLookup =
+  | { ok: true; customer: Customer; companyName: string }
+  | { ok: false; reason: "not_connected" | "customer_not_found" };
+
 const HISTORY_WINDOW_DAYS = 730;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -130,4 +134,15 @@ export async function getDashboardData(
     companyName: conn.companyName ?? "Your business",
     customers: aggregate(customers, openInvoices, signalsByCustomer),
   };
+}
+
+export async function lookupCustomerForUser(
+  userId: number,
+  customerId: string,
+): Promise<CustomerLookup> {
+  const data = await getDashboardData(userId);
+  if (!data.connected) return { ok: false, reason: "not_connected" };
+  const customer = data.customers.find((c) => c.id === customerId);
+  if (!customer) return { ok: false, reason: "customer_not_found" };
+  return { ok: true, customer, companyName: data.companyName };
 }

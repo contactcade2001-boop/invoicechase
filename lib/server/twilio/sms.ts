@@ -1,20 +1,21 @@
 import "server-only";
 import { formatCurrencyDetailed } from "@/lib/format";
 import type { Customer } from "@/lib/types";
-import { getAppBaseUrl, getTwilioConfig, useMockSms } from "../env";
+import { getTwilioConfig, useMockSms } from "../env";
 import { getTwilio } from "./client";
 
-function buildBody(customer: Customer): string {
-  const amount = formatCurrencyDetailed(customer.amountOwed);
-  const link = `${getAppBaseUrl()}/pay/${customer.id}`;
-  return `Pay ${amount} now: ${link}`;
+function buildBody(customer: Customer, payUrl: string): string {
+  return `Pay ${formatCurrencyDetailed(customer.amountOwed)} now: ${payUrl}`;
 }
 
-export async function sendInvoiceSms(customer: Customer): Promise<void> {
+export async function sendInvoiceSms(
+  customer: Customer,
+  payUrl: string,
+): Promise<void> {
   if (!customer.phone) {
     throw new Error("Customer has no phone number on file");
   }
-  const body = buildBody(customer);
+  const body = buildBody(customer, payUrl);
   if (useMockSms()) {
     console.log(
       `[sms:mock] to=${customer.phone} body=${JSON.stringify(body)}`,

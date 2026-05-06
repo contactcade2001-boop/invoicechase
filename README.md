@@ -43,9 +43,12 @@ Paste into `APP_ENCRYPTION_KEY`. Used to encrypt QBO tokens at rest.
 
 1. Get test keys from https://dashboard.stripe.com/test/apikeys → `STRIPE_SECRET_KEY`.
 2. Create a recurring $49/month price in test mode → copy the `price_…` ID into `STRIPE_PRICE_ID`.
-3. For local webhooks, install the Stripe CLI and run:
+3. **Enable Stripe Connect** at https://dashboard.stripe.com/test/connect/overview (no extra env vars — the existing secret key is used to manage Connect accounts on behalf of your platform).
+4. For local webhooks, install the Stripe CLI and run:
    ```bash
-   stripe listen --forward-to localhost:3000/api/stripe/webhook
+   stripe listen \
+     --forward-to localhost:3000/api/stripe/webhook \
+     --events checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,account.updated
    ```
    Copy the printed signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
 
@@ -75,8 +78,10 @@ Skips Twilio entirely; SMS messages are logged to the server console as `[sms:mo
 - `/billing` — subscription management (auth required)
 - `/api/auth/{request,verify,logout}` — magic-link lifecycle
 - `/api/qbo/{connect,callback,disconnect}` — QuickBooks OAuth lifecycle
-- `/api/stripe/{checkout,portal,webhook}` — Stripe billing lifecycle
-- Server actions in `app/actions/sms.ts` — Twilio SMS for the Text and bulk-text buttons
+- `/api/stripe/{checkout,portal,connect,webhook}` — Stripe subscription + Connect onboarding + webhook
+- `/pay/[token]` — public payment page reached via SMS or Pay Now
+- `/api/pay/[token]/checkout` — creates a one-time Stripe Checkout session for the customer
+- Server actions in `app/actions/{sms,pay}.ts` — Twilio SMS, Pay Now URL generation
 
 ## What gets stored
 
@@ -88,6 +93,9 @@ Skips Twilio entirely; SMS messages are logged to the server console as `[sms:mo
 | `sessions` | session cookie ↔ user |
 | `magic_links` | hashed one-time tokens, 15-min TTL |
 | `subscriptions` | one row per user with `stripe_customer_id`, `stripe_subscription_id`, status, current period end |
+| `stripe_connect_accounts` | one row per user with `stripe_account_id` (Express) and the `charges_enabled` / `payouts_enabled` flags |
+| `pay_links` | random tokens that map to (user_id, customer_id); 30-day TTL, used in SMS + Pay Now URLs |
+| `payments` | record of every one-time customer payment (Stripe checkout session + payment intent IDs, amount, application fee) |
 | `qbo_connections` | one row per QBO company linked to a user; access/refresh tokens encrypted with AES-256-GCM |
 
 Schema is created (and idempotently migrated) on first DB access.
@@ -117,8 +125,9 @@ lib/
     db/                              client, schema, users, sessions,
                                      subscriptions, connections
     qbo/                             config, oauth, client, sync, reputation
-    stripe/                          client, checkout (+portal), webhook
+    stripe/                          client, checkout, connect, payCheckout, webhook
     twilio/                          client, sendInvoiceSms
+    pay/                             pay-link helper
 ```
 
 ## Reputation score
@@ -132,8 +141,18 @@ Risk tier (`high` / `medium` / `low`) is derived from the score in `sync.ts`.
 
 ## SMS
 
-The Text button and the bulk "Text ALL overdue" button call server actions in `app/actions/sms.ts`. Each message is `Pay $X now: ${APP_BASE_URL}/pay/{customerId}`. The `/pay/:customerId` route doesn't exist yet — it lands in the next slice (Stripe Checkout for the 1.9% success fee).
+The Text button and the bulk "Text ALL overdue" button call server actions in `app/actions/sms.ts`. Each message is `Pay $X now: ${APP_BASE_URL}/pay/{token}` where `{token}` is a random pay-link key (`pay_links` table, 30-day TTL). Pay Now uses the same link generator and opens the public page in a new tab.
+
+## Payments (Stripe Connect)
+
+Each merchant onboards a Stripe Express account via `/billing` → "Connect Stripe". When a customer hits `/pay/[token]`:
+
+1. Token is resolved to (user_id, customer_id, expires_at).
+2. We re-query QBO for the customer's current open balance.
+3. If charges are enabled, we render a Pay button.
+4. On click, `/api/pay/[token]/checkout` creates a one-time Stripe Checkout session in `payment` mode with `transfer_data.destination` pointing at the merchant's Connect account and an `application_fee_amount` of 1.9% (190 bps via `applicationFeeCents` in `lib/server/stripe/connect.ts`).
+5. On success, the webhook records the payment in the `payments` table.
 
 ## Out of scope
 
-Real email delivery, Stripe Connect for the 1.9% success fee + the `/pay/:customerId` route, full pagination of QBO queries, password-based auth.
+Real email delivery, full pagination of QBO queries, marking the QBO invoice as paid via the QBO API after webhook success, password-based auth.

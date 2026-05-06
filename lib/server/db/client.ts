@@ -45,6 +45,43 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   updated_at INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS stripe_connect_accounts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL UNIQUE,
+  stripe_account_id TEXT NOT NULL UNIQUE,
+  charges_enabled INTEGER NOT NULL DEFAULT 0,
+  payouts_enabled INTEGER NOT NULL DEFAULT 0,
+  details_submitted INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS pay_links (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  token TEXT NOT NULL UNIQUE,
+  user_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS pay_links_user_customer ON pay_links(user_id, customer_id);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  amount_cents INTEGER NOT NULL,
+  application_fee_cents INTEGER,
+  stripe_checkout_session_id TEXT UNIQUE,
+  stripe_payment_intent_id TEXT UNIQUE,
+  status TEXT NOT NULL,
+  paid_at INTEGER,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS payments_user_id ON payments(user_id);
+
 CREATE TABLE IF NOT EXISTS qbo_connections (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL DEFAULT 0,
