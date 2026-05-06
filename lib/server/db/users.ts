@@ -38,3 +38,14 @@ export function markEmailVerified(userId: number): void {
     .where(eq(users.id, userId))
     .run();
 }
+
+export function setSmsTemplate(
+  userId: number,
+  template: string | null,
+): void {
+  const db = getDb();
+  db.update(users)
+    .set({ smsTemplate: template, updatedAt: Date.now() })
+    .where(eq(users.id, userId))
+    .run();
+}

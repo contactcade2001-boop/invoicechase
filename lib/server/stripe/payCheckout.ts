@@ -43,11 +43,13 @@ export async function createPayCheckoutUrl(input: {
         },
       },
     ],
+    customer_email: input.customer.email,
     payment_intent_data: {
       application_fee_amount: fee,
       transfer_data: {
         destination: account!.stripeAccountId,
       },
+      receipt_email: input.customer.email,
       metadata: {
         userId: String(input.userId),
         customerId: input.customer.id,

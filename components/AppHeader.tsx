@@ -5,6 +5,7 @@ const tabs = [
   { key: "dashboard", href: "/dashboard", label: "Dashboard" },
   { key: "payments", href: "/payments", label: "Payments" },
   { key: "billing", href: "/billing", label: "Billing" },
+  { key: "settings", href: "/settings", label: "Settings" },
 ] as const;
 
 export type AppHeaderTab = (typeof tabs)[number]["key"];

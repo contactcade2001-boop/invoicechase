@@ -10,6 +10,7 @@ export type Customer = {
   riskTier: RiskTier;
   reputationScore: number;
   phone: string;
+  email?: string;
 };
 
 export const REPUTATION_MIN = 300;

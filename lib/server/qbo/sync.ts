@@ -119,6 +119,7 @@ function aggregate(
       reputationScore,
       riskTier: tierFromScore(reputationScore),
       phone: pickPhone(qbo),
+      email: qbo.PrimaryEmailAddr?.Address,
     });
   }
   out.sort((a, b) => b.amountOwed - a.amountOwed);

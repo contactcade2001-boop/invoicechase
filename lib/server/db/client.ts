@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL UNIQUE,
   email_verified_at INTEGER,
+  sms_template TEXT,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
@@ -115,6 +116,15 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     !paymentCols.some((c) => c.name === "qbo_payment_id")
   ) {
     sqlite.exec("ALTER TABLE payments ADD COLUMN qbo_payment_id TEXT");
+  }
+  const userCols = sqlite
+    .prepare("PRAGMA table_info(users)")
+    .all() as Array<{ name: string }>;
+  if (
+    userCols.length > 0 &&
+    !userCols.some((c) => c.name === "sms_template")
+  ) {
+    sqlite.exec("ALTER TABLE users ADD COLUMN sms_template TEXT");
   }
 }
 

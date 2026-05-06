@@ -86,6 +86,7 @@ export type QboCustomer = {
   Active?: boolean;
   PrimaryPhone?: { FreeFormNumber?: string };
   Mobile?: { FreeFormNumber?: string };
+  PrimaryEmailAddr?: { Address?: string };
 };
 
 export type QboInvoice = {
@@ -145,7 +146,7 @@ export async function listCustomers(
   return paginate<"Customer", QboCustomer>(
     conn,
     "Customer",
-    "SELECT Id, DisplayName, Active, PrimaryPhone, Mobile FROM Customer WHERE Active = true",
+    "SELECT Id, DisplayName, Active, PrimaryPhone, Mobile, PrimaryEmailAddr FROM Customer WHERE Active = true",
   );
 }
 

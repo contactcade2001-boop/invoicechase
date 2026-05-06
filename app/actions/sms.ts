@@ -6,6 +6,7 @@ import {
   isActive,
 } from "@/lib/server/db/subscriptions";
 import type { UserRow } from "@/lib/server/db/schema";
+import { setSmsTemplate } from "@/lib/server/db/users";
 import { getOrCreatePayLink } from "@/lib/server/pay/links";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 import { sendInvoiceSms } from "@/lib/server/twilio/sms";
@@ -15,7 +16,11 @@ export type SmsResult =
   | { ok: true; sentCount: number; failedCount: number }
   | { ok: false; error: string };
 
-type Loaded = { user: UserRow; customers: Customer[] };
+type Loaded = {
+  user: UserRow;
+  customers: Customer[];
+  businessName: string;
+};
 
 async function loadCustomers(): Promise<Loaded | { error: string }> {
   const user = await getCurrentUser();
@@ -25,15 +30,23 @@ async function loadCustomers(): Promise<Loaded | { error: string }> {
   }
   const data = await getDashboardData(user.id);
   if (!data.connected) return { error: "not_connected" };
-  return { user, customers: data.customers };
+  return {
+    user,
+    customers: data.customers,
+    businessName: data.companyName,
+  };
 }
 
 async function sendOne(
-  user: UserRow,
+  loaded: Loaded,
   customer: Customer,
 ): Promise<void> {
-  const { url } = getOrCreatePayLink(user.id, customer.id);
-  await sendInvoiceSms(customer, url);
+  const { url } = getOrCreatePayLink(loaded.user.id, customer.id);
+  await sendInvoiceSms(customer, {
+    template: loaded.user.smsTemplate,
+    businessName: loaded.businessName,
+    payUrl: url,
+  });
 }
 
 export async function sendTextToCustomer(
@@ -45,7 +58,7 @@ export async function sendTextToCustomer(
   if (!customer) return { ok: false, error: "customer_not_found" };
   if (!customer.phone) return { ok: false, error: "no_phone" };
   try {
-    await sendOne(loaded.user, customer);
+    await sendOne(loaded, customer);
     return { ok: true, sentCount: 1, failedCount: 0 };
   } catch (err) {
     console.error("[sms] send failed", err);
@@ -63,7 +76,7 @@ export async function bulkTextOverdue(): Promise<SmsResult> {
     return { ok: false, error: "no_overdue_with_phone" };
   }
   const results = await Promise.allSettled(
-    overdue.map((c) => sendOne(loaded.user, c)),
+    overdue.map((c) => sendOne(loaded, c)),
   );
   let sent = 0;
   let failed = 0;
@@ -77,3 +90,15 @@ export async function bulkTextOverdue(): Promise<SmsResult> {
   return { ok: true, sentCount: sent, failedCount: failed };
 }
 
+export async function saveSmsTemplate(
+  template: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  const trimmed = template.trim();
+  if (trimmed.length > 320) {
+    return { ok: false, error: "too_long" };
+  }
+  setSmsTemplate(user.id, trimmed.length === 0 ? null : trimmed);
+  return { ok: true };
+}
