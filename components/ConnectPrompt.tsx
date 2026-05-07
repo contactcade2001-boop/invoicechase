@@ -1,6 +1,12 @@
 import { Link2 } from "lucide-react";
 
-export function ConnectPrompt({ error }: { error?: string }) {
+export function ConnectPrompt({
+  error,
+  showXero = false,
+}: {
+  error?: string;
+  showXero?: boolean;
+}) {
   return (
     <div className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center text-center">
       <div className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200 sm:p-10">
@@ -8,7 +14,7 @@ export function ConnectPrompt({ error }: { error?: string }) {
           <Link2 className="h-6 w-6 text-emerald-700" aria-hidden />
         </div>
         <h1 className="mt-4 text-2xl font-bold text-slate-900">
-          Connect QuickBooks to see who owes you
+          Connect your accounting to see who owes you
         </h1>
         <p className="mt-2 text-sm text-slate-600">
           We&apos;ll pull your customers and unpaid invoices, show you the
@@ -19,14 +25,24 @@ export function ConnectPrompt({ error }: { error?: string }) {
             Connection failed: {error}
           </div>
         ) : null}
-        <a
-          href="/api/qbo/connect"
-          className="mt-6 inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
-        >
-          Connect QuickBooks
-        </a>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          <a
+            href="/api/qbo/connect"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+          >
+            Connect QuickBooks
+          </a>
+          {showXero ? (
+            <a
+              href="/api/xero/connect"
+              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+            >
+              Connect Xero
+            </a>
+          ) : null}
+        </div>
         <p className="mt-3 text-xs text-slate-500">
-          Read-only access to customers and invoices.
+          Read-only access to customers and invoices. Disconnect any time.
         </p>
       </div>
     </div>

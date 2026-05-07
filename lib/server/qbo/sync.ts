@@ -146,23 +146,31 @@ async function fetchFreshDashboardData(
   organizationId: number,
 ): Promise<DashboardData> {
   const conn = getConnectionForOrg(organizationId);
-  if (!conn) return { connected: false };
+  if (conn) {
+    const since = isoDaysAgo(new Date(), HISTORY_WINDOW_DAYS);
+    const [customers, openInvoices, paidInvoices, payments] = await Promise.all(
+      [
+        listCustomers(conn),
+        listOpenInvoices(conn),
+        listPaidInvoicesSince(conn, since),
+        listPaymentsSince(conn, since),
+      ],
+    );
+    const signalsByCustomer = collectPaymentSignals(paidInvoices, payments);
+    return {
+      connected: true,
+      companyName: conn.companyName ?? "Your business",
+      customers: aggregate(customers, openInvoices, signalsByCustomer),
+    };
+  }
 
-  const since = isoDaysAgo(new Date(), HISTORY_WINDOW_DAYS);
-  const [customers, openInvoices, paidInvoices, payments] = await Promise.all([
-    listCustomers(conn),
-    listOpenInvoices(conn),
-    listPaidInvoicesSince(conn, since),
-    listPaymentsSince(conn, since),
-  ]);
+  // No QBO connection — try Xero. Lazy-imported so the QBO sync module
+  // doesn't carry the Xero client into bundles that don't need it.
+  const { fetchXeroDashboardData } = await import("../xero/sync");
+  const xero = await fetchXeroDashboardData(organizationId);
+  if (xero.connected) return xero;
 
-  const signalsByCustomer = collectPaymentSignals(paidInvoices, payments);
-
-  return {
-    connected: true,
-    companyName: conn.companyName ?? "Your business",
-    customers: aggregate(customers, openInvoices, signalsByCustomer),
-  };
+  return { connected: false };
 }
 
 function persistDashboardCache(
@@ -335,12 +343,22 @@ export async function getCustomerDetail(
   }
 
   const conn = getConnectionForOrg(organizationId);
-  if (!conn) return { ok: false, reason: "not_connected" };
-  const today = new Date();
-  const invoices = (await listOpenInvoicesForCustomer(conn, customerId))
-    .map((inv) => toLine(inv, today))
-    .sort((a, b) => b.daysLate - a.daysLate);
+  if (conn) {
+    const today = new Date();
+    const invoices = (await listOpenInvoicesForCustomer(conn, customerId))
+      .map((inv) => toLine(inv, today))
+      .sort((a, b) => b.daysLate - a.daysLate);
+    return {
+      ok: true,
+      customer: lookup.customer,
+      companyName: lookup.companyName,
+      invoices,
+    };
+  }
 
+  // Xero customer detail
+  const { fetchXeroCustomerInvoices } = await import("../xero/sync");
+  const invoices = await fetchXeroCustomerInvoices(organizationId, customerId);
   return {
     ok: true,
     customer: lookup.customer,

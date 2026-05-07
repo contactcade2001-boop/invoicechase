@@ -28,6 +28,22 @@ export function getQboConfig() {
   };
 }
 
+export function getXeroConfig() {
+  return {
+    clientId: required("XERO_CLIENT_ID"),
+    clientSecret: required("XERO_CLIENT_SECRET"),
+    redirectUri: required("XERO_REDIRECT_URI"),
+  };
+}
+
+export function isXeroConfigured(): boolean {
+  return !!(
+    process.env.XERO_CLIENT_ID &&
+    process.env.XERO_CLIENT_SECRET &&
+    process.env.XERO_REDIRECT_URI
+  );
+}
+
 export function getStripeConfig() {
   return {
     secretKey: required("STRIPE_SECRET_KEY"),

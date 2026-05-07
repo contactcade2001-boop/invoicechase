@@ -13,6 +13,8 @@ import { getCurrentUser } from "@/lib/server/auth/session";
 import { getA2pRegistration } from "@/lib/server/db/a2p";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
 import { getOrgById } from "@/lib/server/db/organizations";
+import { getXeroConnectionForOrg } from "@/lib/server/db/xeroConnections";
+import { isXeroConfigured } from "@/lib/server/env";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -34,7 +36,10 @@ export default async function SettingsPage() {
 
   const org = getOrgById(orgId)!;
   const conn = getConnectionForOrg(orgId);
-  const businessName = conn?.companyName ?? "Your business";
+  const xeroConn = getXeroConnectionForOrg(orgId);
+  const xeroEnabled = isXeroConfigured();
+  const businessName =
+    conn?.companyName ?? xeroConn?.tenantName ?? "Your business";
   const isOwner = user.role === "owner";
   const a2p = getA2pRegistration(orgId);
 
@@ -96,6 +101,89 @@ export default async function SettingsPage() {
 
         {isOwner ? (
           <>
+            <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+              <h2 className="text-lg font-semibold">Accounting connection</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Connect QuickBooks Online{xeroEnabled ? " or Xero" : ""}.
+                Customers, invoices, and payments sync automatically.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                  <p className="text-sm font-semibold">QuickBooks Online</p>
+                  {conn ? (
+                    <>
+                      <p className="mt-1 text-xs text-slate-600">
+                        Connected as{" "}
+                        <span className="font-mono">
+                          {conn.companyName ?? conn.realmId}
+                        </span>
+                      </p>
+                      <form
+                        action="/api/qbo/disconnect"
+                        method="post"
+                        className="mt-3"
+                      >
+                        <button
+                          type="submit"
+                          className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                        >
+                          Disconnect QuickBooks
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <a
+                      href="/api/qbo/connect"
+                      className="mt-3 inline-flex items-center gap-1 rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-800"
+                    >
+                      Connect QuickBooks
+                    </a>
+                  )}
+                </div>
+                <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                  <p className="text-sm font-semibold">Xero</p>
+                  {!xeroEnabled ? (
+                    <p className="mt-1 text-xs text-slate-500">
+                      Xero integration not configured on this server.
+                    </p>
+                  ) : xeroConn ? (
+                    <>
+                      <p className="mt-1 text-xs text-slate-600">
+                        Connected as{" "}
+                        <span className="font-mono">
+                          {xeroConn.tenantName ?? xeroConn.tenantId}
+                        </span>
+                      </p>
+                      <form
+                        action="/api/xero/disconnect"
+                        method="post"
+                        className="mt-3"
+                      >
+                        <button
+                          type="submit"
+                          className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                        >
+                          Disconnect Xero
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <a
+                      href="/api/xero/connect"
+                      className="mt-3 inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-100"
+                    >
+                      Connect Xero
+                    </a>
+                  )}
+                </div>
+              </div>
+              {conn && xeroConn ? (
+                <p className="mt-3 text-xs text-amber-700">
+                  Both connections active — we&apos;ll prefer QuickBooks. Disconnect QuickBooks if you want Xero to take over.
+                </p>
+              ) : null}
+            </section>
+
             <AutomationSettings
               initial={{
                 autopilotEnabled: org.autopilotEnabled === 1,

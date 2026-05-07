@@ -7,12 +7,14 @@ import {
   type OnboardingStep,
 } from "@/components/OnboardingChecklist";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { isXeroConfigured } from "@/lib/server/env";
 import {
   canAcceptPayments,
   getConnectAccount,
 } from "@/lib/server/db/connect";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
 import { listOrgMembers } from "@/lib/server/db/organizations";
+import { getXeroConnectionForOrg } from "@/lib/server/db/xeroConnections";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -43,6 +45,7 @@ export default async function DashboardPage({
   const data = await getDashboardData(orgId);
   const connectAccount = getConnectAccount(orgId);
   const qboConn = getConnectionForOrg(orgId);
+  const xeroConn = getXeroConnectionForOrg(orgId);
   const members = listOrgMembers(orgId);
 
   const onboarding: OnboardingStep[] =
@@ -50,11 +53,13 @@ export default async function DashboardPage({
       ? [
           {
             key: "qbo",
-            title: "Connect QuickBooks",
-            body: "Pull your customers and unpaid invoices automatically.",
-            href: "/api/qbo/connect",
+            title: "Connect your accounting",
+            body: isXeroConfigured()
+              ? "Connect QuickBooks Online or Xero. Customers and unpaid invoices sync automatically."
+              : "Pull your customers and unpaid invoices automatically.",
+            href: "/settings",
             cta: "Connect",
-            done: !!qboConn,
+            done: !!qboConn || !!xeroConn,
           },
           {
             key: "stripe",
@@ -90,7 +95,10 @@ export default async function DashboardPage({
             stale={data.stale ?? false}
           />
         ) : (
-          <ConnectPrompt error={sp.qbo_error} />
+          <ConnectPrompt
+            error={sp.qbo_error}
+            showXero={isXeroConfigured()}
+          />
         )}
       </main>
     </div>

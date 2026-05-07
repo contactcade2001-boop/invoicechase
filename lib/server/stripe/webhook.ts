@@ -29,6 +29,9 @@ import {
   markInstallmentPaid,
 } from "../db/paymentPlans";
 import { recordPaymentInQbo } from "../qbo/recordPayment";
+import { getConnectionForOrg } from "../db/connections";
+import { getXeroConnectionForOrg } from "../db/xeroConnections";
+import { recordPaymentInXero } from "../xero/recordPayment";
 import { createQboRefundReceipt } from "../qbo/refundReceipt";
 import { invalidateDashboardCache } from "../qbo/sync";
 import { voidQboPayment } from "../qbo/voidPayment";
@@ -168,19 +171,58 @@ async function applyOneTimePayment(
 
   const existing = findPaymentBySession(session.id);
   if (!existing?.qboPaymentId) {
-    try {
-      const result = await recordPaymentInQbo({
-        organizationId,
-        customerId,
-        amountCents,
-        noteRef: session.id,
-      });
-      finalizePayment(session.id, result);
-    } catch (err) {
-      captureException(err, {
-        where: "qbo.mark-paid",
-        sessionId: session.id,
-      });
+    const qboConn = getConnectionForOrg(organizationId);
+    if (qboConn) {
+      try {
+        const result = await recordPaymentInQbo({
+          organizationId,
+          customerId,
+          amountCents,
+          noteRef: session.id,
+        });
+        finalizePayment(session.id, result);
+      } catch (err) {
+        captureException(err, {
+          where: "qbo.mark-paid",
+          sessionId: session.id,
+        });
+      }
+    } else if (getXeroConnectionForOrg(organizationId)) {
+      // Xero is the source of truth — apply payment(s) FIFO to open invoices.
+      try {
+        const result = await recordPaymentInXero({
+          organizationId,
+          customerId,
+          amountCents,
+          noteRef: session.id,
+        });
+        if (result.ok) {
+          // Use the first payment ID as the canonical reference; subsequent
+          // payments still close their respective invoices in Xero.
+          finalizePayment(session.id, {
+            qboPaymentId: result.paymentIds[0] ?? null,
+          });
+          if (result.leftoverCents > 0) {
+            console.warn(
+              "[xero] payment leftover after applying to open invoices",
+              {
+                sessionId: session.id,
+                leftoverCents: result.leftoverCents,
+              },
+            );
+          }
+        } else {
+          captureException(new Error(`xero.record_failed:${result.error}`), {
+            where: "xero.mark-paid",
+            sessionId: session.id,
+          });
+        }
+      } catch (err) {
+        captureException(err, {
+          where: "xero.mark-paid",
+          sessionId: session.id,
+        });
+      }
     }
   }
 
