@@ -4,6 +4,7 @@ import {
   Check,
   CreditCard,
   MessageSquare,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -29,12 +30,18 @@ const steps = [
     title: "Collect with one click",
     body: "Pay Now opens a Stripe checkout. Text sends an SMS with the link. Bulk-text every overdue customer at once.",
   },
+  {
+    icon: Sparkles,
+    title: "Let AI handle the back-and-forth",
+    body: "When customers reply, our AI answers in your voice — “When can you pay?”, “Can I get an extension?” — politely, on-brand, 24/7. You stay focused on running the business; we get you paid faster.",
+  },
 ];
 
 const pricingFeatures = [
   "Live QuickBooks sync",
+  "AI autopilot replies to customer texts in your voice",
   "One-click Stripe payment links",
-  "One-click and bulk SMS reminders",
+  "One-click and bulk SMS + email reminders",
   "Customer reputation scores",
   "Total owed + DSO at a glance",
   "Cancel anytime",
@@ -96,10 +103,13 @@ export default function LandingPage() {
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Stop chasing invoices.
             <br />
-            Start getting paid.
+            Let AI get you paid.
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-slate-600">
-            Connect QuickBooks. See every customer who owes you. Collect with one click.
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-600">
+            Connect QuickBooks. We text your overdue customers, and our AI handles
+            their replies in your voice — &ldquo;when can you pay?&rdquo;,
+            &ldquo;can I split it?&rdquo; — so you don&apos;t have to. You sleep;
+            the money still comes in.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -139,9 +149,12 @@ export default function LandingPage() {
         >
           <div className="mx-auto max-w-5xl px-4">
             <h2 className="text-center text-3xl font-bold tracking-tight">
-              Three steps. That&apos;s it.
+              Set it up once. Get paid on autopilot.
             </h2>
-            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <p className="mt-3 text-center text-slate-600">
+              Connect, sit back, watch the deposits land.
+            </p>
+            <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map((step, i) => (
                 <div
                   key={step.title}

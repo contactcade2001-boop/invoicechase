@@ -19,10 +19,10 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-      <div className="hidden grid-cols-[1.6fr_1fr_1fr_auto] items-center gap-4 border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid">
+      <div className="hidden grid-cols-[minmax(0,2.2fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(280px,auto)] items-center gap-4 border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 md:grid">
         <div>Customer</div>
-        <div>Amount owed</div>
-        <div>Status</div>
+        <div className="text-right">Amount owed</div>
+        <div className="text-right">Status</div>
         <div className="text-right">Actions</div>
       </div>
       <div>
