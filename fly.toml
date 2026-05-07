@@ -1,0 +1,49 @@
+# Fly.io deploy config for Invoice Chase.
+#
+# Initial setup (one-time, from your laptop):
+#   fly launch --no-deploy --copy-config --name invoicechase --region iad
+#   fly volumes create data --region iad --size 3
+#   ./scripts/fly-set-secrets.sh   # see scripts/fly-set-secrets.sh
+#   fly deploy
+#
+# Update name + region below if needed. SQLite + better-sqlite3 wants a
+# single machine — keep min/max at 1 unless you also wire LiteFS.
+
+app = "invoicechase"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "3000"
+  DB_PATH = "/data/app.db"
+  NODE_ENV = "production"
+
+[[mounts]]
+  source = "data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "off"      # SQLite owner — never spin down to zero.
+  auto_start_machines = true
+  min_machines_running = 1
+  max_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "20s"
+    interval = "15s"
+    method = "get"
+    timeout = "5s"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+  cpus = 1
+
+[processes]
+  app = "/app/start.sh"

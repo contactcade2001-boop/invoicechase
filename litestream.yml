@@ -1,0 +1,22 @@
+# Litestream replicates the SQLite database to S3-compatible storage so
+# we can restore on boot if the volume is lost. Only active when
+# LITESTREAM_REPLICA_URL is set in the environment.
+#
+# Example values:
+#   s3://my-bucket/invoicechase
+#   abs://my-account.blob.core.windows.net/my-container/invoicechase
+#   gs://my-bucket/invoicechase
+#
+# For S3-compatible providers (R2, B2, MinIO) set:
+#   LITESTREAM_ACCESS_KEY_ID, LITESTREAM_SECRET_ACCESS_KEY, and
+#   include endpoint+region in the URL via litestream URL parameters.
+
+dbs:
+  - path: ${DB_PATH}
+    replicas:
+      - url: ${LITESTREAM_REPLICA_URL}
+        # Keep ~14 days of point-in-time recovery.
+        retention: 336h
+        retention-check-interval: 1h
+        snapshot-interval: 24h
+        sync-interval: 10s

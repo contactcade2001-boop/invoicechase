@@ -1,0 +1,67 @@
+name: cron
+
+# Hits the /api/cron/* routes on a schedule. Each job calls one endpoint
+# with the CRON_SECRET as a Bearer token. Jobs are independent; one failing
+# doesn't block the others.
+#
+# Required GitHub repo secrets:
+#   APP_BASE_URL    e.g. https://invoicechase.com
+#   CRON_SECRET     same value set on the deployed app
+
+on:
+  schedule:
+    # Daily at 14:00 UTC ≈ 9am ET — covers payment plan reminders and the
+    # deposit poller.
+    - cron: "0 14 * * *"
+    # Mondays at 15:00 UTC for the weekly digest.
+    - cron: "0 15 * * 1"
+    # 3rd of each month at 12:00 UTC for partner commission rollup
+    # (covers the prior full calendar month).
+    - cron: "0 12 3 * *"
+  workflow_dispatch: {}
+
+jobs:
+  daily:
+    if: github.event.schedule == '0 14 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        endpoint:
+          - deposit-poller
+          - payment-plan-reminders
+    steps:
+      - name: Hit ${{ matrix.endpoint }}
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/${{ matrix.endpoint }}"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  weekly-digest:
+    if: github.event.schedule == '0 15 * * 1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Weekly digest
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/weekly-digest"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  monthly-commissions:
+    if: github.event.schedule == '0 12 3 * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Partner commission rollup
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/partner-commissions"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}

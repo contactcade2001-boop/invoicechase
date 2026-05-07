@@ -260,3 +260,90 @@ npm run test
 ## Out of scope
 
 Programmatic Twilio number provisioning (orgs add their own number manually in the Twilio console), real email templates beyond magic links, password-based auth, ACH / international payments, partial-refund accounting, A2P 10DLC registration automation.
+
+## Deploy to production
+
+The repo ships with a Dockerfile + `fly.toml` + cron workflow + launch-readiness checker. The path is "paste keys, then `fly deploy`".
+
+### 1. One-time setup
+
+```bash
+# Install Fly CLI: https://fly.io/docs/flyctl/install/
+fly auth login
+
+# Bootstrap the app (uses fly.toml in this repo)
+fly launch --no-deploy --copy-config --name invoicechase --region iad
+
+# Persistent volume for SQLite + cached QBO data
+fly volumes create data --region iad --size 3
+```
+
+### 2. Mint and stage secrets
+
+```bash
+# Print fresh APP_ENCRYPTION_KEY + CRON_SECRET (don't commit)
+npm run gen-secrets
+
+# Copy the env template, fill in real values from your provider dashboards
+cp .env.production.example .env.production.local
+$EDITOR .env.production.local
+
+# Push every populated value into Fly's secret store in one shot
+./scripts/fly-set-secrets.sh
+```
+
+Required env vars are documented in [.env.production.example](./.env.production.example). At minimum you need: APP\_BASE\_URL, APP\_ENCRYPTION\_KEY, CRON\_SECRET, ADMIN\_EMAILS, QBO\_\*, STRIPE\_\*, TWILIO\_\*, RESEND\_\*, ANTHROPIC\_API\_KEY.
+
+### 3. Verify before deploying
+
+```bash
+# Run the launch-readiness check against your local prod env file
+node --env-file=.env.production.local scripts/check-launch-ready.mjs
+
+# Expected: "✔ Launch readiness: required vars OK"
+# Common failures: STRIPE_SECRET_KEY still on sk_test_, QBO_ENVIRONMENT=sandbox,
+# missing APP_ENCRYPTION_KEY, or USE_MOCK_* set.
+```
+
+### 4. Deploy
+
+```bash
+fly deploy
+fly logs           # tail live logs
+fly status         # confirm one machine running, healthcheck passing
+```
+
+Visit `https://invoicechase.com/api/health` — should return `{ "ok": true, "db": "ok" }`.
+
+### 5. Wire scheduled jobs
+
+Two equivalent options:
+
+**GitHub Actions** (default — already in `.github/workflows/cron.yml`). Add repo secrets `APP_BASE_URL` and `CRON_SECRET`. Daily at 14:00 UTC the workflow hits `/api/cron/deposit-poller` and `/api/cron/payment-plan-reminders`; weekly Monday at 15:00 UTC hits `/api/cron/weekly-digest`; the 3rd of each month at 12:00 UTC runs `/api/cron/partner-commissions`.
+
+**Fly Machines schedule** (alternative): `fly machine run --schedule daily ...`.
+
+### 6. Continuous SQLite backups (recommended)
+
+Set `LITESTREAM_REPLICA_URL` to an S3-compatible bucket URL. The container's entrypoint will:
+
+- Restore the database on first boot if a replica exists,
+- Stream WAL segments to the bucket every 10 seconds,
+- Keep 14 days of point-in-time recovery.
+
+Cloudflare R2 is the cheapest defensible option. Bucket + access key + secret go into `LITESTREAM_REPLICA_URL`, `LITESTREAM_ACCESS_KEY_ID`, `LITESTREAM_SECRET_ACCESS_KEY`.
+
+### 7. Configure each integration
+
+After the deploy is live, configure the providers themselves:
+
+- **Stripe**: in the dashboard, set the webhook endpoint to `https://invoicechase.com/api/stripe/webhook` and listen for `checkout.session.completed`, `customer.subscription.*`, `account.updated`, `charge.refunded`, `charge.dispute.created`. Copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
+- **QuickBooks**: in the Intuit developer portal, set the OAuth redirect URI to `https://invoicechase.com/api/qbo/callback` on your production app.
+- **Twilio**: register your A2P 10DLC brand + campaign (1–2 weeks). Once `campaign_status` flips to `approved` in Settings → SMS compliance, set `REQUIRE_A2P=true` to gate sending.
+- **Resend**: verify the sending domain (DKIM/SPF/DMARC) so receipts and magic links land in the inbox.
+
+### 8. Smoke test
+
+Sign up a fake org, connect QuickBooks, send yourself an SMS, run a $1 Stripe payment, verify the receipt email + dashboard cache + QBO write-back all happen as expected. Refund it, confirm `/payments` reflects the refund.
+
+You're live.
