@@ -10,6 +10,7 @@ import {
   recentMessages,
   setConversationAutopilotPaused,
 } from "../db/sms";
+import { findUserById } from "../db/users";
 import { getOrCreatePayLink } from "../pay/links";
 import { getDashboardData } from "../qbo/sync";
 import { sendRawSms } from "../twilio/sms";
@@ -116,6 +117,9 @@ export async function recordInboundAndMaybeReply(input: {
       ? getOrCreatePayLink(input.org.id, customer.id).url
       : null;
 
+  // Pull the owner's SMS template — it's our best signal for how they talk
+  // to customers, so Claude uses it as a voice anchor.
+  const owner = findUserById(input.org.ownerUserId);
   const ctx: AutopilotContext = {
     businessName,
     customerName: customer?.name ?? null,
@@ -124,6 +128,7 @@ export async function recordInboundAndMaybeReply(input: {
     payUrl,
     history: recentMessages(conversation.id, HISTORY_DEPTH),
     totalMessageCount: countMessagesInConversation(conversation.id),
+    voiceExample: owner?.smsTemplate ?? null,
   };
 
   const result = await generateAutopilotReply(ctx);

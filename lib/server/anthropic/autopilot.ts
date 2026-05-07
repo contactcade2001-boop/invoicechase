@@ -21,12 +21,16 @@ export type AutopilotContext = {
   payUrl: string | null;
   history: SmsMessageRow[];
   totalMessageCount?: number;
+  // Owner's saved SMS template — fed to Claude as a voice example so the
+  // reply matches the business owner's tone instead of generic AI-speak.
+  voiceExample?: string | null;
 };
 
 const SYSTEM_PROMPT = `You are a polite, professional collections assistant texting on behalf of a small business.
 
 Rules:
 - Always be brief (under 160 characters when possible).
+- Match the business owner's tone exactly — if they're casual, be casual; if they're formal, be formal. A "voice example" of their writing may be provided below.
 - Never be aggressive, judgmental, or threatening. Treat the customer with respect.
 - Never invent invoice numbers, dates, or amounts that weren't provided.
 - If the customer asks for a payment link, share the one provided.
@@ -34,7 +38,8 @@ Rules:
 - If the customer asks to stop texts, reply briefly acknowledging and stop.
 - If the customer asks a complex question (dispute, refund, billing detail), say a teammate from the business will follow up directly. Do not invent specifics.
 - Never agree to extensions, discounts, or payment plans on the business's behalf — defer those decisions to the business.
-- Sign off naturally; don't use signatures or formal closings.`;
+- Sign off naturally; don't use signatures or formal closings.
+- Never identify yourself as an AI or refer to "the business owner" in third person — speak AS the business.`;
 
 function formatCurrency(cents: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -56,6 +61,7 @@ function buildUserPrompt(ctx: AutopilotContext): string {
     ctx.totalMessageCount && ctx.totalMessageCount > ctx.history.length
       ? ctx.totalMessageCount - ctx.history.length
       : 0;
+  const voice = ctx.voiceExample?.trim();
   return [
     `Business: ${ctx.businessName}`,
     ctx.customerName ? `Customer: ${ctx.customerName}` : null,
@@ -65,11 +71,14 @@ function buildUserPrompt(ctx: AutopilotContext): string {
     truncated > 0
       ? `(Earlier in this thread: ${truncated} prior message${truncated === 1 ? "" : "s"} not shown.)`
       : null,
+    voice
+      ? `\nOwner's voice example (match this tone — sentence length, formality, vocabulary):\n"""\n${voice}\n"""`
+      : null,
     "",
     prior ? `Recent conversation:\n${prior}\n` : null,
     `Latest message from the customer: "${last?.body ?? ""}"`,
     "",
-    "Write a short SMS reply (under 160 characters when possible).",
+    "Write a short SMS reply (under 160 characters when possible) in the owner's voice.",
   ]
     .filter(Boolean)
     .join("\n");
