@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { Mail } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { bulkEmailOverdue } from "@/app/actions/sms";
 import type { Customer } from "@/lib/types";
 import { smsErrorMessage } from "./smsErrors";
@@ -44,8 +44,10 @@ export function BulkEmailButton({ overdue }: { overdue: Customer[] }) {
       title={withEmail === 0 ? "No overdue customers with emails on file" : undefined}
       className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      <Mail className="h-4 w-4" aria-hidden />
-      {pending ? "Emailing…" : `Email overdue${withEmail > 0 ? ` (${withEmail})` : ""}`}
+      <Sparkles className="h-4 w-4" aria-hidden />
+      {pending
+        ? "Emailing…"
+        : `Email with AI${withEmail > 0 ? ` (${withEmail})` : ""}`}
     </button>
   );
 }
