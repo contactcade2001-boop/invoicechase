@@ -23,6 +23,7 @@ export const organizations = sqliteTable("organizations", {
   logoUrl: text("logo_url"),
   customerReferralCode: text("customer_referral_code"),
   referredByOrgId: integer("referred_by_org_id"),
+  reminderSequencesEnabled: integer("reminder_sequences_enabled").notNull().default(0),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -178,7 +179,19 @@ export const payLinks = sqliteTable("pay_links", {
   organizationId: integer("organization_id").notNull(),
   customerId: text("customer_id").notNull(),
   amountCentsOverride: integer("amount_cents_override"),
+  viewedAt: integer("viewed_at"),
+  viewedCount: integer("viewed_count").notNull().default(0),
   expiresAt: integer("expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const reminderSends = sqliteTable("reminder_sends", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  tone: text("tone").notNull(),
+  channel: text("channel").notNull(),
+  sentAt: integer("sent_at").notNull(),
   createdAt: integer("created_at").notNull(),
 });
 
@@ -355,6 +368,7 @@ export type MagicLinkRow = typeof magicLinks.$inferSelect;
 export type SubscriptionRow = typeof subscriptions.$inferSelect;
 export type StripeConnectAccountRow = typeof stripeConnectAccounts.$inferSelect;
 export type PayLinkRow = typeof payLinks.$inferSelect;
+export type ReminderSendRow = typeof reminderSends.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;
 export type XeroConnectionRow = typeof xeroConnections.$inferSelect;

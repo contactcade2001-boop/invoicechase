@@ -10,6 +10,7 @@ import {
   formatCurrency,
   formatCurrencyDetailed,
 } from "@/lib/format";
+import { formatRelativeTime } from "@/lib/inboxFormat";
 import type { Customer } from "@/lib/types";
 import type { OpenInvoiceLine } from "@/lib/server/qbo/sync";
 import { NewPaymentPlanModal } from "./NewPaymentPlanModal";
@@ -28,9 +29,13 @@ function fmtDate(iso: string | null): string {
 export function CustomerDetail({
   customer,
   invoices,
+  payLinkViewedAt,
+  payLinkViewedCount,
 }: {
   customer: Customer;
   invoices: OpenInvoiceLine[];
+  payLinkViewedAt?: number | null;
+  payLinkViewedCount?: number;
 }) {
   const [planOpen, setPlanOpen] = useState(false);
   const [textPending, startText] = useTransition();
@@ -71,8 +76,20 @@ export function CustomerDetail({
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">
               {customer.name}
             </h1>
-            <div className="mt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <ReputationMeter score={customer.reputationScore} />
+              {payLinkViewedAt ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-200">
+                  <span
+                    className="h-1.5 w-1.5 rounded-full bg-sky-500"
+                    aria-hidden
+                  />
+                  Pay link opened {formatRelativeTime(payLinkViewedAt)}
+                  {payLinkViewedCount && payLinkViewedCount > 1
+                    ? ` · ${payLinkViewedCount}×`
+                    : ""}
+                </span>
+              ) : null}
             </div>
             <p className="mt-3 text-sm text-slate-600">
               {customer.phone || "No phone on file"}

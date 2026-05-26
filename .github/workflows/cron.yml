@@ -30,6 +30,7 @@ jobs:
         endpoint:
           - deposit-poller
           - payment-plan-reminders
+          - reminder-sequences
     steps:
       - name: Hit ${{ matrix.endpoint }}
         run: |

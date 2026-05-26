@@ -262,6 +262,19 @@ CREATE TABLE IF NOT EXISTS jobber_connections (
 );
 CREATE INDEX IF NOT EXISTS jobber_connections_org_id ON jobber_connections(organization_id);
 
+CREATE TABLE IF NOT EXISTS reminder_sends (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  tone TEXT NOT NULL,
+  channel TEXT NOT NULL,
+  sent_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS reminder_sends_org_customer_tone
+  ON reminder_sends(organization_id, customer_id, tone);
+CREATE INDEX IF NOT EXISTS reminder_sends_sent_at ON reminder_sends(sent_at);
+
 CREATE TABLE IF NOT EXISTS qbo_dashboard_cache (
   organization_id INTEGER PRIMARY KEY,
   payload TEXT NOT NULL,
@@ -460,6 +473,14 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
       "ALTER TABLE pay_links ADD COLUMN amount_cents_override INTEGER",
     );
   }
+  if (!hasColumn(sqlite, "pay_links", "viewed_at")) {
+    sqlite.exec("ALTER TABLE pay_links ADD COLUMN viewed_at INTEGER");
+  }
+  if (!hasColumn(sqlite, "pay_links", "viewed_count")) {
+    sqlite.exec(
+      "ALTER TABLE pay_links ADD COLUMN viewed_count INTEGER NOT NULL DEFAULT 0",
+    );
+  }
   if (!hasColumn(sqlite, "payments", "organization_id")) {
     sqlite.exec(
       "ALTER TABLE payments ADD COLUMN organization_id INTEGER NOT NULL DEFAULT 0",
@@ -486,6 +507,7 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["logo_url", "TEXT"],
     ["customer_referral_code", "TEXT"],
     ["referred_by_org_id", "INTEGER"],
+    ["reminder_sequences_enabled", "INTEGER NOT NULL DEFAULT 0"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&

@@ -1,7 +1,18 @@
 import "server-only";
-import { and, desc, eq, gt, isNull } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, sql } from "drizzle-orm";
 import { getDb } from "./client";
 import { payLinks, type PayLinkRow } from "./schema";
+
+export function markPayLinkViewed(token: string): void {
+  getDb()
+    .update(payLinks)
+    .set({
+      viewedAt: Date.now(),
+      viewedCount: sql`${payLinks.viewedCount} + 1`,
+    })
+    .where(eq(payLinks.token, token))
+    .run();
+}
 
 export function findActivePayLink(
   organizationId: number,

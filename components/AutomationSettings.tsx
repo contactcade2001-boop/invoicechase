@@ -10,6 +10,7 @@ import {
   setAutopilotEnabled,
   setCustomReceiptsEnabled,
   setDepositEnabled,
+  setReminderSequencesEnabled,
 } from "@/app/actions/org";
 
 export function AutomationSettings({
@@ -23,12 +24,16 @@ export function AutomationSettings({
     digestPhone: string;
     twilioPhone: string;
     customReceiptsEnabled: boolean;
+    reminderSequencesEnabled: boolean;
   };
 }) {
   const [autopilot, setAutopilot] = useState(initial.autopilotEnabled);
   const [deposit, setDeposit] = useState(initial.depositEnabled);
   const [customReceipts, setCustomReceipts] = useState(
     initial.customReceiptsEnabled,
+  );
+  const [sequences, setSequences] = useState(
+    initial.reminderSequencesEnabled,
   );
   const [percent, setPercent] = useState(
     String(initial.depositPercentBps / 100),
@@ -55,6 +60,11 @@ export function AutomationSettings({
   function onAutopilot(next: boolean) {
     setAutopilot(next);
     flagPending("autopilot", () => setAutopilotEnabled(next));
+  }
+
+  function onSequences(next: boolean) {
+    setSequences(next);
+    flagPending("sequences", () => setReminderSequencesEnabled(next));
   }
 
   function onDeposit(next: boolean) {
@@ -154,6 +164,34 @@ export function AutomationSettings({
           </p>
         ) : null}
         {savedTag === "autopilot" ? (
+          <p className="mt-2 text-xs text-emerald-700">Saved</p>
+        ) : null}
+      </section>
+
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold">
+              Automated reminder sequences
+            </h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Once enabled, we run a daily check: customers 1–6 days overdue
+              get a polite nudge, 7–13 days get a firmer message, and 14+
+              days get a final notice. Each tone fires at most once every 6
+              days per customer so they don&apos;t feel blasted.
+            </p>
+          </div>
+          <Toggle
+            checked={sequences}
+            onChange={onSequences}
+            disabled={pending}
+          />
+        </div>
+        <p className="mt-3 text-xs text-slate-500">
+          Sends via SMS and email (whichever the customer has on file). STOP
+          replies are honored automatically.
+        </p>
+        {savedTag === "sequences" ? (
           <p className="mt-2 text-xs text-emerald-700">Saved</p>
         ) : null}
       </section>

@@ -17,6 +17,7 @@ export type AuditKind =
   | "settings.twilio_phone_saved"
   | "settings.twilio_provisioned"
   | "settings.custom_receipts_toggled"
+  | "settings.reminder_sequences_toggled"
   | "settings.qbo_refund_accounts_saved"
   | "qbo.connected"
   | "qbo.disconnected"

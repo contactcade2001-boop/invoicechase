@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AgingBreakdown } from "@/components/AgingBreakdown";
 import { BulkEmailButton } from "@/components/BulkEmailButton";
 import { BulkTextButton } from "@/components/BulkTextButton";
 import { CustomerTable } from "@/components/CustomerTable";
@@ -61,6 +62,8 @@ export function Dashboard({
         dso={dso}
         overdueCount={counts.overdue}
       />
+
+      <AgingBreakdown customers={customers} />
 
       <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <RefreshDashboardButton refreshedAt={refreshedAt} stale={stale} />

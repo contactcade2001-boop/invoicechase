@@ -2,7 +2,10 @@ import { CheckCircle2, CreditCard, Lock } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { canAcceptPayments, getConnectAccount } from "@/lib/server/db/connect";
-import { findPayLinkByToken } from "@/lib/server/db/payLinks";
+import {
+  findPayLinkByToken,
+  markPayLinkViewed,
+} from "@/lib/server/db/payLinks";
 import { getOrgById } from "@/lib/server/db/organizations";
 import { lookupCustomerForOrg } from "@/lib/server/qbo/sync";
 import { formatCurrencyDetailed } from "@/lib/format";
@@ -131,6 +134,9 @@ export default async function PayPage({
       </PageShell>
     );
   }
+  // Record the view so the merchant knows the customer at least opened
+  // the link. Best-effort; one extra UPDATE per page load.
+  markPayLinkViewed(token);
   if (link.expiresAt < Date.now()) {
     return (
       <PageShell>

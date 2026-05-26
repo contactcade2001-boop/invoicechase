@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AppHeader } from "@/components/AppHeader";
 import { CustomerDetail } from "@/components/CustomerDetail";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { findActivePayLink } from "@/lib/server/db/payLinks";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -28,6 +29,7 @@ export default async function CustomerDetailPage({
   }
 
   const detail = await getCustomerDetail(orgId, id);
+  const activePayLink = findActivePayLink(orgId, id);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -37,6 +39,8 @@ export default async function CustomerDetailPage({
           <CustomerDetail
             customer={detail.customer}
             invoices={detail.invoices}
+            payLinkViewedAt={activePayLink?.viewedAt ?? null}
+            payLinkViewedCount={activePayLink?.viewedCount ?? 0}
           />
         ) : detail.reason === "not_connected" ? (
           <div className="rounded-2xl bg-white p-8 text-center ring-1 ring-slate-200">

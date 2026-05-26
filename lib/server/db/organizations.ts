@@ -96,7 +96,8 @@ export function setOrgFlag(
   field:
     | "autopilotEnabled"
     | "depositEnabled"
-    | "customReceiptsEnabled",
+    | "customReceiptsEnabled"
+    | "reminderSequencesEnabled",
   value: boolean,
 ): void {
   const db = getDb();
