@@ -31,7 +31,9 @@ import {
 import { recordPaymentInQbo } from "../qbo/recordPayment";
 import { getConnectionForOrg } from "../db/connections";
 import { getXeroConnectionForOrg } from "../db/xeroConnections";
+import { getJobberConnectionForOrg } from "../db/jobberConnections";
 import { recordPaymentInXero } from "../xero/recordPayment";
+import { recordPaymentInJobber } from "../jobber/recordPayment";
 import { createQboRefundReceipt } from "../qbo/refundReceipt";
 import { invalidateDashboardCache } from "../qbo/sync";
 import { voidQboPayment } from "../qbo/voidPayment";
@@ -197,8 +199,6 @@ async function applyOneTimePayment(
           noteRef: session.id,
         });
         if (result.ok) {
-          // Use the first payment ID as the canonical reference; subsequent
-          // payments still close their respective invoices in Xero.
           finalizePayment(session.id, {
             qboPaymentId: result.paymentIds[0] ?? null,
           });
@@ -220,6 +220,40 @@ async function applyOneTimePayment(
       } catch (err) {
         captureException(err, {
           where: "xero.mark-paid",
+          sessionId: session.id,
+        });
+      }
+    } else if (getJobberConnectionForOrg(organizationId)) {
+      // Jobber is the source of truth — same FIFO fan-out as Xero.
+      try {
+        const result = await recordPaymentInJobber({
+          organizationId,
+          customerId,
+          amountCents,
+          noteRef: session.id,
+        });
+        if (result.ok) {
+          finalizePayment(session.id, {
+            qboPaymentId: result.paymentIds[0] ?? null,
+          });
+          if (result.leftoverCents > 0) {
+            console.warn(
+              "[jobber] payment leftover after applying to open invoices",
+              {
+                sessionId: session.id,
+                leftoverCents: result.leftoverCents,
+              },
+            );
+          }
+        } else {
+          captureException(
+            new Error(`jobber.record_failed:${result.error}`),
+            { where: "jobber.mark-paid", sessionId: session.id },
+          );
+        }
+      } catch (err) {
+        captureException(err, {
+          where: "jobber.mark-paid",
           sessionId: session.id,
         });
       }

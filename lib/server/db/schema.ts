@@ -227,6 +227,19 @@ export const xeroConnections = sqliteTable("xero_connections", {
   updatedAt: integer("updated_at").notNull(),
 });
 
+export const jobberConnections = sqliteTable("jobber_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull().unique(),
+  accountId: text("account_id").notNull(),
+  accountName: text("account_name"),
+  accessTokenEnc: text("access_token_enc").notNull(),
+  refreshTokenEnc: text("refresh_token_enc").notNull(),
+  accessTokenExpiresAt: integer("access_token_expires_at").notNull(),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at").notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
 export const qboDashboardCache = sqliteTable("qbo_dashboard_cache", {
   organizationId: integer("organization_id").primaryKey(),
   payload: text("payload").notNull(),
@@ -345,6 +358,7 @@ export type PayLinkRow = typeof payLinks.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;
 export type XeroConnectionRow = typeof xeroConnections.$inferSelect;
+export type JobberConnectionRow = typeof jobberConnections.$inferSelect;
 export type QboDashboardCacheRow = typeof qboDashboardCache.$inferSelect;
 export type PartnerRow = typeof partners.$inferSelect;
 export type PartnerReferralRow = typeof partnerReferrals.$inferSelect;

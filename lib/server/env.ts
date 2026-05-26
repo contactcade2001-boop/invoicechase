@@ -44,6 +44,22 @@ export function isXeroConfigured(): boolean {
   );
 }
 
+export function getJobberConfig() {
+  return {
+    clientId: required("JOBBER_CLIENT_ID"),
+    clientSecret: required("JOBBER_CLIENT_SECRET"),
+    redirectUri: required("JOBBER_REDIRECT_URI"),
+  };
+}
+
+export function isJobberConfigured(): boolean {
+  return !!(
+    process.env.JOBBER_CLIENT_ID &&
+    process.env.JOBBER_CLIENT_SECRET &&
+    process.env.JOBBER_REDIRECT_URI
+  );
+}
+
 export function getStripeConfig() {
   return {
     secretKey: required("STRIPE_SECRET_KEY"),

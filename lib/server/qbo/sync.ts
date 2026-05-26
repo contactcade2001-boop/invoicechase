@@ -164,11 +164,15 @@ async function fetchFreshDashboardData(
     };
   }
 
-  // No QBO connection — try Xero. Lazy-imported so the QBO sync module
-  // doesn't carry the Xero client into bundles that don't need it.
+  // No QBO connection — try Xero, then Jobber. Lazy-imported so the QBO
+  // sync module doesn't carry the alternative clients into every bundle.
   const { fetchXeroDashboardData } = await import("../xero/sync");
   const xero = await fetchXeroDashboardData(organizationId);
   if (xero.connected) return xero;
+
+  const { fetchJobberDashboardData } = await import("../jobber/sync");
+  const jobber = await fetchJobberDashboardData(organizationId);
+  if (jobber.connected) return jobber;
 
   return { connected: false };
 }
@@ -358,11 +362,29 @@ export async function getCustomerDetail(
 
   // Xero customer detail
   const { fetchXeroCustomerInvoices } = await import("../xero/sync");
-  const invoices = await fetchXeroCustomerInvoices(organizationId, customerId);
+  const xeroInvoices = await fetchXeroCustomerInvoices(
+    organizationId,
+    customerId,
+  );
+  if (xeroInvoices.length > 0) {
+    return {
+      ok: true,
+      customer: lookup.customer,
+      companyName: lookup.companyName,
+      invoices: xeroInvoices,
+    };
+  }
+
+  // Jobber customer detail
+  const { fetchJobberCustomerInvoices } = await import("../jobber/sync");
+  const jobberInvoices = await fetchJobberCustomerInvoices(
+    organizationId,
+    customerId,
+  );
   return {
     ok: true,
     customer: lookup.customer,
     companyName: lookup.companyName,
-    invoices,
+    invoices: jobberInvoices,
   };
 }

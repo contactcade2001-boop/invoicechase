@@ -3,9 +3,11 @@ import { Link2 } from "lucide-react";
 export function ConnectPrompt({
   error,
   showXero = false,
+  showJobber = false,
 }: {
   error?: string;
   showXero?: boolean;
+  showJobber?: boolean;
 }) {
   return (
     <div className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center text-center">
@@ -38,6 +40,14 @@ export function ConnectPrompt({
               className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
             >
               Connect Xero
+            </a>
+          ) : null}
+          {showJobber ? (
+            <a
+              href="/api/jobber/connect"
+              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+            >
+              Connect Jobber
             </a>
           ) : null}
         </div>

@@ -138,40 +138,28 @@ const pricingFeatures = [
 
 const faq = [
   {
-    q: "How does the AI personalization actually work?",
-    a: "Claude (Anthropic's flagship model) gets the full context for every reply: your business name, your custom SMS template, the customer's name, what they owe, how late they are, and the conversation history so far. It uses that to answer in your voice — no generic 'as an AI assistant' nonsense. If a customer asks something it isn't sure about, the conversation lands in your inbox and autopilot pauses for that thread until you take over.",
+    q: "How does the AI personalization work?",
+    a: "Claude (Anthropic's AI) gets your business name, your SMS template style, the customer's name + balance + days late, and the conversation history — then replies in your voice. If it's unsure, the thread lands in your inbox and autopilot pauses.",
   },
   {
-    q: "What is the reputation score and how is it calculated?",
-    a: "Every customer gets a score from 300 to 850 — exactly like a personal credit score. We compute it from their payment history: how often they pay on time, the average days they run late, how often they've gone 60+ days overdue, and how big their unpaid balance is right now. Scores update automatically as new payments come in. The score is private to you — your customers never see it.",
+    q: "What's the reputation score?",
+    a: "A 300–850 score per customer (like a credit score) based on their payment history. Tells you who to chase first and who to require deposits from. Private to you — customers never see it.",
   },
   {
-    q: "Why does the score matter for cashflow?",
-    a: "It tells you who to chase first and who to require deposits from before doing more work. The deposit-collection feature can be set to auto-text low-reputation customers a deposit link the moment a new invoice is issued — so you never extend more credit to people with a history of stiffing you.",
+    q: "How much faster will I get paid?",
+    a: "Most SMBs see DSO drop 15–30 days within the first month — the combo of AI replies, one-click pay links, and bulk reminders compresses your collections timeline.",
   },
   {
-    q: "How much faster will I actually get paid?",
-    a: "Most SMBs see DSO (days-sales-outstanding) drop 15–30 days within the first month. The combination of AI replies (so customer questions get answered at 2am instead of waiting for you), one-click pay links, and bulk reminders is what does it. A typical $200k AR balance turns into ~$25k–$50k of recovered cashflow in the first quarter.",
+    q: "What accounting software do you support?",
+    a: "QuickBooks Online, Xero, and Jobber. One connection per business; switching is one click in Settings.",
   },
   {
     q: "How long does setup take?",
-    a: "About 60 seconds. Connect QuickBooks with one OAuth click, and the dashboard fills with your real customers and outstanding invoices. The AI autopilot turns on with a single toggle in /settings.",
-  },
-  {
-    q: "Do you store my customers' card data?",
-    a: "No. Card numbers go straight to Stripe Checkout — they never touch our servers. Stripe is PCI-DSS Level 1 certified.",
+    a: "About 60 seconds. Connect your accounting with one OAuth click and the dashboard fills with your data immediately.",
   },
   {
     q: "Can I cancel anytime?",
-    a: "Yes. Disconnect QuickBooks with one click; we revoke our access and delete the connection. Cancel the subscription from /billing — no contracts, no penalties.",
-  },
-  {
-    q: "What if I don't use QuickBooks?",
-    a: "Right now QuickBooks Online is required. Other accounting integrations (Xero, FreshBooks, Wave) are on the roadmap.",
-  },
-  {
-    q: "What about SMS compliance?",
-    a: "Built-in. Recipients can reply STOP / HELP / START and we honor it automatically — they're suppressed from your future sends. We track A2P 10DLC registration in /settings, which you'll complete with Twilio before going live at scale.",
+    a: "Yes. Disconnect with one click; cancel the subscription from /billing. No contracts, no penalties.",
   },
 ];
 

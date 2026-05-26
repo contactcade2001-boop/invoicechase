@@ -248,6 +248,20 @@ CREATE TABLE IF NOT EXISTS xero_connections (
 );
 CREATE INDEX IF NOT EXISTS xero_connections_org_id ON xero_connections(organization_id);
 
+CREATE TABLE IF NOT EXISTS jobber_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  account_id TEXT NOT NULL,
+  account_name TEXT,
+  access_token_enc TEXT NOT NULL,
+  refresh_token_enc TEXT NOT NULL,
+  access_token_expires_at INTEGER NOT NULL,
+  refresh_token_expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS jobber_connections_org_id ON jobber_connections(organization_id);
+
 CREATE TABLE IF NOT EXISTS qbo_dashboard_cache (
   organization_id INTEGER PRIMARY KEY,
   payload TEXT NOT NULL,

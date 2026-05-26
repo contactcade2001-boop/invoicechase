@@ -12,9 +12,10 @@ import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getA2pRegistration } from "@/lib/server/db/a2p";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
+import { getJobberConnectionForOrg } from "@/lib/server/db/jobberConnections";
 import { getOrgById } from "@/lib/server/db/organizations";
 import { getXeroConnectionForOrg } from "@/lib/server/db/xeroConnections";
-import { isXeroConfigured } from "@/lib/server/env";
+import { isJobberConfigured, isXeroConfigured } from "@/lib/server/env";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -37,9 +38,14 @@ export default async function SettingsPage() {
   const org = getOrgById(orgId)!;
   const conn = getConnectionForOrg(orgId);
   const xeroConn = getXeroConnectionForOrg(orgId);
+  const jobberConn = getJobberConnectionForOrg(orgId);
   const xeroEnabled = isXeroConfigured();
+  const jobberEnabled = isJobberConfigured();
   const businessName =
-    conn?.companyName ?? xeroConn?.tenantName ?? "Your business";
+    conn?.companyName ??
+    xeroConn?.tenantName ??
+    jobberConn?.accountName ??
+    "Your business";
   const isOwner = user.role === "owner";
   const a2p = getA2pRegistration(orgId);
 
@@ -102,12 +108,14 @@ export default async function SettingsPage() {
         {isOwner ? (
           <>
             <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-              <h2 className="text-lg font-semibold">Accounting connection</h2>
+              <h2 className="text-lg font-semibold">Accounting &amp; FSM connections</h2>
               <p className="mt-1 text-sm text-slate-600">
-                Connect QuickBooks Online{xeroEnabled ? " or Xero" : ""}.
-                Customers, invoices, and payments sync automatically.
+                Connect the system that holds your customers and invoices.
+                One per organization — switching is just disconnect, then
+                reconnect. We sort priority QuickBooks → Xero → Jobber when
+                multiple are present.
               </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                   <p className="text-sm font-semibold">QuickBooks Online</p>
                   {conn ? (
@@ -144,7 +152,7 @@ export default async function SettingsPage() {
                   <p className="text-sm font-semibold">Xero</p>
                   {!xeroEnabled ? (
                     <p className="mt-1 text-xs text-slate-500">
-                      Xero integration not configured on this server.
+                      Not configured on this server.
                     </p>
                   ) : xeroConn ? (
                     <>
@@ -176,12 +184,70 @@ export default async function SettingsPage() {
                     </a>
                   )}
                 </div>
+                <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                  <p className="text-sm font-semibold">Jobber</p>
+                  {!jobberEnabled ? (
+                    <p className="mt-1 text-xs text-slate-500">
+                      Not configured on this server.
+                    </p>
+                  ) : jobberConn ? (
+                    <>
+                      <p className="mt-1 text-xs text-slate-600">
+                        Connected as{" "}
+                        <span className="font-mono">
+                          {jobberConn.accountName ?? jobberConn.accountId}
+                        </span>
+                      </p>
+                      <form
+                        action="/api/jobber/disconnect"
+                        method="post"
+                        className="mt-3"
+                      >
+                        <button
+                          type="submit"
+                          className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                        >
+                          Disconnect Jobber
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <a
+                      href="/api/jobber/connect"
+                      className="mt-3 inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-100"
+                    >
+                      Connect Jobber
+                    </a>
+                  )}
+                </div>
               </div>
-              {conn && xeroConn ? (
-                <p className="mt-3 text-xs text-amber-700">
-                  Both connections active — we&apos;ll prefer QuickBooks. Disconnect QuickBooks if you want Xero to take over.
+
+              <div className="mt-5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Coming soon
                 </p>
-              ) : null}
+                <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                  {[
+                    "Housecall Pro",
+                    "ServiceTitan",
+                    "FieldPulse",
+                    "Workiz",
+                  ].map((name) => (
+                    <div
+                      key={name}
+                      className="rounded-lg border border-dashed border-slate-300 px-3 py-2 text-xs"
+                    >
+                      <p className="font-semibold text-slate-700">{name}</p>
+                      <a
+                        href={`mailto:support@invoicechase.com?subject=Request%20${encodeURIComponent(name)}%20integration`}
+                        className="text-[11px] text-slate-500 underline-offset-2 hover:underline"
+                      >
+                        Request priority →
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </section>
 
             <AutomationSettings
