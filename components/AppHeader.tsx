@@ -36,6 +36,12 @@ const tabs: Tab[] = [
     visibleTo: ["owner", "manager"],
   },
   {
+    key: "forecast",
+    href: "/forecast",
+    label: "Forecast",
+    visibleTo: ["owner", "manager"],
+  },
+  {
     key: "team",
     href: "/team",
     label: "Team",
@@ -60,6 +66,7 @@ export type AppHeaderTab =
   | "inbox"
   | "payments"
   | "reports"
+  | "forecast"
   | "team"
   | "settings"
   | "billing";

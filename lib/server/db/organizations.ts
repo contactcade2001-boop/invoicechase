@@ -83,6 +83,24 @@ export function setOrgCustomerReferralCode(
     .run();
 }
 
+export function setOrgCashflowConfig(
+  orgId: number,
+  input: {
+    monthlyOutflowCents: number;
+    monthlyNewInvoicesCents: number;
+  },
+): void {
+  getDb()
+    .update(organizations)
+    .set({
+      cashflowMonthlyOutflowCents: input.monthlyOutflowCents,
+      cashflowMonthlyNewInvoicesCents: input.monthlyNewInvoicesCents,
+      updatedAt: Date.now(),
+    })
+    .where(eq(organizations.id, orgId))
+    .run();
+}
+
 export function setReferredBy(orgId: number, referrerOrgId: number): void {
   getDb()
     .update(organizations)

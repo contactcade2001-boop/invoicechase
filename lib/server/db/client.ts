@@ -508,6 +508,8 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["customer_referral_code", "TEXT"],
     ["referred_by_org_id", "INTEGER"],
     ["reminder_sequences_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["cashflow_monthly_outflow_cents", "INTEGER NOT NULL DEFAULT 0"],
+    ["cashflow_monthly_new_invoices_cents", "INTEGER NOT NULL DEFAULT 0"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&

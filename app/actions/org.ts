@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/server/auth/session";
 import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import {
   findOrgByPortalSlug,
+  setOrgCashflowConfig,
   setOrgDepositConfig,
   setOrgDigestPhone,
   setOrgFlag,
@@ -147,6 +148,34 @@ export async function saveQboRefundAccounts(input: {
     qboRefundItemId: itemId,
   });
   revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function saveCashflowConfig(input: {
+  monthlyOutflowDollars: number;
+  monthlyNewInvoicesDollars: number;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const out = Math.max(0, Math.round(input.monthlyOutflowDollars * 100));
+  const newRev = Math.max(0, Math.round(input.monthlyNewInvoicesDollars * 100));
+  if (!Number.isFinite(out) || !Number.isFinite(newRev)) {
+    return { ok: false, error: "invalid_amount" };
+  }
+  setOrgCashflowConfig(user.organizationId!, {
+    monthlyOutflowCents: out,
+    monthlyNewInvoicesCents: newRev,
+  });
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "settings.cashflow_saved",
+    metadata: { monthlyOutflowCents: out, monthlyNewInvoicesCents: newRev },
+  });
+  revalidatePath("/settings");
+  revalidatePath("/forecast");
   return { ok: true };
 }
 

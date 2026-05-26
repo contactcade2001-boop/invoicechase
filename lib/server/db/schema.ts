@@ -24,6 +24,8 @@ export const organizations = sqliteTable("organizations", {
   customerReferralCode: text("customer_referral_code"),
   referredByOrgId: integer("referred_by_org_id"),
   reminderSequencesEnabled: integer("reminder_sequences_enabled").notNull().default(0),
+  cashflowMonthlyOutflowCents: integer("cashflow_monthly_outflow_cents").notNull().default(0),
+  cashflowMonthlyNewInvoicesCents: integer("cashflow_monthly_new_invoices_cents").notNull().default(0),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
