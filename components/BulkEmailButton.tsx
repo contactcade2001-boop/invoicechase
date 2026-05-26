@@ -14,7 +14,7 @@ export function BulkEmailButton({ overdue }: { overdue: Customer[] }) {
   function handleClick() {
     if (withEmail === 0) return;
     const ok = window.confirm(
-      `Email ${withEmail} overdue customer${withEmail === 1 ? "" : "s"} now?\n\nEach gets your branded reminder with a payment link.`,
+      `Email ${withEmail} overdue customer${withEmail === 1 ? "" : "s"}?\n\nEach gets your branded reminder with a payment link.`,
     );
     if (!ok) return;
     start(async () => {
@@ -41,14 +41,11 @@ export function BulkEmailButton({ overdue }: { overdue: Customer[] }) {
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 sm:w-auto"
+      title={withEmail === 0 ? "No overdue customers with emails on file" : undefined}
+      className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Mail className="h-4 w-4" aria-hidden />
-      {pending
-        ? `Emailing ${withEmail}…`
-        : withEmail === 0
-          ? "No overdue emails"
-          : `Email ${withEmail} overdue`}
+      {pending ? "Emailing…" : `Email overdue${withEmail > 0 ? ` (${withEmail})` : ""}`}
     </button>
   );
 }

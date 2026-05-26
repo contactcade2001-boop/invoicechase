@@ -58,7 +58,7 @@ export function CustomerRow({ customer }: { customer: Customer }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 last:border-b-0 md:grid-cols-[minmax(0,2.2fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(280px,auto)] md:items-center md:gap-4 md:px-6">
+    <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 transition hover:bg-slate-50/40 last:border-b-0 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6">
       <div className="flex flex-col gap-1.5 md:min-w-0">
         <Link
           href={`/dashboard/customer/${customer.id}`}
@@ -87,35 +87,35 @@ export function CustomerRow({ customer }: { customer: Customer }) {
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 md:flex md:justify-end">
-        <button
-          type="button"
-          onClick={onPay}
-          disabled={payPending}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 md:w-24"
-        >
-          <CreditCard className="h-4 w-4" aria-hidden />
-          {payPending ? "…" : "Pay"}
-        </button>
+      <div className="flex items-center gap-2 md:justify-end">
         <button
           type="button"
           onClick={onText}
           disabled={textPending || !customer.phone}
-          title={!customer.phone ? "No phone on file" : undefined}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 md:w-24"
+          title={!customer.phone ? "No phone on file" : "Text reminder"}
+          aria-label="Text reminder"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-slate-600 ring-1 ring-inset ring-slate-200 transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <MessageSquare className="h-4 w-4" aria-hidden />
-          {textPending ? "…" : "Text"}
         </button>
         <button
           type="button"
           onClick={onEmail}
           disabled={emailPending || !customer.email}
-          title={!customer.email ? "No email on file" : undefined}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 md:w-24"
+          title={!customer.email ? "No email on file" : "Email reminder"}
+          aria-label="Email reminder"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-slate-600 ring-1 ring-inset ring-slate-200 transition hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Mail className="h-4 w-4" aria-hidden />
-          {emailPending ? "…" : "Email"}
+        </button>
+        <button
+          type="button"
+          onClick={onPay}
+          disabled={payPending}
+          className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none"
+        >
+          <CreditCard className="h-4 w-4" aria-hidden />
+          {payPending ? "Opening…" : "Pay now"}
         </button>
       </div>
     </div>

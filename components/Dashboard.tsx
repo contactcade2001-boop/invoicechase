@@ -59,6 +59,7 @@ export function Dashboard({
         businessName={companyName}
         totalOwed={totalOwed}
         dso={dso}
+        overdueCount={counts.overdue}
       />
 
       <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">

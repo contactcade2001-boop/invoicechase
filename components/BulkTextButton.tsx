@@ -1,20 +1,20 @@
 "use client";
 
 import { useTransition } from "react";
-import { Send } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { bulkTextOverdue } from "@/app/actions/sms";
 import type { Customer } from "@/lib/types";
 import { smsErrorMessage } from "./smsErrors";
 
 export function BulkTextButton({ overdue }: { overdue: Customer[] }) {
   const [pending, start] = useTransition();
-  const count = overdue.length;
+  const count = overdue.filter((c) => c.phone).length;
   const disabled = count === 0 || pending;
 
   function handleClick() {
     if (count === 0) return;
     const ok = window.confirm(
-      `Text ${count} overdue customer${count === 1 ? "" : "s"} now?\n\nEach will receive an SMS with their amount owed and a payment link.`,
+      `Text ${count} overdue customer${count === 1 ? "" : "s"}?\n\nEach gets a personalized SMS with their amount owed and a payment link.`,
     );
     if (!ok) return;
     start(async () => {
@@ -41,14 +41,11 @@ export function BulkTextButton({ overdue }: { overdue: Customer[] }) {
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 px-5 py-4 text-base font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 disabled:shadow-none sm:w-auto"
+      title={count === 0 ? "No overdue customers with phone numbers" : undefined}
+      className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none"
     >
-      <Send className="h-5 w-5" aria-hidden />
-      {pending
-        ? `Texting ${count}…`
-        : count === 0
-          ? "No overdue customers"
-          : `Text ALL ${count} overdue customer${count === 1 ? "" : "s"} NOW`}
+      <MessageSquare className="h-4 w-4" aria-hidden />
+      {pending ? "Texting…" : `Text overdue${count > 0 ? ` (${count})` : ""}`}
     </button>
   );
 }

@@ -91,13 +91,13 @@ const features = [
 const reputationTiers = [
   {
     range: "800–850",
-    label: "Exceptional",
+    label: "Excellent",
     color: "bg-emerald-500",
     desc: "Pays consistently on or before due date.",
   },
   {
     range: "740–799",
-    label: "Very Good",
+    label: "Strong",
     color: "bg-lime-500",
     desc: "Reliable, occasionally a few days late.",
   },
