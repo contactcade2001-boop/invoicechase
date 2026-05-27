@@ -1,9 +1,50 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const TITLE = "Invoice Chase — AI-powered AR collections for QuickBooks SMBs";
+const DESCRIPTION =
+  "Stop chasing invoices. Connect QuickBooks (or Xero or Jobber), and let Claude AI handle customer replies in your voice. Get paid 15–30 days faster.";
+
 export const metadata: Metadata = {
-  title: "Invoice Chase",
-  description: "See who owes you and collect with one click.",
+  metadataBase: new URL(
+    process.env.APP_BASE_URL ?? "https://invoicechase.com",
+  ),
+  title: {
+    default: TITLE,
+    template: "%s · Invoice Chase",
+  },
+  description: DESCRIPTION,
+  applicationName: "Invoice Chase",
+  authors: [{ name: "Invoice Chase" }],
+  keywords: [
+    "QuickBooks AR",
+    "invoice collections",
+    "accounts receivable automation",
+    "SMS payment reminders",
+    "AI collections",
+    "Xero collections",
+    "Jobber payments",
+  ],
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+    siteName: "Invoice Chase",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({

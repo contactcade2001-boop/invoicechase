@@ -255,7 +255,7 @@ Both endpoints require `Authorization: Bearer ${CRON_SECRET}`. Vercel Cron sets 
 npm run test
 ```
 
-32 Vitest unit tests covering: format helpers, SMS template substitution, reputation scoring, rate limiter, application fee math, auth tokens, FIFO `buildLines`. The rate-limit test points `DB_PATH` at a tempdir so it doesn't touch the real DB.
+47 Vitest unit tests covering: format helpers, SMS template substitution, reputation scoring, rate limiter, application fee math, auth tokens, FIFO `buildLines`, aging buckets, email template rendering, CSV escaping, and reminder-sequence tones. The rate-limit test points `DB_PATH` at a tempdir so it doesn't touch the real DB.
 
 ## Out of scope
 
@@ -339,6 +339,8 @@ After the deploy is live, configure the providers themselves:
 
 - **Stripe**: in the dashboard, set the webhook endpoint to `https://invoicechase.com/api/stripe/webhook` and listen for `checkout.session.completed`, `customer.subscription.*`, `account.updated`, `charge.refunded`, `charge.dispute.created`. Copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
 - **QuickBooks**: in the Intuit developer portal, set the OAuth redirect URI to `https://invoicechase.com/api/qbo/callback` on your production app.
+- **Xero** (optional): set `XERO_*` env vars and add `…/api/xero/callback` as redirect URI at developer.xero.com.
+- **Jobber** (optional): apply for API access at developer.getjobber.com (1–2 weeks for approval), then set `JOBBER_*` env vars and `…/api/jobber/callback` as the redirect URI.
 - **Twilio**: register your A2P 10DLC brand + campaign (1–2 weeks). Once `campaign_status` flips to `approved` in Settings → SMS compliance, set `REQUIRE_A2P=true` to gate sending.
 - **Resend**: verify the sending domain (DKIM/SPF/DMARC) so receipts and magic links land in the inbox.
 

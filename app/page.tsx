@@ -217,12 +217,12 @@ export default function LandingPage() {
               Get Started
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
-            <a
-              href="#how-it-works"
+            <Link
+              href="/demo"
               className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
             >
-              See how it works
-            </a>
+              See a live demo
+            </Link>
           </div>
           <p className="mt-4 text-xs text-slate-500">
             $49/month + 1.9% per collected payment. No setup fee. Connect in 60 seconds.
