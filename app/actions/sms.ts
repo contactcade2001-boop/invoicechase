@@ -8,6 +8,7 @@ import {
 import type { UserRow } from "@/lib/server/db/schema";
 import { setSmsTemplate } from "@/lib/server/db/users";
 import { logAuditEvent } from "@/lib/server/db/auditEvents";
+import { recordTemplateEvent } from "@/lib/server/db/templateStats";
 import {
   appendMessage,
   getOrCreateConversation,
@@ -117,6 +118,11 @@ export async function sendTextToCustomer(
       targetType: "customer",
       targetId: customer.id,
       metadata: { name: customer.name, phone: customer.phone },
+    });
+    recordTemplateEvent({
+      organizationId: loaded.organizationId,
+      templateKey: "sms-default",
+      event: "send",
     });
     return { ok: true, sentCount: 1, failedCount: 0 };
   } catch (err) {
@@ -328,6 +334,11 @@ export async function sendEmailReminderToCustomer(
       targetType: "customer",
       targetId: customer.id,
       metadata: { name: customer.name, email: customer.email },
+    });
+    recordTemplateEvent({
+      organizationId: loaded.organizationId,
+      templateKey: "email-default",
+      event: "send",
     });
     return { ok: true };
   } catch (err) {

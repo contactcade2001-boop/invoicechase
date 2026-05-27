@@ -17,6 +17,7 @@ import {
 import { getOrgById } from "../db/organizations";
 import { sendReceiptEmail } from "../email/receipt";
 import { sendPaymentFollowups } from "../payments/followups";
+import { recordTemplateEvent } from "../db/templateStats";
 import { captureException } from "../observability";
 import {
   getSubscriptionByStripeCustomerId,
@@ -303,6 +304,20 @@ async function applyOneTimePayment(
       where: "followups",
       sessionId: session.id,
     });
+  }
+
+  // Attribute the paid event to the SMS template — the typical path is a
+  // pay link sent via SMS. Email-led conversions are less common but tracked
+  // by source via the pay-link table; for now we count to sms-default.
+  try {
+    recordTemplateEvent({
+      organizationId,
+      templateKey: "sms-default",
+      event: "paid",
+      paidCents: amountCents,
+    });
+  } catch {
+    /* tracking is best-effort */
   }
 }
 

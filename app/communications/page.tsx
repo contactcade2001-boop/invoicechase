@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { EmailReminderTemplateEditor } from "@/components/EmailReminderTemplateEditor";
 import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
+import { TemplateStatsTable } from "@/components/TemplateStatsTable";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { listTemplateStats } from "@/lib/server/db/templateStats";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
 import { getJobberConnectionForOrg } from "@/lib/server/db/jobberConnections";
 import { getXeroConnectionForOrg } from "@/lib/server/db/xeroConnections";
@@ -33,6 +35,8 @@ export default async function CommunicationsPage() {
     xero?.tenantName ??
     jobber?.accountName ??
     "Your business";
+
+  const templateStats = listTemplateStats(orgId);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -91,6 +95,8 @@ export default async function CommunicationsPage() {
             />
           </div>
         </section>
+
+        <TemplateStatsTable rows={templateStats} />
       </main>
     </div>
   );
