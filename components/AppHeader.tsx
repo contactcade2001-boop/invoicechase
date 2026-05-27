@@ -51,37 +51,77 @@ const primary: Tab[] = [
   },
 ];
 
-// Secondary — lives in the account dropdown.
-const secondary: Tab[] = [
+// Secondary — lives in the account dropdown, grouped by section.
+const secondary: (Tab & { section: "Work" | "Insights" | "Recovery" | "Account" })[] = [
   {
     key: "communications",
     href: "/communications",
-    label: "Templates",
+    label: "Communications",
     visibleTo: ["owner", "manager"],
+    section: "Work",
+  },
+  {
+    key: "approvals",
+    href: "/approvals",
+    label: "AI approval queue",
+    visibleTo: ["owner"],
+    section: "Work",
   },
   {
     key: "reports",
     href: "/reports",
     label: "Reports",
     visibleTo: ["owner", "manager"],
+    section: "Insights",
+  },
+  {
+    key: "leaderboard",
+    href: "/leaderboard",
+    label: "Team leaderboard",
+    visibleTo: ["owner", "manager"],
+    section: "Insights",
+  },
+  {
+    key: "recovery",
+    href: "/recovery",
+    label: "Recovery toolkit",
+    visibleTo: ["owner"],
+    section: "Recovery",
+  },
+  {
+    key: "liens",
+    href: "/liens",
+    label: "Mechanics lien tracker",
+    visibleTo: ["owner"],
+    section: "Recovery",
+  },
+  {
+    key: "cashflow-settings",
+    href: "/settings/cashflow",
+    label: "Cashflow controls",
+    visibleTo: ["owner"],
+    section: "Account",
   },
   {
     key: "team",
     href: "/team",
     label: "Team",
     visibleTo: ["owner"],
+    section: "Account",
   },
   {
     key: "settings",
     href: "/settings",
     label: "Settings",
     visibleTo: ["owner", "manager"],
+    section: "Account",
   },
   {
     key: "billing",
     href: "/billing",
     label: "Billing",
     visibleTo: ["owner"],
+    section: "Account",
   },
 ];
 
