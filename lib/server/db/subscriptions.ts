@@ -65,6 +65,9 @@ export function upsertSubscription(input: SubscriptionUpsert): void {
 }
 
 export function isActive(sub: SubscriptionRow | null): boolean {
+  // Demo / staging bypass: when running with mock data, everyone is
+  // implicitly subscribed so the billing gate doesn't lock the app.
+  if (process.env.USE_MOCK_DATA === "1") return true;
   if (!sub || !sub.status) return false;
   return sub.status === "active" || sub.status === "trialing";
 }
