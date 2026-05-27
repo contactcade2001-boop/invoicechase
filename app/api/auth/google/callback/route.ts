@@ -9,14 +9,19 @@ export const dynamic = "force-dynamic";
 
 const STATE_COOKIE = "ic_google_state";
 
+function baseUrl(req: NextRequest): string {
+  return (process.env.APP_BASE_URL ?? req.url).replace(/\/$/, "");
+}
+
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   const stateParam = req.nextUrl.searchParams.get("state");
   const stateCookie = req.cookies.get(STATE_COOKIE)?.value;
   const error = req.nextUrl.searchParams.get("error");
+  const base = baseUrl(req);
 
   function bail(reason: string) {
-    const url = new URL("/login", req.url);
+    const url = new URL("/login", base);
     url.searchParams.set("error", reason);
     const res = NextResponse.redirect(url);
     res.cookies.delete(STATE_COOKIE);
@@ -45,7 +50,7 @@ export async function GET(req: NextRequest) {
       orgReferralCode,
     });
 
-    const res = NextResponse.redirect(new URL("/dashboard", req.url));
+    const res = NextResponse.redirect(new URL("/dashboard", base));
     res.cookies.delete(STATE_COOKIE);
     if (referralCode) res.cookies.delete(REFERRAL_COOKIE);
     if (orgReferralCode) res.cookies.delete("ic_org_ref");

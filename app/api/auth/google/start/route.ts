@@ -12,7 +12,8 @@ const STATE_TTL_S = 10 * 60;
 
 export async function GET(req: NextRequest) {
   if (!isGoogleConfigured()) {
-    const url = new URL("/login", req.url);
+    const base = (process.env.APP_BASE_URL ?? req.url).replace(/\/$/, "");
+    const url = new URL("/login", base);
     url.searchParams.set("error", "google_not_configured");
     return NextResponse.redirect(url);
   }
