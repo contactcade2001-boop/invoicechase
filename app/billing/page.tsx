@@ -1,11 +1,11 @@
 import {
   ArrowRight,
-  Banknote,
   CheckCircle2,
   CreditCard,
 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import { StripeLogo } from "@/components/BrandLogos";
 import { CopyReferralLink } from "@/components/CopyReferralLink";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import {
@@ -203,7 +203,8 @@ export default async function BillingPage({
                   type="submit"
                   className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
                 >
-                  Update payment details
+                  <StripeLogo size={16} />
+                  Update Stripe details
                 </button>
               </form>
             </>
@@ -222,7 +223,7 @@ export default async function BillingPage({
                   type="submit"
                   className="inline-flex items-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
                 >
-                  <Banknote className="h-4 w-4" aria-hidden />
+                  <StripeLogo size={18} />
                   {connectAccount
                     ? "Continue Stripe onboarding"
                     : "Connect Stripe"}

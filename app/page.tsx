@@ -16,6 +16,12 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  JobberLogo,
+  QuickBooksLogo,
+  StripeLogo,
+  XeroLogo,
+} from "@/components/BrandLogos";
 
 const navLinks = [
   { href: "#how-it-works", label: "How it works" },
@@ -239,6 +245,33 @@ export default function LandingPage() {
             . We only text customers you already have a business relationship
             with. Recipients can reply STOP at any time.
           </p>
+        </section>
+
+        {/* Brand strip — instant trust signal for the tools we plug into */}
+        <section className="border-y border-slate-200 bg-slate-50 py-8">
+          <div className="mx-auto max-w-4xl px-4">
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-500">
+              Works with
+            </p>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <QuickBooksLogo size={22} />
+                QuickBooks Online
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <XeroLogo size={22} />
+                Xero
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <JobberLogo size={22} />
+                Jobber
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <StripeLogo size={22} />
+                Stripe
+              </span>
+            </div>
+          </div>
         </section>
 
         <section

@@ -1,4 +1,5 @@
 import { Link2 } from "lucide-react";
+import { JobberLogo, QuickBooksLogo, XeroLogo } from "./BrandLogos";
 
 export function ConnectPrompt({
   error,
@@ -44,21 +45,24 @@ export function ConnectPrompt({
             href="/api/qbo/connect"
             className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
           >
+            <QuickBooksLogo size={18} />
             Connect QuickBooks
           </a>
           {showXero ? (
             <a
               href="/api/xero/connect"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
             >
+              <XeroLogo size={18} />
               Connect Xero
             </a>
           ) : null}
           {showJobber ? (
             <a
               href="/api/jobber/connect"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
             >
+              <JobberLogo size={18} />
               Connect Jobber
             </a>
           ) : null}
