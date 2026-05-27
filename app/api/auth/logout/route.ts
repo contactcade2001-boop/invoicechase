@@ -5,5 +5,6 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   await destroyCurrentSession();
-  return NextResponse.redirect(new URL("/", req.url), { status: 303 });
+  const base = (process.env.APP_BASE_URL ?? req.url).replace(/\/$/, "");
+  return NextResponse.redirect(new URL("/", base), { status: 303 });
 }

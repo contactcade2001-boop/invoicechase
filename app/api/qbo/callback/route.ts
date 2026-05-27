@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { encryptToken } from "@/lib/server/crypto";
@@ -29,7 +30,7 @@ async function fetchCompanyName(
 }
 
 function errorRedirect(req: NextRequest, message: string) {
-  const url = new URL("/dashboard", req.url);
+  const url = redirectUrl(req, "/dashboard");
   url.searchParams.set("qbo_error", message);
   return NextResponse.redirect(url);
 }
@@ -37,10 +38,10 @@ function errorRedirect(req: NextRequest, message: string) {
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(redirectUrl(req, "/login"));
   }
   if (user.role !== "owner") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(redirectUrl(req, "/dashboard"));
   }
   const orgId = user.organizationId!;
 
@@ -98,7 +99,7 @@ export async function GET(req: NextRequest) {
   void warmDashboardCache(orgId);
 
   const res = NextResponse.redirect(
-    new URL("/dashboard?qbo_connected=1", req.url),
+    redirectUrl(req, "/dashboard?qbo_connected=1"),
   );
   res.cookies.delete(STATE_COOKIE);
   return res;

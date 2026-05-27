@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { logAuditEvent } from "@/lib/server/db/auditEvents";
@@ -12,10 +13,10 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
-    return NextResponse.redirect(new URL("/login", req.url), { status: 303 });
+    return NextResponse.redirect(redirectUrl(req, "/login"), { status: 303 });
   }
   if (user.role !== "owner") {
-    return NextResponse.redirect(new URL("/dashboard", req.url), {
+    return NextResponse.redirect(redirectUrl(req, "/dashboard"), {
       status: 303,
     });
   }
@@ -33,5 +34,5 @@ export async function POST(req: NextRequest) {
       targetId: conn.tenantId,
     });
   }
-  return NextResponse.redirect(new URL("/settings", req.url), { status: 303 });
+  return NextResponse.redirect(redirectUrl(req, "/settings"), { status: 303 });
 }

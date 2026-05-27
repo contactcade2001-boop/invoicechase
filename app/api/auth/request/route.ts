@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { NextResponse, type NextRequest } from "next/server";
 import { requestMagicLink } from "@/lib/server/auth/magic-link";
 import { LIMITS, checkRateLimit } from "@/lib/server/rateLimit";
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
   const email = String(form.get("email") ?? "").trim().toLowerCase();
   if (!email) {
     return NextResponse.redirect(
-      new URL("/login?error=missing_email", req.url),
+      redirectUrl(req, "/login?error=missing_email"),
       { status: 303 },
     );
   }

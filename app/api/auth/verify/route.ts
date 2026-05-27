@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { NextResponse, type NextRequest } from "next/server";
 import { verifyMagicLink } from "@/lib/server/auth/magic-link";
 import { createSession } from "@/lib/server/auth/session";
@@ -14,13 +15,13 @@ export async function GET(req: NextRequest) {
     const referralCode = req.cookies.get(REFERRAL_COOKIE)?.value ?? null;
     const orgReferralCode = req.cookies.get("ic_org_ref")?.value ?? null;
     attributeNewSignup({ userId, referralCode, orgReferralCode });
-    const res = NextResponse.redirect(new URL("/dashboard", req.url));
+    const res = NextResponse.redirect(redirectUrl(req, "/dashboard"));
     if (referralCode) res.cookies.delete(REFERRAL_COOKIE);
     if (orgReferralCode) res.cookies.delete("ic_org_ref");
     return res;
   } catch (err) {
     console.error("[auth] verify failed", err);
-    const url = new URL("/login", req.url);
+    const url = redirectUrl(req, "/login");
     url.searchParams.set("error", "expired_link");
     return NextResponse.redirect(url);
   }

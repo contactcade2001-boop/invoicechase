@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { encryptToken } from "@/lib/server/crypto";
@@ -10,16 +11,16 @@ import { exchangeCodeForTokens } from "@/lib/server/servicetitan/oauth";
 export const dynamic = "force-dynamic";
 
 function errorRedirect(req: NextRequest, message: string) {
-  const url = new URL("/dashboard", req.url);
+  const url = redirectUrl(req, "/dashboard");
   url.searchParams.set("st_error", message);
   return NextResponse.redirect(url);
 }
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.redirect(new URL("/login", req.url));
+  if (!user) return NextResponse.redirect(redirectUrl(req, "/login"));
   if (user.role !== "owner") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(redirectUrl(req, "/dashboard"));
   }
   const orgId = user.organizationId!;
 
@@ -71,7 +72,7 @@ export async function GET(req: NextRequest) {
 
   invalidateDashboardCache(orgId);
   const res = NextResponse.redirect(
-    new URL("/dashboard?st_connected=1", req.url),
+    redirectUrl(req, "/dashboard?st_connected=1"),
   );
   res.cookies.delete(ST_STATE_COOKIE);
   return res;

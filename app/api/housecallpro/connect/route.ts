@@ -1,3 +1,4 @@
+import { redirectUrl } from "@/lib/server/urls";
 import { randomBytes } from "node:crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth/session";
@@ -12,9 +13,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   const user = await getCurrentUser();
-  if (!user) return NextResponse.redirect(new URL("/login", req.url));
+  if (!user) return NextResponse.redirect(redirectUrl(req, "/login"));
   if (user.role !== "owner") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    return NextResponse.redirect(redirectUrl(req, "/dashboard"));
   }
   const cfg = getHousecallProConfig();
   const state = randomBytes(16).toString("hex");
