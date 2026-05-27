@@ -1,6 +1,7 @@
 import { ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BrandMark } from "@/components/BrandMark";
 import { isGoogleConfigured } from "@/lib/server/auth/google";
 import { getCurrentUser } from "@/lib/server/auth/session";
 
@@ -41,12 +42,10 @@ export default async function LoginPage({
     <div className="flex min-h-screen flex-col bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-14 max-w-5xl items-center px-4">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
-              <span className="text-xs font-black text-white">ic</span>
-            </span>
-            <span className="font-display text-base font-bold tracking-tight text-slate-900">
-              Invoice Chase
+          <Link href="/" className="flex items-center gap-2">
+            <BrandMark size={20} />
+            <span className="font-display text-base font-bold tracking-tight text-stone-900">
+              Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </Link>
         </div>

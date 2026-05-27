@@ -453,6 +453,34 @@ CREATE TABLE IF NOT EXISTS onboarding_state (
   preferred_integration TEXT,
   updated_at INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS settlement_offers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  original_balance_cents INTEGER NOT NULL,
+  offer_balance_cents INTEGER NOT NULL,
+  expires_in_hours INTEGER NOT NULL DEFAULT 48,
+  expires_at INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'sent',
+  accepted_at INTEGER,
+  declined_at INTEGER,
+  paid_at INTEGER,
+  pay_link_id INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS settlement_offers_org ON settlement_offers(organization_id);
+
+CREATE TABLE IF NOT EXISTS customer_send_prefs (
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  best_hour_utc INTEGER,
+  best_dow INTEGER,
+  sample_n INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (organization_id, customer_id)
+);
 `;
 
 function hasColumn(
@@ -584,6 +612,16 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["reminder_sequences_enabled", "INTEGER NOT NULL DEFAULT 0"],
     ["cashflow_monthly_outflow_cents", "INTEGER NOT NULL DEFAULT 0"],
     ["cashflow_monthly_new_invoices_cents", "INTEGER NOT NULL DEFAULT 0"],
+    ["early_pay_discount_bps", "INTEGER NOT NULL DEFAULT 0"],
+    ["early_pay_days", "INTEGER NOT NULL DEFAULT 7"],
+    ["ach_discount_bps", "INTEGER NOT NULL DEFAULT 0"],
+    ["late_fee_bps", "INTEGER NOT NULL DEFAULT 0"],
+    ["late_fee_start_days", "INTEGER NOT NULL DEFAULT 30"],
+    ["pre_due_reminder_days", "INTEGER NOT NULL DEFAULT 0"],
+    ["smart_send_times_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["bank_balance_cents", "INTEGER"],
+    ["bank_balance_refreshed_at", "INTEGER"],
+    ["plaid_item_id", "TEXT"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&

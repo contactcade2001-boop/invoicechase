@@ -24,6 +24,7 @@ import {
   AnimatedCounter,
   LiveCounter,
 } from "@/components/AnimatedCounter";
+import { BrandMark } from "@/components/BrandMark";
 import {
   FieldPulseLogo,
   HousecallProLogo,
@@ -238,10 +239,10 @@ export default function LandingPage() {
       {/* ── Sticky nav ─────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <BrandMark />
+          <Link href="/" className="flex items-center gap-2">
+            <BrandMark size={20} />
             <span className="font-display text-base font-bold tracking-tight text-stone-900">
-              Invoice Chase
+              Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </Link>
           <div className="hidden items-center gap-7 text-sm font-medium md:flex">
@@ -356,28 +357,26 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Trust credits — animated vertical marquee of integrations ── */}
-        <section className="relative border-y border-stone-200 bg-white py-16">
+        {/* ── Trust strip — clean static logo grid ──────────────────── */}
+        <section className="border-y border-stone-200 bg-white py-14">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
-            <div className="text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
-                Built on the rails your business already runs
-              </p>
-              <h2 className="font-display mx-auto mt-3 max-w-3xl text-3xl font-bold text-stone-900 sm:text-4xl">
-                Connects with everything.
-                <br className="hidden sm:inline" /> Replaces nothing.
-              </h2>
-            </div>
-
-            <div className="credits-track mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3">
-              <CreditsColumn speed="fast" offset={0} />
-              <CreditsColumn speed="normal" offset={3} />
-              <CreditsColumn speed="slow" offset={5} />
-            </div>
-
-            <p className="mt-6 text-center text-[11px] text-stone-400">
-              Hover any column to pause. One-click OAuth for each.
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+              Connects with the tools your business already runs on
             </p>
+            <div className="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 sm:grid-cols-4 lg:grid-cols-8">
+              {INTEGRATIONS.map((it) => (
+                <div
+                  key={it.name}
+                  className="flex flex-col items-center justify-center gap-2 opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
+                  title={it.name}
+                >
+                  <it.Logo size={28} />
+                  <span className="text-[11px] font-semibold text-stone-600">
+                    {it.name.split(" ")[0]}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -798,10 +797,10 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-5 py-14 lg:px-6">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             <div className="col-span-2 sm:col-span-1">
-              <Link href="/" className="flex items-center gap-2.5">
-                <BrandMark />
+              <Link href="/" className="flex items-center gap-2">
+                <BrandMark size={20} />
                 <span className="font-display text-base font-bold tracking-tight text-stone-900">
-                  Invoice Chase
+                  Invoice Chase<span className="text-orange-600">.</span>
                 </span>
               </Link>
               <p className="mt-4 max-w-xs text-sm leading-6 text-stone-600">
@@ -855,13 +854,6 @@ export default function LandingPage() {
   );
 }
 
-function BrandMark() {
-  return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
-      <span className="text-xs font-black text-white">ic</span>
-    </span>
-  );
-}
 
 function FooterCol({
   title,
@@ -946,53 +938,6 @@ function AnimatedMetric({
   );
 }
 
-// ── Animated credits column ─────────────────────────────────────────────────
-
-function CreditsColumn({
-  speed,
-  offset,
-}: {
-  speed: "slow" | "normal" | "fast";
-  offset: number;
-}) {
-  // Start each column at a different point so they aren't synchronized.
-  const rotated = [
-    ...INTEGRATIONS.slice(offset),
-    ...INTEGRATIONS.slice(0, offset),
-  ];
-  const cls =
-    speed === "slow"
-      ? "animate-credits-slow"
-      : speed === "fast"
-        ? "animate-credits-fast"
-        : "animate-credits";
-  return (
-    <div className="credits-mask relative h-64 overflow-hidden rounded-2xl bg-stone-50 ring-1 ring-inset ring-stone-200">
-      <div className={`flex flex-col gap-3 p-3 ${cls}`}>
-        {[...rotated, ...rotated].map((it, i) => (
-          <div
-            key={`${it.name}-${i}`}
-            className="flex items-center gap-3 rounded-xl bg-white px-4 py-3.5 shadow-sm ring-1 ring-stone-200"
-          >
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-stone-50 ring-1 ring-stone-200">
-              <it.Logo size={20} />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-stone-900">
-                {it.name}
-              </p>
-              <p className="text-[11px] text-stone-500">{it.sub}</p>
-            </div>
-            <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-orange-700">
-              Connect
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ── Product mockup ────────────────────────────────────────────────────────
 
 function ProductMockup() {
@@ -1000,7 +945,7 @@ function ProductMockup() {
     <div className="grid grid-cols-1 gap-0 bg-stone-50/30 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="hidden border-r border-stone-200 bg-white p-5 lg:block">
         <div className="flex items-center gap-2">
-          <BrandMark />
+          <BrandMark size={18} />
           <span className="text-sm font-semibold text-stone-900">
             Honest Plumbing
           </span>

@@ -54,9 +54,60 @@ export const organizations = sqliteTable("organizations", {
   reminderSequencesEnabled: integer("reminder_sequences_enabled").notNull().default(0),
   cashflowMonthlyOutflowCents: integer("cashflow_monthly_outflow_cents").notNull().default(0),
   cashflowMonthlyNewInvoicesCents: integer("cashflow_monthly_new_invoices_cents").notNull().default(0),
+  // ── Cashflow lift settings ──────────────────────────────────────────
+  /** 200 = 2.00% off if paid within the early window. 0 = disabled. */
+  earlyPayDiscountBps: integer("early_pay_discount_bps").notNull().default(0),
+  /** Number of days from invoice issue to qualify for the early-pay discount. */
+  earlyPayDays: integer("early_pay_days").notNull().default(7),
+  /** Discount in bps for paying via ACH instead of card. 0 = disabled. */
+  achDiscountBps: integer("ach_discount_bps").notNull().default(0),
+  /** Monthly late-fee in bps. 150 = 1.5%/month. 0 = disabled. */
+  lateFeeBps: integer("late_fee_bps").notNull().default(0),
+  /** Days past due before the fee starts accruing. */
+  lateFeeStartDays: integer("late_fee_start_days").notNull().default(30),
+  /** Send a pre-due reminder N days before the invoice is due. 0 = off. */
+  preDueReminderDays: integer("pre_due_reminder_days").notNull().default(0),
+  /** Smart-send: time-of-day matching using customer reply history. */
+  smartSendTimesEnabled: integer("smart_send_times_enabled").notNull().default(0),
+  /** Last-known bank balance in cents (from Plaid or manual). */
+  bankBalanceCents: integer("bank_balance_cents"),
+  /** UNIX ms when bankBalanceCents was last refreshed. */
+  bankBalanceRefreshedAt: integer("bank_balance_refreshed_at"),
+  /** Plaid item id if connected, null otherwise. */
+  plaidItemId: text("plaid_item_id"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
+
+export const settlementOffers = sqliteTable("settlement_offers", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  originalBalanceCents: integer("original_balance_cents").notNull(),
+  offerBalanceCents: integer("offer_balance_cents").notNull(),
+  /** Hours from creation for the offer to remain open. */
+  expiresInHours: integer("expires_in_hours").notNull().default(48),
+  expiresAt: integer("expires_at").notNull(),
+  status: text("status").notNull().default("sent"),
+  acceptedAt: integer("accepted_at"),
+  declinedAt: integer("declined_at"),
+  paidAt: integer("paid_at"),
+  payLinkId: integer("pay_link_id"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const customerSendPrefs = sqliteTable("customer_send_prefs", {
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  /** Best hour-of-day (0-23) to text this customer. Computed from history. */
+  bestHourUtc: integer("best_hour_utc"),
+  /** Best day-of-week (0=Sun..6=Sat). */
+  bestDow: integer("best_dow"),
+  /** Sample size used. */
+  sampleN: integer("sample_n").notNull().default(0),
+  updatedAt: integer("updated_at").notNull(),
+}, (t) => [primaryKey({ columns: [t.organizationId, t.customerId] })]);
 
 export const smsConversations = sqliteTable("sms_conversations", {
   id: integer("id").primaryKey({ autoIncrement: true }),

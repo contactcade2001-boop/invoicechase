@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 import { CommandPalette } from "@/components/CommandPalette";
 import { GlobalHotkeys } from "@/components/GlobalHotkeys";
+import { HeaderAccountMenu } from "@/components/HeaderAccountMenu";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -15,7 +17,8 @@ type Tab = {
   badge?: number;
 };
 
-const tabs: Tab[] = [
+// Primary navigation — the five things owners hit every day.
+const primary: Tab[] = [
   {
     key: "dashboard",
     href: "/dashboard",
@@ -35,27 +38,31 @@ const tabs: Tab[] = [
     visibleTo: ["owner", "manager"],
   },
   {
-    key: "communications",
-    href: "/communications",
-    label: "Communications",
-    visibleTo: ["owner", "manager"],
-  },
-  {
     key: "payments",
     href: "/payments",
     label: "Payments",
     visibleTo: ["owner", "manager"],
   },
   {
-    key: "reports",
-    href: "/reports",
-    label: "Reports",
-    visibleTo: ["owner", "manager"],
-  },
-  {
     key: "forecast",
     href: "/forecast",
     label: "Forecast",
+    visibleTo: ["owner", "manager"],
+  },
+];
+
+// Secondary — lives in the account dropdown.
+const secondary: Tab[] = [
+  {
+    key: "communications",
+    href: "/communications",
+    label: "Templates",
+    visibleTo: ["owner", "manager"],
+  },
+  {
+    key: "reports",
+    href: "/reports",
+    label: "Reports",
     visibleTo: ["owner", "manager"],
   },
   {
@@ -99,24 +106,28 @@ export async function AppHeader({
 }) {
   const role = user.role as UserRole;
   const unread = unreadInboxCountFor(user);
-  const visibleTabs = tabs
+  const primaryVisible = primary
     .filter((t) => t.visibleTo.includes(role))
     .map((t) =>
       t.key === "inbox" && unread > 0 ? { ...t, badge: unread } : t,
     );
+  const secondaryVisible = secondary.filter((t) => t.visibleTo.includes(role));
+
   return (
-    <header className="sticky top-0 z-20 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-stone-200/80 bg-white/85 backdrop-blur-md dark:border-stone-800 dark:bg-stone-950/80">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-6 px-5 lg:px-6">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
-            <span className="text-xs font-black text-white">ic</span>
-          </span>
-          <span className="font-display text-[15px] font-bold tracking-tight text-stone-900">
-            Invoice Chase
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2"
+          aria-label="Invoice Chase home"
+        >
+          <BrandMark size={20} />
+          <span className="font-display text-[15px] font-bold tracking-tight text-stone-900 dark:text-stone-100">
+            Invoice Chase<span className="text-orange-600">.</span>
           </span>
         </Link>
-        <nav className="flex flex-1 items-center gap-1 overflow-x-auto text-sm">
-          {visibleTabs.map((t) => {
+        <nav className="hidden flex-1 items-center justify-center gap-1 text-sm md:flex">
+          {primaryVisible.map((t) => {
             const active = current === t.key;
             return (
               <Link
@@ -124,8 +135,8 @@ export async function AppHeader({
                 href={t.href}
                 className={`relative inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition ${
                   active
-                    ? "text-stone-900"
-                    : "text-stone-500 hover:bg-stone-100/70 hover:text-stone-900"
+                    ? "text-stone-900 dark:text-stone-100"
+                    : "text-stone-500 hover:bg-stone-100/70 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100"
                 }`}
               >
                 {t.label}
@@ -136,7 +147,7 @@ export async function AppHeader({
                 ) : null}
                 {active ? (
                   <span
-                    className="absolute inset-x-2 -bottom-[5px] h-0.5 rounded-full bg-orange-600"
+                    className="absolute inset-x-3 -bottom-[5px] h-0.5 rounded-full bg-orange-600"
                     aria-hidden
                   />
                 ) : null}
@@ -147,17 +158,11 @@ export async function AppHeader({
         <div className="flex items-center gap-1">
           <NotificationsBell />
           <ThemeToggle />
-          <span className="hidden lg:inline lg:ml-2 lg:text-xs lg:text-stone-500">
-            {user.email}
-          </span>
-          <form action="/api/auth/logout" method="post" className="ml-1">
-            <button
-              type="submit"
-              className="rounded-md px-2.5 py-1.5 text-xs font-medium text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
-            >
-              Sign out
-            </button>
-          </form>
+          <HeaderAccountMenu
+            email={user.email}
+            current={current}
+            secondary={secondaryVisible}
+          />
         </div>
       </div>
       <CommandPalette />

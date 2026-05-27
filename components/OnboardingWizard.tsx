@@ -10,6 +10,7 @@ import {
   Palette,
   Sparkles,
 } from "lucide-react";
+import { BrandMark } from "@/components/BrandMark";
 import {
   HousecallProLogo,
   JobberLogo,
@@ -123,12 +124,10 @@ export function OnboardingWizard({
     <div className="bg-hero-mesh flex min-h-screen flex-col">
       <header className="border-b border-stone-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5 lg:px-6">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
-              <span className="text-xs font-black text-white">ic</span>
-            </span>
+          <div className="flex items-center gap-2">
+            <BrandMark size={18} />
             <span className="font-display text-sm font-bold tracking-tight text-stone-900">
-              Welcome to Invoice Chase
+              Welcome to Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </div>
           <p className="text-xs text-stone-500">

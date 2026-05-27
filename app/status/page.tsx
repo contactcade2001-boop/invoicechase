@@ -1,5 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { BrandMark } from "@/components/BrandMark";
 
 export const metadata = {
   title: "System status",
@@ -67,12 +68,11 @@ export default function StatusPage() {
     <div className="flex min-h-screen flex-col bg-stone-50">
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center px-5 lg:px-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
-              <span className="text-xs font-black text-white">ic</span>
-            </span>
+          <Link href="/" className="flex items-center gap-2">
+            <BrandMark size={20} />
             <span className="font-display text-base font-bold tracking-tight text-stone-900">
-              Invoice Chase · Status
+              Invoice Chase<span className="text-orange-600">.</span>
+              <span className="ml-1 text-stone-400"> Status</span>
             </span>
           </Link>
         </div>
