@@ -10,10 +10,12 @@ name: cron
 
 on:
   schedule:
+    # Daily at 12:00 UTC ≈ 7am ET — owner-facing AR digest email.
+    - cron: "0 12 * * *"
     # Daily at 14:00 UTC ≈ 9am ET — covers payment plan reminders and the
     # deposit poller.
     - cron: "0 14 * * *"
-    # Mondays at 15:00 UTC for the weekly digest.
+    # Mondays at 15:00 UTC for the weekly digest (SMS).
     - cron: "0 15 * * 1"
     # 3rd of each month at 12:00 UTC for partner commission rollup
     # (covers the prior full calendar month).
@@ -37,6 +39,19 @@ jobs:
           curl -fsS \
             -H "Authorization: Bearer $CRON_SECRET" \
             "$APP_BASE_URL/api/cron/${{ matrix.endpoint }}"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  daily-digest:
+    if: github.event.schedule == '0 12 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Daily owner digest
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/daily-digest"
         env:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}

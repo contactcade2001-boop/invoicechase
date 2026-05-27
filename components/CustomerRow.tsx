@@ -58,7 +58,11 @@ export function CustomerRow({ customer }: { customer: Customer }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 transition hover:bg-slate-50/40 last:border-b-0 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6">
+    <div
+      data-row
+      tabIndex={-1}
+      className="grid grid-cols-1 gap-3 border-b border-slate-100 px-4 py-4 transition hover:bg-slate-50/40 last:border-b-0 focus:bg-orange-50/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-300 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6"
+    >
       <div className="flex flex-col gap-1.5 md:min-w-0">
         <Link
           href={`/dashboard/customer/${customer.id}`}

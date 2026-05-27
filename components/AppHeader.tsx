@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CommandPalette } from "@/components/CommandPalette";
+import { GlobalHotkeys } from "@/components/GlobalHotkeys";
 import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
 import { NotificationsBell } from "@/components/NotificationsBell";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -161,6 +162,7 @@ export async function AppHeader({
       </div>
       <CommandPalette />
       <KeyboardShortcutsHelp />
+      <GlobalHotkeys />
     </header>
   );
 }

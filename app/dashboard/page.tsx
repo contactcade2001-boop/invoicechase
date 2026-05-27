@@ -35,6 +35,7 @@ import { getBehavioralPatterns } from "@/lib/server/insights/patterns";
 import { computeChurnRisk } from "@/lib/server/insights/churnRisk";
 import { getTodaysPlays } from "@/lib/server/insights/plays";
 import { computePulse } from "@/lib/server/insights/pulse";
+import { isOnboarded } from "@/lib/server/db/onboarding";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 
 export const dynamic = "force-dynamic";
@@ -56,6 +57,9 @@ export default async function DashboardPage({
   if (!isActive(sub)) {
     if (user.role !== "owner") redirect("/fast-pay");
     redirect("/billing");
+  }
+  if (user.role === "owner" && !isOnboarded(orgId)) {
+    redirect("/onboarding");
   }
 
   const data = await getDashboardData(orgId);
