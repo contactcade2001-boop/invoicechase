@@ -16,6 +16,7 @@ import {
 } from "../db/payments";
 import { getOrgById } from "../db/organizations";
 import { sendReceiptEmail } from "../email/receipt";
+import { sendPaymentFollowups } from "../payments/followups";
 import { captureException } from "../observability";
 import {
   getSubscriptionByStripeCustomerId,
@@ -286,6 +287,22 @@ async function applyOneTimePayment(
         sessionId: session.id,
       });
     }
+  }
+
+  // Thank-you SMS + review request (best-effort, never throws).
+  try {
+    const phone = session.customer_details?.phone ?? null;
+    await sendPaymentFollowups({
+      organizationId,
+      customerName: session.customer_details?.name ?? null,
+      customerPhone: phone,
+      amountCents,
+    });
+  } catch (err) {
+    captureException(err, {
+      where: "followups",
+      sessionId: session.id,
+    });
   }
 }
 

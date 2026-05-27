@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { CashflowControlsForm } from "@/components/CashflowControlsForm";
 import { PlaidConnectButton } from "@/components/PlaidConnectButton";
+import { RelationshipControlsForm } from "@/components/RelationshipControlsForm";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getCashflowConfig } from "@/lib/server/db/cashflow";
 import { isPlaidConfigured } from "@/lib/server/plaid/client";
@@ -57,6 +58,18 @@ export default async function CashflowSettingsPage() {
         </section>
 
         <CashflowControlsForm config={cfg} />
+
+        <div className="mt-12">
+          <header className="mb-4">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
+              Relationship & control
+            </p>
+            <h2 className="font-display mt-2 text-2xl font-bold text-stone-900">
+              Stay on-brand. Stay in control.
+            </h2>
+          </header>
+          <RelationshipControlsForm config={cfg} />
+        </div>
       </main>
     </div>
   );

@@ -439,6 +439,7 @@ CREATE TABLE IF NOT EXISTS customer_metadata (
   note TEXT,
   snoozed_until INTEGER,
   tags TEXT,
+  tone TEXT,
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (organization_id, customer_id)
 );
@@ -480,6 +481,53 @@ CREATE TABLE IF NOT EXISTS customer_send_prefs (
   sample_n INTEGER NOT NULL DEFAULT 0,
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (organization_id, customer_id)
+);
+
+CREATE TABLE IF NOT EXISTS mechanics_liens (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  job_address TEXT,
+  state TEXT NOT NULL,
+  invoice_amount_cents INTEGER NOT NULL,
+  last_furnish_date INTEGER NOT NULL,
+  filing_deadline INTEGER NOT NULL,
+  reminder_days INTEGER NOT NULL DEFAULT 30,
+  status TEXT NOT NULL DEFAULT 'tracking',
+  resolved_at INTEGER,
+  notes TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS mechanics_liens_org ON mechanics_liens(organization_id);
+CREATE INDEX IF NOT EXISTS mechanics_liens_deadline ON mechanics_liens(filing_deadline);
+
+CREATE TABLE IF NOT EXISTS approval_queue (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  channel TEXT NOT NULL,
+  draft_body TEXT NOT NULL,
+  reason TEXT,
+  status TEXT NOT NULL DEFAULT 'pending',
+  approved_at INTEGER,
+  approved_by_user_id INTEGER,
+  declined_at INTEGER,
+  sent_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS approval_queue_org_status ON approval_queue(organization_id, status);
+
+CREATE TABLE IF NOT EXISTS template_stats (
+  organization_id INTEGER NOT NULL,
+  template_key TEXT NOT NULL,
+  sends INTEGER NOT NULL DEFAULT 0,
+  replies INTEGER NOT NULL DEFAULT 0,
+  paid INTEGER NOT NULL DEFAULT 0,
+  paid_cents INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (organization_id, template_key)
 );
 `;
 
@@ -624,6 +672,11 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["plaid_item_id", "TEXT"],
     ["plaid_access_token_enc", "TEXT"],
     ["plaid_institution_name", "TEXT"],
+    ["seasonal_pause_until", "INTEGER"],
+    ["approval_queue_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["thank_you_on_payment_enabled", "INTEGER NOT NULL DEFAULT 1"],
+    ["review_request_enabled", "INTEGER NOT NULL DEFAULT 0"],
+    ["review_request_url", "TEXT"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&
@@ -741,6 +794,13 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
         )
         .run(orgId, u.id);
     }
+  }
+  // Backfill: add tone column to customer_metadata if missing
+  if (
+    hasColumn(sqlite, "customer_metadata", "customer_id") &&
+    !hasColumn(sqlite, "customer_metadata", "tone")
+  ) {
+    sqlite.exec("ALTER TABLE customer_metadata ADD COLUMN tone TEXT");
   }
   void tableHasRows; // reserved for future migration checks
 }

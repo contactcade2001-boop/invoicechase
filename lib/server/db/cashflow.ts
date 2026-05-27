@@ -14,6 +14,11 @@ export type CashflowConfig = {
   bankBalanceCents: number | null;
   bankBalanceRefreshedAt: number | null;
   plaidConnected: boolean;
+  seasonalPauseUntil: number | null;
+  approvalQueueEnabled: boolean;
+  thankYouOnPaymentEnabled: boolean;
+  reviewRequestEnabled: boolean;
+  reviewRequestUrl: string | null;
 };
 
 export function getCashflowConfig(orgId: number): CashflowConfig {
@@ -30,6 +35,11 @@ export function getCashflowConfig(orgId: number): CashflowConfig {
       bankBalanceCents: organizations.bankBalanceCents,
       bankBalanceRefreshedAt: organizations.bankBalanceRefreshedAt,
       plaidItemId: organizations.plaidItemId,
+      seasonalPauseUntil: organizations.seasonalPauseUntil,
+      approvalQueueEnabled: organizations.approvalQueueEnabled,
+      thankYouOnPaymentEnabled: organizations.thankYouOnPaymentEnabled,
+      reviewRequestEnabled: organizations.reviewRequestEnabled,
+      reviewRequestUrl: organizations.reviewRequestUrl,
     })
     .from(organizations)
     .where(eq(organizations.id, orgId))
@@ -45,6 +55,11 @@ export function getCashflowConfig(orgId: number): CashflowConfig {
     bankBalanceCents: o?.bankBalanceCents ?? null,
     bankBalanceRefreshedAt: o?.bankBalanceRefreshedAt ?? null,
     plaidConnected: !!o?.plaidItemId,
+    seasonalPauseUntil: o?.seasonalPauseUntil ?? null,
+    approvalQueueEnabled: (o?.approvalQueueEnabled ?? 0) === 1,
+    thankYouOnPaymentEnabled: (o?.thankYouOnPaymentEnabled ?? 1) === 1,
+    reviewRequestEnabled: (o?.reviewRequestEnabled ?? 0) === 1,
+    reviewRequestUrl: o?.reviewRequestUrl ?? null,
   };
 }
 
@@ -59,6 +74,11 @@ export function updateCashflowConfig(
     preDueReminderDays: number;
     smartSendTimesEnabled: boolean;
     bankBalanceCents: number | null;
+    seasonalPauseUntil: number | null;
+    approvalQueueEnabled: boolean;
+    thankYouOnPaymentEnabled: boolean;
+    reviewRequestEnabled: boolean;
+    reviewRequestUrl: string | null;
   }>,
 ): void {
   const db = getDb();
@@ -81,6 +101,16 @@ export function updateCashflowConfig(
     update.bankBalanceCents = patch.bankBalanceCents;
     update.bankBalanceRefreshedAt = Date.now();
   }
+  if (patch.seasonalPauseUntil !== undefined)
+    update.seasonalPauseUntil = patch.seasonalPauseUntil;
+  if (patch.approvalQueueEnabled !== undefined)
+    update.approvalQueueEnabled = patch.approvalQueueEnabled ? 1 : 0;
+  if (patch.thankYouOnPaymentEnabled !== undefined)
+    update.thankYouOnPaymentEnabled = patch.thankYouOnPaymentEnabled ? 1 : 0;
+  if (patch.reviewRequestEnabled !== undefined)
+    update.reviewRequestEnabled = patch.reviewRequestEnabled ? 1 : 0;
+  if (patch.reviewRequestUrl !== undefined)
+    update.reviewRequestUrl = patch.reviewRequestUrl;
   db.update(organizations).set(update).where(eq(organizations.id, orgId)).run();
 }
 

@@ -37,6 +37,27 @@ export async function POST(req: NextRequest) {
       typeof body.bankBalanceDollars === "number"
         ? Math.round(body.bankBalanceDollars * 100)
         : undefined,
+    seasonalPauseUntil:
+      typeof body.seasonalPauseUntil === "number" ||
+      body.seasonalPauseUntil === null
+        ? (body.seasonalPauseUntil as number | null)
+        : undefined,
+    approvalQueueEnabled:
+      typeof body.approvalQueueEnabled === "boolean"
+        ? body.approvalQueueEnabled
+        : undefined,
+    thankYouOnPaymentEnabled:
+      typeof body.thankYouOnPaymentEnabled === "boolean"
+        ? body.thankYouOnPaymentEnabled
+        : undefined,
+    reviewRequestEnabled:
+      typeof body.reviewRequestEnabled === "boolean"
+        ? body.reviewRequestEnabled
+        : undefined,
+    reviewRequestUrl:
+      typeof body.reviewRequestUrl === "string"
+        ? body.reviewRequestUrl
+        : undefined,
   });
   return NextResponse.json({ ok: true });
 }

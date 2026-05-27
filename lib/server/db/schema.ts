@@ -14,6 +14,8 @@ export const customerMetadata = sqliteTable(
     note: text("note"),
     snoozedUntil: integer("snoozed_until"),
     tags: text("tags"),
+    /** Per-customer tone override: "gentle" | "neutral" | "firm". */
+    tone: text("tone"),
     updatedAt: integer("updated_at").notNull(),
   },
   (t) => [primaryKey({ columns: [t.organizationId, t.customerId] })],
@@ -79,6 +81,16 @@ export const organizations = sqliteTable("organizations", {
   plaidAccessTokenEnc: text("plaid_access_token_enc"),
   /** Display name for the connected institution (e.g. "Chase Personal"). */
   plaidInstitutionName: text("plaid_institution_name"),
+  /** Org-wide pause for seasonal slowdowns. Affects all autopilot sends. */
+  seasonalPauseUntil: integer("seasonal_pause_until"),
+  /** Require owner approval before any AI-drafted message is sent. */
+  approvalQueueEnabled: integer("approval_queue_enabled").notNull().default(0),
+  /** Auto-send thank-you SMS when a payment is received. */
+  thankYouOnPaymentEnabled: integer("thank_you_on_payment_enabled").notNull().default(1),
+  /** Auto-send review request after payment (Google/Yelp/etc). */
+  reviewRequestEnabled: integer("review_request_enabled").notNull().default(0),
+  /** Public review URL (Google Maps / Yelp). */
+  reviewRequestUrl: text("review_request_url"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -100,6 +112,57 @@ export const settlementOffers = sqliteTable("settlement_offers", {
   payLinkId: integer("pay_link_id"),
   createdAt: integer("created_at").notNull(),
 });
+
+export const mechanicsLiens = sqliteTable("mechanics_liens", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  jobAddress: text("job_address"),
+  /** Two-letter US state code (e.g. "TX"). Drives deadline math. */
+  state: text("state").notNull(),
+  invoiceAmountCents: integer("invoice_amount_cents").notNull(),
+  /** Last day work was performed or materials delivered. */
+  lastFurnishDate: integer("last_furnish_date").notNull(),
+  /** Auto-computed: lastFurnishDate + per-state window. */
+  filingDeadline: integer("filing_deadline").notNull(),
+  /** Days before the deadline to remind the owner. */
+  reminderDays: integer("reminder_days").notNull().default(30),
+  status: text("status").notNull().default("tracking"),
+  resolvedAt: integer("resolved_at"),
+  notes: text("notes"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const approvalQueue = sqliteTable("approval_queue", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  channel: text("channel").notNull(),
+  draftBody: text("draft_body").notNull(),
+  reason: text("reason"),
+  status: text("status").notNull().default("pending"),
+  approvedAt: integer("approved_at"),
+  approvedByUserId: integer("approved_by_user_id"),
+  declinedAt: integer("declined_at"),
+  sentAt: integer("sent_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const templateStats = sqliteTable(
+  "template_stats",
+  {
+    organizationId: integer("organization_id").notNull(),
+    templateKey: text("template_key").notNull(),
+    sends: integer("sends").notNull().default(0),
+    replies: integer("replies").notNull().default(0),
+    paid: integer("paid").notNull().default(0),
+    paidCents: integer("paid_cents").notNull().default(0),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.organizationId, t.templateKey] })],
+);
 
 export const customerSendPrefs = sqliteTable("customer_send_prefs", {
   organizationId: integer("organization_id").notNull(),
