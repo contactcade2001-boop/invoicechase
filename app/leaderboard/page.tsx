@@ -29,10 +29,10 @@ export default async function LeaderboardPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
             This month
           </p>
-          <h1 className="font-display mt-2 text-3xl font-bold text-stone-900">
+          <h1 className="font-display mt-2 text-3xl font-bold text-stone-100">
             Team leaderboard.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-stone-600">
+          <p className="mt-3 text-sm leading-6 text-stone-400">
             Ranked by dollars actually collected. SMS sends and fast-pays
             shown for context.
           </p>
@@ -48,10 +48,10 @@ export default async function LeaderboardPage() {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-700">
                   Leader
                 </p>
-                <p className="font-display text-xl font-bold text-stone-900">
+                <p className="font-display text-xl font-bold text-stone-100">
                   {top.email}
                 </p>
-                <p className="text-sm text-stone-700">
+                <p className="text-sm text-stone-300">
                   {fmt(top.paymentsCollectedCents)} collected · {top.sends}{" "}
                   sends · {top.fastPays} fast-pays
                 </p>
@@ -60,10 +60,10 @@ export default async function LeaderboardPage() {
           </section>
         ) : null}
 
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+        <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-stone-200 bg-stone-50/60 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+              <tr className="border-b border-stone-800 bg-stone-900/40 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                 <th className="px-5 py-3 text-left">#</th>
                 <th className="px-5 py-3 text-left">Member</th>
                 <th className="px-5 py-3 text-right">Sends</th>
@@ -81,20 +81,20 @@ export default async function LeaderboardPage() {
                 </tr>
               ) : null}
               {board.map((r, i) => (
-                <tr key={r.userId} className="border-b border-stone-100 last:border-b-0">
+                <tr key={r.userId} className="border-b border-stone-800/60 last:border-b-0">
                   <td className="px-5 py-3 font-mono text-xs text-stone-500">
                     {i + 1}
                   </td>
                   <td className="px-5 py-3">
-                    <p className="font-medium text-stone-900">{r.email}</p>
+                    <p className="font-medium text-stone-100">{r.email}</p>
                     <p className="text-[11px] uppercase tracking-wider text-stone-500">
                       {r.role}
                     </p>
                   </td>
-                  <td className="px-5 py-3 text-right tabular-nums text-stone-700">
+                  <td className="px-5 py-3 text-right tabular-nums text-stone-300">
                     {r.sends}
                   </td>
-                  <td className="px-5 py-3 text-right tabular-nums text-stone-700">
+                  <td className="px-5 py-3 text-right tabular-nums text-stone-300">
                     {r.fastPays}
                   </td>
                   <td className="px-5 py-3 text-right font-semibold tabular-nums text-emerald-700">

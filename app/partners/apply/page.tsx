@@ -22,14 +22,14 @@ export default async function PartnerApplyPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-stone-800 bg-stone-900/70">
         <nav className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <Link
             href="/partners"
-            className="text-sm text-slate-600 hover:text-slate-900"
+            className="text-sm text-stone-400 hover:text-stone-100"
           >
             ← Partner program
           </Link>
@@ -39,11 +39,11 @@ export default async function PartnerApplyPage() {
         <h1 className="text-3xl font-bold tracking-tight">
           Become a partner
         </h1>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-stone-400">
           Earn 20% recurring on every Invoice Chase subscription you refer. Tell
           us where to send your monthly payout statements.
         </p>
-        <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="mt-8 rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <PartnerApplyForm defaultEmail={user.email} />
         </div>
       </main>

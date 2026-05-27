@@ -59,7 +59,7 @@ export function RefreshDashboardButton({
   void tick;
 
   return (
-    <div className="flex items-center gap-3 text-xs text-slate-500">
+    <div className="flex items-center gap-3 text-xs text-stone-500">
       {stale ? (
         <span className="rounded-full bg-amber-50 px-2 py-0.5 font-medium text-amber-800 ring-1 ring-inset ring-amber-200">
           Showing cached data
@@ -70,7 +70,7 @@ export function RefreshDashboardButton({
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 disabled:cursor-not-allowed disabled:opacity-60"
         aria-label="Refresh dashboard"
       >
         <RefreshCcw

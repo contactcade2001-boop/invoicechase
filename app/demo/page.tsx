@@ -29,16 +29,16 @@ export default function DemoPage() {
       </div>
 
       {/* Faux app header */}
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-stone-800 bg-stone-900/70">
         <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <span className="font-semibold text-slate-900">Dashboard</span>
-            <span className="hidden text-slate-400 sm:inline">Customers</span>
-            <span className="hidden text-slate-400 sm:inline">Inbox</span>
-            <span className="hidden text-slate-400 sm:inline">Forecast</span>
+            <span className="font-semibold text-stone-100">Dashboard</span>
+            <span className="hidden text-stone-500 sm:inline">Customers</span>
+            <span className="hidden text-stone-500 sm:inline">Inbox</span>
+            <span className="hidden text-stone-500 sm:inline">Forecast</span>
             <Link
               href="/login"
               className="rounded-md bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-800"

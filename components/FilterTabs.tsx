@@ -36,13 +36,13 @@ export function FilterTabs({ active, counts, onChange }: Props) {
             className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition ${
               isActive
                 ? "bg-slate-900 text-white shadow-sm"
-                : "bg-white text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-50"
+                : "bg-stone-900/70 text-stone-300 ring-1 ring-inset ring-stone-800 hover:bg-stone-950"
             }`}
           >
             {tab.label}
             <span
               className={`inline-flex min-w-[1.5rem] items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
-                isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                isActive ? "bg-stone-900/70/20 text-white" : "bg-slate-100 text-stone-400"
               }`}
             >
               {counts[tab.key]}

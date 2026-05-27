@@ -24,23 +24,23 @@ export default async function CashflowSettingsPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
             Cashflow controls
           </p>
-          <h1 className="font-display mt-2 text-3xl font-bold text-stone-900">
+          <h1 className="font-display mt-2 text-3xl font-bold text-stone-100">
             Get paid sooner, lose less to bad debt.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-stone-600">
+          <p className="mt-3 text-sm leading-6 text-stone-400">
             Every lever here is engineered to compress your DSO. Flip what
             applies to your business — defaults are safe.
           </p>
         </header>
 
-        <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+        <section className="mb-6 rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
             Bank connection
           </p>
-          <h2 className="font-display mt-1 text-lg font-semibold text-stone-900">
+          <h2 className="font-display mt-1 text-lg font-semibold text-stone-100">
             Live cash on hand via Plaid
           </h2>
-          <p className="mt-1 text-sm text-stone-600">
+          <p className="mt-1 text-sm text-stone-400">
             Securely connect your business bank account. We pull the balance
             every few minutes so the runway widget and forecast stay accurate.
           </p>
@@ -64,7 +64,7 @@ export default async function CashflowSettingsPage() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
               Relationship & control
             </p>
-            <h2 className="font-display mt-2 text-2xl font-bold text-stone-900">
+            <h2 className="font-display mt-2 text-2xl font-bold text-stone-100">
               Stay on-brand. Stay in control.
             </h2>
           </header>

@@ -122,11 +122,11 @@ export function OnboardingWizard({
 
   return (
     <div className="bg-hero-mesh flex min-h-screen flex-col">
-      <header className="border-b border-stone-200 bg-white/80 backdrop-blur">
+      <header className="border-b border-stone-800 bg-stone-900/70/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-5 lg:px-6">
           <div className="flex items-center gap-2">
             <BrandMark size={18} />
-            <span className="font-display text-sm font-bold tracking-tight text-stone-900">
+            <span className="font-display text-sm font-bold tracking-tight text-stone-100">
               Welcome to Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </div>
@@ -146,7 +146,7 @@ export function OnboardingWizard({
                   i < step
                     ? "bg-orange-600 text-white"
                     : i === step
-                      ? "bg-stone-900 text-white"
+                      ? "bg-orange-600 text-white"
                       : "bg-stone-200 text-stone-500"
                 }`}
               >
@@ -154,7 +154,7 @@ export function OnboardingWizard({
               </div>
               <span
                 className={`hidden text-xs font-semibold uppercase tracking-wider sm:inline ${
-                  i === step ? "text-stone-900" : "text-stone-400"
+                  i === step ? "text-stone-100" : "text-stone-400"
                 }`}
               >
                 {s}
@@ -170,19 +170,19 @@ export function OnboardingWizard({
           ))}
         </div>
 
-        <section className="mt-10 rounded-2xl bg-white p-8 shadow-xl shadow-stone-900/5 ring-1 ring-stone-200">
+        <section className="mt-10 rounded-2xl bg-stone-900/70 p-8 shadow-xl shadow-stone-900/5 ring-1 ring-stone-800">
           {step === 0 ? (
             <>
               <Building2 className="h-6 w-6 text-orange-600" aria-hidden />
-              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-900">
+              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-100">
                 Tell us about your business.
               </h1>
-              <p className="mt-2 text-sm text-stone-600">
+              <p className="mt-2 text-sm text-stone-400">
                 Used to personalize reminders and your customer portal.
               </p>
               <div className="mt-6 space-y-4">
                 <label className="block">
-                  <span className="text-xs font-semibold text-stone-700">
+                  <span className="text-xs font-semibold text-stone-300">
                     Business name
                   </span>
                   <input
@@ -191,17 +191,17 @@ export function OnboardingWizard({
                     value={businessName}
                     onChange={(e) => setBusinessName(e.target.value)}
                     placeholder="Honest Plumbing"
-                    className="mt-1.5 block w-full rounded-md border-0 px-3 py-2.5 text-stone-900 shadow-sm ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                    className="mt-1.5 block w-full rounded-md border-0 px-3 py-2.5 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-stone-900"
                   />
                 </label>
                 <label className="block">
-                  <span className="text-xs font-semibold text-stone-700">
+                  <span className="text-xs font-semibold text-stone-300">
                     Industry
                   </span>
                   <select
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
-                    className="mt-1.5 block w-full rounded-md border-0 bg-white px-3 py-2.5 text-stone-900 shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                    className="mt-1.5 block w-full rounded-md border-0 bg-stone-900/70 px-3 py-2.5 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
                   >
                     <option value="">Choose one…</option>
                     {INDUSTRIES.map((i) => (
@@ -216,10 +216,10 @@ export function OnboardingWizard({
           ) : step === 1 ? (
             <>
               <Palette className="h-6 w-6 text-orange-600" aria-hidden />
-              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-900">
+              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-100">
                 Pick your brand color.
               </h1>
-              <p className="mt-2 text-sm text-stone-600">
+              <p className="mt-2 text-sm text-stone-400">
                 Shows up on your customer portal, pay-now buttons, and
                 receipts.
               </p>
@@ -247,10 +247,10 @@ export function OnboardingWizard({
                   onChange={(e) => setAccentColor(e.target.value)}
                   className="h-8 w-12 rounded border-0 bg-transparent"
                 />
-                <code className="font-mono text-stone-700">{accentColor}</code>
+                <code className="font-mono text-stone-300">{accentColor}</code>
               </div>
               <div
-                className="mt-6 overflow-hidden rounded-2xl border border-stone-200 p-5"
+                className="mt-6 overflow-hidden rounded-2xl border border-stone-800 p-5"
                 style={{
                   background: `linear-gradient(180deg, ${accentColor}10 0%, transparent 100%)`,
                 }}
@@ -258,7 +258,7 @@ export function OnboardingWizard({
                 <p className="text-xs uppercase tracking-wider text-stone-500">
                   Preview
                 </p>
-                <p className="mt-1 font-display text-lg font-semibold text-stone-900">
+                <p className="mt-1 font-display text-lg font-semibold text-stone-100">
                   {businessName || "Your Business"} · Pay invoice
                 </p>
                 <button
@@ -274,10 +274,10 @@ export function OnboardingWizard({
           ) : (
             <>
               <Sparkles className="h-6 w-6 text-orange-600" aria-hidden />
-              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-900">
+              <h1 className="font-display mt-4 text-3xl font-bold tracking-tight text-stone-100">
                 Where do your invoices live?
               </h1>
-              <p className="mt-2 text-sm text-stone-600">
+              <p className="mt-2 text-sm text-stone-400">
                 We&apos;ll OAuth in 60 seconds and pull your customers +
                 balances automatically.
               </p>
@@ -292,20 +292,20 @@ export function OnboardingWizard({
                       className={`group flex items-center gap-3 rounded-xl border p-4 text-left transition ${
                         active
                           ? "border-orange-600 bg-orange-50 ring-2 ring-orange-200"
-                          : "border-stone-200 bg-white hover:border-stone-300 hover:shadow-sm"
+                          : "border-stone-800 bg-stone-900/70 hover:border-stone-300 hover:shadow-sm"
                       }`}
                     >
                       {it.Logo ? (
-                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-50 ring-1 ring-stone-200">
+                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-950 ring-1 ring-stone-800">
                           <it.Logo size={20} />
                         </span>
                       ) : (
-                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-xs font-bold text-stone-500 ring-1 ring-stone-200">
+                        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-800 text-xs font-bold text-stone-500 ring-1 ring-stone-800">
                           ?
                         </span>
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-stone-900">
+                        <p className="text-sm font-semibold text-stone-100">
                           {it.name}
                         </p>
                         {it.popular ? (
@@ -321,12 +321,12 @@ export function OnboardingWizard({
             </>
           )}
 
-          <div className="mt-8 flex items-center justify-between border-t border-stone-100 pt-6">
+          <div className="mt-8 flex items-center justify-between border-t border-stone-800/60 pt-6">
             <button
               type="button"
               onClick={back}
               disabled={step === 0}
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-stone-600 transition hover:bg-stone-100 hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium text-stone-400 transition hover:bg-orange-700 hover:text-stone-100 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               Back
@@ -335,7 +335,7 @@ export function OnboardingWizard({
               type="button"
               onClick={next}
               disabled={!canAdvance() || pending}
-              className="group inline-flex items-center gap-2 rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-300"
+              className="group inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:bg-stone-300"
             >
               {step === STEPS.length - 1 ? "Finish" : "Continue"}
               <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />

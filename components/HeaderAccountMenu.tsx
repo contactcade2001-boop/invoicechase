@@ -56,14 +56,14 @@ export function HeaderAccountMenu({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-stone-700 transition hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-800"
+        className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-stone-300 transition hover:bg-orange-700 dark:text-stone-200 dark:hover:bg-orange-700"
         aria-label="More menu"
       >
         <Menu className="h-3.5 w-3.5 text-stone-500" aria-hidden />
-        <span className="hidden text-xs font-medium text-stone-600 sm:inline">
+        <span className="hidden text-xs font-medium text-stone-400 sm:inline">
           More
         </span>
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-stone-900 text-[10px] font-bold text-white dark:bg-stone-700">
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-orange-600 text-[10px] font-bold text-white dark:bg-stone-700">
           {initials}
         </span>
         <ChevronDown
@@ -72,9 +72,9 @@ export function HeaderAccountMenu({
         />
       </button>
       {open ? (
-        <div className="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-stone-200 dark:bg-stone-900 dark:ring-stone-800">
-          <div className="border-b border-stone-100 px-4 py-3 dark:border-stone-800">
-            <p className="truncate text-xs font-semibold text-stone-900 dark:text-stone-100">
+        <div className="absolute right-0 top-full z-30 mt-2 w-64 overflow-hidden rounded-xl bg-stone-900/70 shadow-2xl ring-1 ring-stone-800 dark:bg-orange-600 dark:ring-stone-800">
+          <div className="border-b border-stone-800/60 px-4 py-3 dark:border-stone-800">
+            <p className="truncate text-xs font-semibold text-stone-100 dark:text-stone-100">
               {email}
             </p>
             <p className="text-[10px] uppercase tracking-wider text-stone-400">
@@ -100,7 +100,7 @@ export function HeaderAccountMenu({
                         className={`flex items-center justify-between px-4 py-1.5 text-sm transition ${
                           active
                             ? "bg-orange-50 font-semibold text-orange-700 dark:bg-orange-950/20"
-                            : "text-stone-700 hover:bg-stone-50 dark:text-stone-300 dark:hover:bg-stone-800"
+                            : "text-stone-300 hover:bg-stone-950 dark:text-stone-300 dark:hover:bg-orange-700"
                         }`}
                       >
                         {t.label}
@@ -111,11 +111,11 @@ export function HeaderAccountMenu({
               );
             })}
           </div>
-          <div className="border-t border-stone-100 dark:border-stone-800">
+          <div className="border-t border-stone-800/60 dark:border-stone-800">
             <form action="/api/auth/logout" method="post">
               <button
                 type="submit"
-                className="inline-flex w-full items-center gap-2 px-4 py-2 text-sm text-stone-600 transition hover:bg-stone-50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800"
+                className="inline-flex w-full items-center gap-2 px-4 py-2 text-sm text-stone-400 transition hover:bg-stone-950 hover:text-stone-100 dark:text-stone-400 dark:hover:bg-orange-700"
               >
                 <LogOut className="h-3.5 w-3.5" aria-hidden />
                 Sign out

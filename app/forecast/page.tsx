@@ -44,7 +44,7 @@ export default async function ForecastPage() {
           <h1 className="text-3xl font-bold tracking-tight">
             13-week cash flow forecast
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-stone-400">
             Projected collections from your open AR, weighted by each
             customer&apos;s reputation score, plus your recurring outflows
             and expected new revenue. Not GAAP — a planning estimate.
@@ -52,11 +52,11 @@ export default async function ForecastPage() {
         </div>
 
         {!forecast.connected ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
             <h2 className="text-lg font-semibold">
               Connect your accounting first
             </h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-stone-500">
               We need your open invoices to project anything. Connect from{" "}
               <Link href="/settings" className="underline">
                 Settings
@@ -69,11 +69,11 @@ export default async function ForecastPage() {
         )}
 
         {isOwner ? (
-          <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
             <h2 className="text-lg font-semibold tracking-tight">
               Forecast assumptions
             </h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-stone-400">
               The forecast above projects AR collections from real invoice
               data. Tell us your recurring costs and expected new revenue to
               turn it into a full cash position.
@@ -143,11 +143,11 @@ function ForecastContent({
         />
       </section>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
         <h2 className="text-sm font-semibold tracking-tight">
           Weekly net change
         </h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-stone-500">
           Inflows + new revenue − outflows. Bars above the line are
           surplus weeks, below are deficits.
         </p>
@@ -167,7 +167,7 @@ function ForecastContent({
                     style={{ height: `${pct}%` }}
                   />
                 </div>
-                <p className="mt-2 text-[10px] font-mono text-slate-500">
+                <p className="mt-2 text-[10px] font-mono text-stone-500">
                   {weekLabel(w.weekStart)}
                 </p>
               </div>
@@ -176,11 +176,11 @@ function ForecastContent({
         </div>
       </section>
 
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
         <h2 className="text-sm font-semibold tracking-tight">
           Running cash position
         </h2>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-stone-500">
           Cumulative net change from week 0. Starts at $0 — slide the
           curve up by your current bank balance to read absolute cash.
         </p>
@@ -200,7 +200,7 @@ function ForecastContent({
                     style={{ height: `${pct}%` }}
                   />
                 </div>
-                <p className="mt-2 text-[10px] font-mono text-slate-500">
+                <p className="mt-2 text-[10px] font-mono text-stone-500">
                   {weekLabel(w.weekStart)}
                 </p>
               </div>
@@ -209,10 +209,10 @@ function ForecastContent({
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+      <section className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <th className="px-5 py-3 text-left">Week of</th>
               <th className="px-5 py-3 text-right">Collections</th>
               <th className="px-5 py-3 text-right">New rev.</th>
@@ -225,9 +225,9 @@ function ForecastContent({
             {forecast.weeks.map((w) => (
               <tr
                 key={w.weekStart}
-                className="border-b border-slate-100 last:border-b-0"
+                className="border-b border-stone-800/60 last:border-b-0"
               >
-                <td className="px-5 py-3 font-mono text-xs text-slate-700">
+                <td className="px-5 py-3 font-mono text-xs text-stone-300">
                   {weekLabel(w.weekStart)}
                 </td>
                 <td className="px-5 py-3 text-right tabular-nums text-emerald-700">
@@ -236,7 +236,7 @@ function ForecastContent({
                 <td className="px-5 py-3 text-right tabular-nums text-sky-700">
                   {formatCurrencyDetailed(w.expectedNewRevenue)}
                 </td>
-                <td className="px-5 py-3 text-right tabular-nums text-slate-500">
+                <td className="px-5 py-3 text-right tabular-nums text-stone-500">
                   −{formatCurrencyDetailed(w.expectedOutflows)}
                 </td>
                 <td
@@ -249,7 +249,7 @@ function ForecastContent({
                 </td>
                 <td
                   className={`px-5 py-3 text-right tabular-nums ${
-                    w.runningCash >= 0 ? "text-slate-900" : "text-red-700"
+                    w.runningCash >= 0 ? "text-stone-100" : "text-red-700"
                   }`}
                 >
                   {w.runningCash >= 0 ? "" : ""}
@@ -278,12 +278,12 @@ function Stat({
   const colors: Record<typeof tone, string> = {
     emerald: "text-emerald-700",
     sky: "text-sky-700",
-    slate: "text-slate-700",
+    slate: "text-stone-300",
     red: "text-red-700",
   };
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+    <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+      <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
         {label}
       </p>
       <p
@@ -291,7 +291,7 @@ function Stat({
       >
         {value}
       </p>
-      <p className="mt-1 text-xs text-slate-500">{sub}</p>
+      <p className="mt-1 text-xs text-stone-500">{sub}</p>
     </div>
   );
 }

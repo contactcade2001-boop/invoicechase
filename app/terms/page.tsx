@@ -140,17 +140,17 @@ const sections: { title: string; body: React.ReactNode }[] = [
 
 export default function TermsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
+    <div className="flex min-h-screen flex-col bg-stone-900/70 text-stone-100">
+      <header className="border-b border-stone-800 bg-stone-900/70">
         <nav className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <Link href="/privacy" className="text-slate-600 hover:text-slate-900">
+            <Link href="/privacy" className="text-stone-400 hover:text-stone-100">
               Privacy
             </Link>
-            <Link href="/login" className="text-slate-600 hover:text-slate-900">
+            <Link href="/login" className="text-stone-400 hover:text-stone-100">
               Sign in
             </Link>
           </div>
@@ -160,13 +160,13 @@ export default function TermsPage() {
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Terms of Service
         </h1>
-        <p className="mt-2 text-sm text-slate-500">
+        <p className="mt-2 text-sm text-stone-500">
           Last updated: May 6, 2026
         </p>
-        <div className="mt-10 space-y-8 text-sm leading-6 text-slate-700">
+        <div className="mt-10 space-y-8 text-sm leading-6 text-stone-300">
           {sections.map((section) => (
             <section key={section.title}>
-              <h2 className="text-lg font-semibold text-slate-900">
+              <h2 className="text-lg font-semibold text-stone-100">
                 {section.title}
               </h2>
               <div className="mt-2 space-y-3">{section.body}</div>
@@ -174,14 +174,14 @@ export default function TermsPage() {
           ))}
         </div>
       </main>
-      <footer className="border-t border-slate-200 bg-white py-8">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 text-sm text-slate-500">
-          <span className="font-semibold text-slate-700">Invoice Chase</span>
+      <footer className="border-t border-stone-800 bg-stone-900/70 py-8">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 text-sm text-stone-500">
+          <span className="font-semibold text-stone-300">Invoice Chase</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-slate-900">
+            <Link href="/privacy" className="hover:text-stone-100">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-slate-900">
+            <Link href="/terms" className="hover:text-stone-100">
               Terms
             </Link>
           </div>

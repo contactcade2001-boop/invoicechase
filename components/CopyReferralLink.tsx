@@ -22,7 +22,7 @@ export function CopyReferralLink({ url }: { url: string }) {
         readOnly
         value={url}
         onFocus={(e) => e.currentTarget.select()}
-        className="flex-1 rounded-md border-0 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-800 ring-1 ring-inset ring-slate-300"
+        className="flex-1 rounded-md border-0 bg-stone-950 px-3 py-2 font-mono text-sm text-stone-200 ring-1 ring-inset ring-stone-700"
       />
       <button
         type="button"

@@ -26,7 +26,7 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: "bg-red-50 text-red-700 ring-red-200",
   submitted: "bg-amber-50 text-amber-800 ring-amber-200",
   in_review: "bg-amber-50 text-amber-800 ring-amber-200",
-  not_started: "bg-slate-100 text-slate-700 ring-slate-200",
+  not_started: "bg-slate-100 text-stone-300 ring-stone-800",
 };
 
 export function A2pRegistration({ initial }: { initial: Initial }) {
@@ -49,7 +49,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-stone-400">
         US carriers require A2P 10DLC brand + campaign registration before
         we can send your texts at scale. Register at the Twilio console, then
         paste the IDs and statuses here so we can mark you cleared. Without
@@ -59,7 +59,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
         href="https://console.twilio.com/us1/develop/sms/regulatory-compliance"
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-1 text-sm font-semibold text-slate-900 underline-offset-2 hover:underline"
+        className="inline-flex items-center gap-1 text-sm font-semibold text-stone-100 underline-offset-2 hover:underline"
       >
         Open Twilio console
         <ExternalLink className="h-3 w-3" aria-hidden />
@@ -67,7 +67,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Legal business name
           </span>
           <input
@@ -75,39 +75,39 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
             value={v.legalBusinessName}
             onChange={(e) => update("legalBusinessName", e.target.value)}
             maxLength={200}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">EIN</span>
+          <span className="text-sm font-medium text-stone-300">EIN</span>
           <input
             type="text"
             value={v.businessEin}
             onChange={(e) => update("businessEin", e.target.value)}
             maxLength={32}
             placeholder="12-3456789"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">Brand ID</span>
+          <span className="text-sm font-medium text-stone-300">Brand ID</span>
           <input
             type="text"
             value={v.brandId}
             onChange={(e) => update("brandId", e.target.value)}
             maxLength={64}
             placeholder="BNxxxxxxxxxxxxxxxx"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Brand status
           </span>
           <select
             value={v.brandStatus}
             onChange={(e) => update("brandStatus", e.target.value)}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>
@@ -117,7 +117,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Campaign ID
           </span>
           <input
@@ -126,17 +126,17 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
             onChange={(e) => update("campaignId", e.target.value)}
             maxLength={64}
             placeholder="CMxxxxxxxxxxxxxxxx"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 font-mono text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Campaign status
           </span>
           <select
             value={v.campaignStatus}
             onChange={(e) => update("campaignStatus", e.target.value)}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value}>
@@ -153,7 +153,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
         {v.campaignStatus === "approved" ? (
           <span className="text-emerald-700">SMS sending unlocked.</span>
         ) : (
-          <span className="text-slate-500">
+          <span className="text-stone-500">
             We&apos;ll throttle to test rates until approved.
           </span>
         )}
@@ -178,7 +178,7 @@ export function A2pRegistration({ initial }: { initial: Initial }) {
 
 function Pill({ label, status }: { label: string; status: string }) {
   const cls =
-    STATUS_STYLES[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 font-medium ring-1 ring-inset ${cls}`}

@@ -40,11 +40,11 @@ function relativeAge(ms: number): string {
 export function TodaysPlaysCard({ result }: { result: PlaysResult }) {
   if (result.plays.length === 0) {
     return (
-      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
           <Target className="h-3 w-3" aria-hidden /> Today&apos;s plays
         </p>
-        <p className="mt-3 text-sm text-slate-600">
+        <p className="mt-3 text-sm text-stone-400">
           Everyone&apos;s current. Nothing urgent today.
         </p>
       </section>
@@ -57,29 +57,29 @@ export function TodaysPlaysCard({ result }: { result: PlaysResult }) {
   );
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <Target className="h-3 w-3" aria-hidden /> Today&apos;s plays
             {result.source === "claude" ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
                 <Sparkles className="h-2.5 w-2.5" aria-hidden /> AI
               </span>
             ) : (
-              <span className="inline-flex items-center rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold text-slate-600">
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-1.5 py-0.5 text-[9px] font-semibold text-stone-400">
                 Rule-based
               </span>
             )}
           </p>
-          <p className="mt-1 text-sm text-slate-700">
+          <p className="mt-1 text-sm text-stone-300">
             {result.plays.length} action{result.plays.length === 1 ? "" : "s"}
             {totalExpected > 0
               ? ` · ${formatCurrencyDetailed(totalExpected)} potential cash unlocked`
               : ""}
           </p>
         </div>
-        <p className="text-[10px] text-slate-400" title="Cached for 6 hours">
+        <p className="text-[10px] text-stone-500" title="Cached for 6 hours">
           {relativeAge(result.generatedAt)}
         </p>
       </div>
@@ -89,7 +89,7 @@ export function TodaysPlaysCard({ result }: { result: PlaysResult }) {
           return (
             <li
               key={`${play.customerId}-${play.action}-${i}`}
-              className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/40 p-3"
+              className="flex items-start gap-3 rounded-xl border border-stone-800 bg-stone-950/40 p-3"
             >
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                 {i + 1}
@@ -98,7 +98,7 @@ export function TodaysPlaysCard({ result }: { result: PlaysResult }) {
                 <div className="flex flex-wrap items-baseline gap-2">
                   <Link
                     href={`/dashboard/customer/${play.customerId}`}
-                    className="font-semibold text-slate-900 hover:underline"
+                    className="font-semibold text-stone-100 hover:underline"
                   >
                     {play.customerName}
                   </Link>
@@ -114,7 +114,7 @@ export function TodaysPlaysCard({ result }: { result: PlaysResult }) {
                     </span>
                   ) : null}
                 </div>
-                <p className="mt-1 text-xs leading-5 text-slate-600">
+                <p className="mt-1 text-xs leading-5 text-stone-400">
                   {play.reason}
                 </p>
               </div>

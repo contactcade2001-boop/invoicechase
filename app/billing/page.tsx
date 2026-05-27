@@ -118,8 +118,8 @@ export default async function BillingPage({
         ) : null}
 
         {/* Subscription card */}
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
             Subscription
           </h2>
           {subActive ? (
@@ -136,7 +136,7 @@ export default async function BillingPage({
                 ) : null}
               </div>
               <h3 className="mt-3 text-2xl font-bold">$49 / month</h3>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-stone-400">
                 Renews on {formatRenewal(sub?.currentPeriodEnd ?? null)}
               </p>
               <form action="/api/stripe/portal" method="post" className="mt-6">
@@ -154,7 +154,7 @@ export default async function BillingPage({
               <h3 className="mt-2 text-xl font-bold">
                 Activate your subscription
               </h3>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-stone-400">
                 $49 per month, plus 1.9% per payment collected through Invoice
                 Chase. Cancel any time.
               </p>
@@ -176,8 +176,8 @@ export default async function BillingPage({
         </section>
 
         {/* Connect / Accept payments card */}
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-500">
             Accept payments
           </h2>
 
@@ -194,14 +194,14 @@ export default async function BillingPage({
                   </span>
                 ) : null}
               </div>
-              <p className="mt-3 text-sm text-slate-600">
+              <p className="mt-3 text-sm text-stone-400">
                 Customers can pay via your Stripe account. Invoice Chase keeps
                 1.9% of each payment as a platform fee.
               </p>
               <form action="/api/stripe/connect" method="post" className="mt-6">
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
+                  className="inline-flex items-center gap-2 rounded-md bg-stone-900/70 px-4 py-2 text-sm font-semibold text-stone-300 shadow-sm ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950"
                 >
                   <StripeLogo size={16} />
                   Update Stripe details
@@ -213,7 +213,7 @@ export default async function BillingPage({
               <h3 className="mt-2 text-xl font-bold">
                 Connect Stripe to get paid
               </h3>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-stone-400">
                 Onboard with Stripe (about 5 minutes) so customers can pay via
                 Pay Now and SMS payment links. Funds land in your bank account;
                 we collect a 1.9% platform fee on each payment.
@@ -234,18 +234,18 @@ export default async function BillingPage({
           )}
         </section>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <h2 className="text-lg font-semibold tracking-tight">
             Refer another business
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             Know another QuickBooks-using SMB? Send them this link. When they
             subscribe, you both get a free month.
           </p>
           <div className="mt-4">
             <CopyReferralLink url={referralUrl} />
           </div>
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-stone-500">
             {orgReferrals.length === 0
               ? "No referrals yet."
               : `${orgReferrals.length} business${orgReferrals.length === 1 ? "" : "es"} referred · ${orgReferrals.filter((r) => r.creditStatus === "credited").length} credited.`}

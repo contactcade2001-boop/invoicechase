@@ -68,11 +68,11 @@ export default async function InboxPage({
         <div className="flex items-end justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Inbox</h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-stone-400">
               Replies from customers, plus what autopilot sent on your behalf.
             </p>
           </div>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-stone-500">
             {total} conversation{total === 1 ? "" : "s"}
           </span>
         </div>
@@ -82,20 +82,20 @@ export default async function InboxPage({
             {hasPrev ? (
               <Link
                 href={`/inbox?page=${page - 1}`}
-                className="text-slate-600 hover:text-slate-900"
+                className="text-stone-400 hover:text-stone-100"
               >
                 ← Newer
               </Link>
             ) : (
               <span />
             )}
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-stone-500">
               Page {page} of {totalPages}
             </span>
             {hasNext ? (
               <Link
                 href={`/inbox?page=${page + 1}`}
-                className="text-slate-600 hover:text-slate-900"
+                className="text-stone-400 hover:text-stone-100"
               >
                 Older →
               </Link>

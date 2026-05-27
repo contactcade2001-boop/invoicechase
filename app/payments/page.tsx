@@ -31,11 +31,11 @@ function StatusBadge({ status }: { status: string }) {
     succeeded: "bg-emerald-50 text-emerald-700 ring-emerald-200",
     pending: "bg-amber-50 text-amber-700 ring-amber-200",
     failed: "bg-red-50 text-red-700 ring-red-200",
-    refunded: "bg-slate-100 text-slate-700 ring-slate-200",
+    refunded: "bg-slate-100 text-stone-300 ring-stone-800",
     partially_refunded: "bg-amber-50 text-amber-700 ring-amber-200",
     disputed: "bg-red-50 text-red-700 ring-red-200",
   };
-  const cls = styles[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+  const cls = styles[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
   const label = status === "partially_refunded" ? "partial refund" : status;
   return (
     <span
@@ -53,14 +53,14 @@ function PaymentRowView({ p }: { p: PaymentRow }) {
   const needsQboSync = p.status === "succeeded" && !p.qboPaymentId;
   const partial = p.status === "partially_refunded" && refunded > 0;
   return (
-    <tr className="border-b border-slate-100 last:border-b-0">
-      <td className="px-4 py-3 text-sm text-slate-700">
+    <tr className="border-b border-stone-800/60 last:border-b-0">
+      <td className="px-4 py-3 text-sm text-stone-300">
         {formatDate(p.paidAt ?? p.createdAt)}
       </td>
-      <td className="px-4 py-3 text-sm font-medium text-slate-900">
+      <td className="px-4 py-3 text-sm font-medium text-stone-100">
         {p.customerName ?? "Customer"}
       </td>
-      <td className="px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
+      <td className="px-4 py-3 text-right text-sm font-semibold tabular-nums text-stone-100">
         {formatCurrencyDetailed(p.amountCents)}
         {partial ? (
           <div className="text-[11px] font-normal text-amber-700">
@@ -68,10 +68,10 @@ function PaymentRowView({ p }: { p: PaymentRow }) {
           </div>
         ) : null}
       </td>
-      <td className="px-4 py-3 text-right text-sm tabular-nums text-slate-600">
+      <td className="px-4 py-3 text-right text-sm tabular-nums text-stone-400">
         {fee ? formatCurrencyDetailed(fee) : "—"}
       </td>
-      <td className="px-4 py-3 text-right text-sm tabular-nums text-slate-700">
+      <td className="px-4 py-3 text-right text-sm tabular-nums text-stone-300">
         {formatCurrencyDetailed(net)}
       </td>
       <td className="px-4 py-3 text-right">
@@ -104,13 +104,13 @@ export default async function PaymentsPage() {
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-stone-400">
               Money collected through Invoice Chase.
             </p>
           </div>
           <Link
             href="/payment-plans"
-            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
+            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 hover:bg-stone-950"
           >
             Payment plans
             <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -118,52 +118,52 @@ export default async function PaymentsPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               This month
             </p>
             <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums">
               {formatCurrencyDetailed(summary.thisMonthCents)}
             </p>
           </div>
-          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Lifetime
             </p>
             <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums">
               {formatCurrencyDetailed(summary.lifetimeCents)}
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-stone-500">
               {summary.count} payment{summary.count === 1 ? "" : "s"}
             </p>
           </div>
-          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Platform fees
             </p>
             <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums">
               {formatCurrencyDetailed(summary.lifetimeFeesCents)}
             </p>
-            <p className="mt-1 text-xs text-slate-500">1.9% of collected</p>
+            <p className="mt-1 text-xs text-stone-500">1.9% of collected</p>
           </div>
         </div>
 
         {rows.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-            <Inbox className="mx-auto h-8 w-8 text-slate-400" aria-hidden />
-            <h2 className="mt-3 text-sm font-semibold text-slate-900">
+          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <Inbox className="mx-auto h-8 w-8 text-stone-500" aria-hidden />
+            <h2 className="mt-3 text-sm font-semibold text-stone-100">
               No payments yet
             </h2>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-stone-500">
               When a customer pays through one of your payment links, it&apos;ll
               show up here.
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 text-left">Date</th>
                   <th className="px-4 py-3 text-left">Customer</th>
                   <th className="px-4 py-3 text-right">Amount</th>

@@ -42,7 +42,7 @@ export function BulkTextButton({ overdue }: { overdue: Customer[] }) {
       onClick={handleClick}
       disabled={disabled}
       title={count === 0 ? "No overdue customers with phone numbers" : undefined}
-      className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none"
+      className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-stone-500 disabled:shadow-none"
     >
       <Sparkles className="h-4 w-4" aria-hidden />
       {pending

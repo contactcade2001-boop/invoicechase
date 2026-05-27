@@ -67,18 +67,18 @@ export function NewPaymentPlanModal({
     <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/40 p-4">
       <form
         onSubmit={onSubmit}
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+        className="w-full max-w-md rounded-2xl bg-stone-900/70 p-6 shadow-xl"
       >
         <h2 className="text-lg font-semibold tracking-tight">
           New payment plan for {customer.name}
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-stone-400">
           Splits this balance into a sequence of equal pay-link installments.
         </p>
 
         <div className="mt-4 grid grid-cols-2 gap-3">
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Total ($)
             </span>
             <input
@@ -89,11 +89,11 @@ export function NewPaymentPlanModal({
               onChange={(e) =>
                 setTotalCents(Math.round(Number(e.target.value) * 100))
               }
-              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Installments
             </span>
             <input
@@ -102,11 +102,11 @@ export function NewPaymentPlanModal({
               max={24}
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
-              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Every (days)
             </span>
             <input
@@ -115,24 +115,24 @@ export function NewPaymentPlanModal({
               max={90}
               value={frequency}
               onChange={(e) => setFrequency(Number(e.target.value))}
-              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             />
           </label>
           <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               First due
             </span>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             />
           </label>
         </div>
 
         <label className="mt-3 block">
-          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
             Note (optional)
           </span>
           <input
@@ -141,11 +141,11 @@ export function NewPaymentPlanModal({
             onChange={(e) => setNote(e.target.value)}
             maxLength={500}
             placeholder="e.g. Roof repair invoice 4112"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
 
-        <p className="mt-4 text-xs text-slate-500">
+        <p className="mt-4 text-xs text-stone-500">
           Each installment ≈ ${(installmentCents / 100).toFixed(2)}, due every{" "}
           {frequency} days starting {startDate}.
         </p>
@@ -160,7 +160,7 @@ export function NewPaymentPlanModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+            className="rounded-md px-3 py-2 text-sm font-semibold text-stone-300 hover:bg-slate-100"
           >
             Cancel
           </button>

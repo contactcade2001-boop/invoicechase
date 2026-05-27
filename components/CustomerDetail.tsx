@@ -64,16 +64,16 @@ export function CustomerDetail({
     <div className="space-y-6">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900"
+        className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-stone-100"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden />
         Back to dashboard
       </Link>
 
-      <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-8">
+      <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-3xl font-bold tracking-tight text-stone-100">
               {customer.name}
             </h1>
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -91,7 +91,7 @@ export function CustomerDetail({
                 </span>
               ) : null}
             </div>
-            <p className="mt-3 text-sm text-slate-600">
+            <p className="mt-3 text-sm text-stone-400">
               {customer.phone || "No phone on file"}
             </p>
           </div>
@@ -100,7 +100,7 @@ export function CustomerDetail({
               type="button"
               onClick={onPay}
               disabled={payPending}
-              className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
+              className="inline-flex items-center gap-1.5 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-stone-500"
             >
               <CreditCard className="h-4 w-4" aria-hidden />
               {payPending ? "Opening…" : "Pay Now"}
@@ -110,7 +110,7 @@ export function CustomerDetail({
               onClick={onText}
               disabled={textPending || !customer.phone}
               title={!customer.phone ? "No phone on file" : undefined}
-              className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
+              className="inline-flex items-center gap-1.5 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-stone-500"
             >
               <MessageSquare className="h-4 w-4" aria-hidden />
               {textPending ? "Sending…" : "Text"}
@@ -124,7 +124,7 @@ export function CustomerDetail({
                   ? "No outstanding balance"
                   : "Split this balance into installments"
               }
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <CalendarClock className="h-4 w-4" aria-hidden />
               Payment plan
@@ -139,28 +139,28 @@ export function CustomerDetail({
         />
 
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl bg-stone-950 p-4 ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Total owed
             </p>
             <p className="mt-1 text-2xl font-bold tracking-tight tabular-nums">
               {formatCurrencyDetailed(customer.amountOwed)}
             </p>
           </div>
-          <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl bg-stone-950 p-4 ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Status
             </p>
             <p
               className={`mt-1 text-base font-semibold tabular-nums ${
-                customer.daysLate > 0 ? "text-red-600" : "text-slate-700"
+                customer.daysLate > 0 ? "text-red-600" : "text-stone-300"
               }`}
             >
               {describeDays(customer.daysLate)}
             </p>
           </div>
-          <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl bg-stone-950 p-4 ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Open invoices
             </p>
             <p className="mt-1 text-2xl font-bold tracking-tight tabular-nums">
@@ -170,18 +170,18 @@ export function CustomerDetail({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-        <div className="border-b border-slate-200 bg-slate-50 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+        <div className="border-b border-stone-800 bg-stone-950 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
           Open invoices
         </div>
         {invoices.length === 0 ? (
-          <div className="p-6 text-center text-sm text-slate-500">
+          <div className="p-6 text-center text-sm text-stone-500">
             No open invoices for this customer.
           </div>
         ) : (
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-stone-800 text-xs font-semibold uppercase tracking-wide text-stone-500">
                 <th className="px-4 py-2 text-left">Invoice</th>
                 <th className="px-4 py-2 text-left">Issued</th>
                 <th className="px-4 py-2 text-left">Due</th>
@@ -196,26 +196,26 @@ export function CustomerDetail({
                 return (
                   <tr
                     key={inv.id}
-                    className="border-b border-slate-100 last:border-b-0"
+                    className="border-b border-stone-800/60 last:border-b-0"
                   >
-                    <td className="px-4 py-3 text-sm font-medium text-slate-900">
+                    <td className="px-4 py-3 text-sm font-medium text-stone-100">
                       {inv.number ?? `#${inv.id}`}
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-600">
+                    <td className="px-4 py-3 text-sm text-stone-400">
                       {fmtDate(inv.txnDate)}
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-600">
+                    <td className="px-4 py-3 text-sm text-stone-400">
                       {fmtDate(inv.dueDate)}
                     </td>
-                    <td className="px-4 py-3 text-right text-sm tabular-nums text-slate-700">
+                    <td className="px-4 py-3 text-right text-sm tabular-nums text-stone-300">
                       {formatCurrency(inv.totalCents)}
                     </td>
-                    <td className="px-4 py-3 text-right text-sm font-semibold tabular-nums text-slate-900">
+                    <td className="px-4 py-3 text-right text-sm font-semibold tabular-nums text-stone-100">
                       {formatCurrency(inv.balanceCents)}
                     </td>
                     <td
                       className={`px-4 py-3 text-right text-sm tabular-nums ${
-                        overdue ? "text-red-600" : "text-slate-600"
+                        overdue ? "text-red-600" : "text-stone-400"
                       }`}
                     >
                       {describeDays(inv.daysLate)}

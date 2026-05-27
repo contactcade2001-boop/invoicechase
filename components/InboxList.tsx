@@ -15,10 +15,10 @@ export type InboxListEntry = {
 export function InboxList({ entries }: { entries: InboxListEntry[] }) {
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-        <Inbox className="mx-auto h-8 w-8 text-slate-400" aria-hidden />
+      <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+        <Inbox className="mx-auto h-8 w-8 text-stone-500" aria-hidden />
         <h2 className="mt-3 text-sm font-semibold">No conversations yet</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-stone-500">
           Once a customer replies to a Fast-Pay text, the thread shows up here.
         </p>
       </div>
@@ -26,14 +26,14 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+    <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
       {entries.map(({ conversation, lastMessage, unread }) => {
         const paused = conversation.autopilotPaused === 1;
         return (
           <Link
             key={conversation.id}
             href={`/inbox/${conversation.id}`}
-            className={`flex items-start justify-between gap-3 border-b border-slate-100 px-4 py-3 transition last:border-b-0 hover:bg-slate-50 ${
+            className={`flex items-start justify-between gap-3 border-b border-stone-800/60 px-4 py-3 transition last:border-b-0 hover:bg-stone-950 ${
               unread ? "bg-emerald-50/30" : ""
             }`}
           >
@@ -42,8 +42,8 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
                 <span
                   className={`truncate text-sm ${
                     unread
-                      ? "font-semibold text-slate-900"
-                      : "font-medium text-slate-700"
+                      ? "font-semibold text-stone-100"
+                      : "font-medium text-stone-300"
                   }`}
                 >
                   {conversation.customerName ?? conversation.customerPhone}
@@ -67,7 +67,7 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
               </div>
               <p
                 className={`mt-0.5 truncate text-sm ${
-                  unread ? "text-slate-700" : "text-slate-500"
+                  unread ? "text-stone-300" : "text-stone-500"
                 }`}
               >
                 {lastMessage
@@ -75,7 +75,7 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
                   : "(no messages yet)"}
               </p>
             </div>
-            <span className="shrink-0 text-xs text-slate-400">
+            <span className="shrink-0 text-xs text-stone-500">
               {formatRelativeTime(conversation.lastMessageAt)}
             </span>
           </Link>

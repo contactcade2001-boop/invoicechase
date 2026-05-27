@@ -13,16 +13,16 @@ export const dynamic = "force-dynamic";
 const PAGE_SIZE = 200;
 
 const STATUS_STYLES: Record<string, string> = {
-  received: "bg-slate-100 text-slate-700 ring-slate-200",
+  received: "bg-slate-100 text-stone-300 ring-stone-800",
   processed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  ignored: "bg-slate-100 text-slate-500 ring-slate-200",
+  ignored: "bg-slate-100 text-stone-500 ring-stone-800",
   rejected: "bg-red-50 text-red-700 ring-red-200",
   errored: "bg-red-50 text-red-700 ring-red-200",
 };
 
 function StatusPill({ status }: { status: string }) {
   const cls =
-    STATUS_STYLES[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}
@@ -101,7 +101,7 @@ export default async function WebhookEventsPage({
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-8 sm:py-10">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Webhook events</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             Recent Stripe + Twilio webhooks scoped to your organization. Useful
             for debugging billing or autopilot issues.
           </p>
@@ -116,17 +116,17 @@ export default async function WebhookEventsPage({
           exportHref={exportHref}
         />
         {events.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm text-slate-600">
+          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <p className="text-sm text-stone-400">
               No matching events. Adjust the filters or wait for new webhooks
               to arrive.
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 text-left">When</th>
                   <th className="px-4 py-3 text-left">Source</th>
                   <th className="px-4 py-3 text-left">Type</th>
@@ -139,26 +139,26 @@ export default async function WebhookEventsPage({
                 {events.map((e) => (
                   <tr
                     key={e.id}
-                    className="border-b border-slate-100 last:border-b-0"
+                    className="border-b border-stone-800/60 last:border-b-0"
                   >
-                    <td className="whitespace-nowrap px-4 py-2 text-slate-500">
+                    <td className="whitespace-nowrap px-4 py-2 text-stone-500">
                       {formatRelativeTime(e.createdAt)}
                     </td>
-                    <td className="px-4 py-2 capitalize text-slate-700">
+                    <td className="px-4 py-2 capitalize text-stone-300">
                       {e.source}
                     </td>
-                    <td className="px-4 py-2 font-mono text-xs text-slate-700">
+                    <td className="px-4 py-2 font-mono text-xs text-stone-300">
                       {e.type ?? "—"}
                     </td>
                     <td className="px-4 py-2">
                       <StatusPill status={e.status} />
                     </td>
-                    <td className="px-4 py-2 font-mono text-[11px] text-slate-500">
+                    <td className="px-4 py-2 font-mono text-[11px] text-stone-500">
                       {e.eventId
                         ? `${e.eventId.slice(0, 18)}${e.eventId.length > 18 ? "…" : ""}`
                         : "—"}
                     </td>
-                    <td className="px-4 py-2 text-xs text-slate-500">
+                    <td className="px-4 py-2 text-xs text-stone-500">
                       {e.errorMessage ?? ""}
                     </td>
                   </tr>
@@ -167,7 +167,7 @@ export default async function WebhookEventsPage({
             </table>
           </div>
         )}
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-stone-500">
           Events older than 30 days are pruned automatically by the weekly
           digest cron.
         </p>

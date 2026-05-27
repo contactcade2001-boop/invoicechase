@@ -52,7 +52,7 @@ export function DemandLetterForm() {
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             placeholder="Acme Construction LLC"
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
         <Field label="Customer address">
@@ -61,7 +61,7 @@ export function DemandLetterForm() {
             value={customerAddress}
             onChange={(e) => setCustomerAddress(e.target.value)}
             placeholder="123 Main St, Austin TX 78701"
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
         <Field label="Invoice number">
@@ -70,7 +70,7 @@ export function DemandLetterForm() {
             value={invoiceNumber}
             onChange={(e) => setInvoiceNumber(e.target.value)}
             placeholder="INV-4218"
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
         <Field label="Amount owed (USD)">
@@ -80,7 +80,7 @@ export function DemandLetterForm() {
             min={0}
             step={100}
             onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
         <Field label="Days past due">
@@ -90,7 +90,7 @@ export function DemandLetterForm() {
             min={0}
             step={1}
             onChange={(e) => setDaysLate(parseInt(e.target.value) || 0)}
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
         <Field label="Work description (short)" className="sm:col-span-2">
@@ -99,7 +99,7 @@ export function DemandLetterForm() {
             value={work}
             onChange={(e) => setWork(e.target.value)}
             placeholder="full HVAC replacement at 123 Main St"
-            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </Field>
       </div>
@@ -107,7 +107,7 @@ export function DemandLetterForm() {
         type="button"
         onClick={download}
         disabled={busy || !customerName || amount <= 0}
-        className="inline-flex items-center gap-1.5 rounded-md bg-stone-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 rounded-md bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:opacity-50"
       >
         <Download className="h-3.5 w-3.5" />
         {busy ? "Generating…" : "Download demand letter"}

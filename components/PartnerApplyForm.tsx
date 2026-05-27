@@ -39,7 +39,7 @@ export function PartnerApplyForm({ defaultEmail }: { defaultEmail: string }) {
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Your name</span>
+        <span className="text-sm font-medium text-stone-300">Your name</span>
         <input
           type="text"
           value={name}
@@ -47,11 +47,11 @@ export function PartnerApplyForm({ defaultEmail }: { defaultEmail: string }) {
           required
           maxLength={120}
           autoComplete="name"
-          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
+          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
         />
       </label>
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">
+        <span className="text-sm font-medium text-stone-300">
           Firm or company (optional)
         </span>
         <input
@@ -60,11 +60,11 @@ export function PartnerApplyForm({ defaultEmail }: { defaultEmail: string }) {
           onChange={(e) => setCompany(e.target.value)}
           maxLength={160}
           autoComplete="organization"
-          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
+          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
         />
       </label>
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">
+        <span className="text-sm font-medium text-stone-300">
           Payout email
         </span>
         <input
@@ -74,9 +74,9 @@ export function PartnerApplyForm({ defaultEmail }: { defaultEmail: string }) {
           required
           maxLength={200}
           autoComplete="email"
-          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
+          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
         />
-        <span className="mt-1 block text-xs text-slate-500">
+        <span className="mt-1 block text-xs text-stone-500">
           We send monthly commission statements here.
         </span>
       </label>
@@ -92,7 +92,7 @@ export function PartnerApplyForm({ defaultEmail }: { defaultEmail: string }) {
       >
         {pending ? "Setting up…" : "Create my partner account"}
       </button>
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-stone-500">
         You stay signed in to your Invoice Chase account; the partner account
         is separate from any QuickBooks customer org you might already have.
       </p>

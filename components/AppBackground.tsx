@@ -1,42 +1,28 @@
 /**
- * Slow-drifting orange/amber/rose blobs that sit behind every page.
- * Pure CSS, no JS, GPU-accelerated. Fixed-position, ignores pointer events.
+ * Static dark background — single subtle radial highlight, no motion, no
+ * blobs. Reads like Linear/Ramp: dark surface with hint of depth.
  */
 export function AppBackground() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-stone-950"
     >
-      {/* Base wash. */}
-      <div className="absolute inset-0 bg-gradient-to-br from-stone-50 via-white to-stone-100 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950" />
+      {/* Soft top-right glow for depth — single layer, no animation. */}
       <div
-        className="aurora-blob-a absolute -left-32 -top-40 h-[42rem] w-[42rem] rounded-full blur-3xl"
+        className="absolute inset-0 opacity-60"
         style={{
           background:
-            "radial-gradient(circle, rgba(249,115,22,0.42) 0%, rgba(249,115,22,0) 70%)",
+            "radial-gradient(1200px 600px at 80% -10%, rgba(249,115,22,0.12) 0%, transparent 60%), radial-gradient(900px 500px at 0% 110%, rgba(120,113,108,0.10) 0%, transparent 60%)",
         }}
       />
+      {/* Hairline grid for that enterprise SaaS feel. */}
       <div
-        className="aurora-blob-b absolute -right-32 top-[6rem] h-[48rem] w-[48rem] rounded-full blur-3xl"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
-          background:
-            "radial-gradient(circle, rgba(245,158,11,0.40) 0%, rgba(245,158,11,0) 70%)",
-        }}
-      />
-      <div
-        className="aurora-blob-c absolute left-[15%] -bottom-64 h-[40rem] w-[40rem] rounded-full blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(244,63,94,0.34) 0%, rgba(244,63,94,0) 70%)",
-        }}
-      />
-      <div
-        className="aurora-blob-a absolute right-[20%] bottom-[8%] h-[28rem] w-[28rem] rounded-full blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(251,191,36,0.30) 0%, rgba(251,191,36,0) 70%)",
-          animationDelay: "-8s",
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
         }}
       />
     </div>

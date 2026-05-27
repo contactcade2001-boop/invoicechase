@@ -98,7 +98,7 @@ export default async function DashboardPage({
             cta: "Connect",
             done: !!qboConn || !!xeroConn || !!jobberConn,
             badge: (
-              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500">
                 <span className="inline-flex items-center gap-1">
                   <QuickBooksLogo size={14} /> QuickBooks
                 </span>
@@ -123,7 +123,7 @@ export default async function DashboardPage({
             cta: "Set up",
             done: canAcceptPayments(connectAccount),
             badge: (
-              <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+              <span className="inline-flex items-center gap-1 text-xs text-stone-500">
                 <StripeLogo size={14} /> Stripe Connect
               </span>
             ),

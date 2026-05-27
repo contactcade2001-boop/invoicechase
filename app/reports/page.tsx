@@ -34,14 +34,14 @@ export default async function ReportsPage() {
       <AppHeader user={user} current="reports" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8">
         <h1 className="text-3xl font-bold tracking-tight">Reports</h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-stone-400">
           Hand these to your accountant or your bookkeeper. Both exports reflect
           the data we have in QuickBooks + Stripe at the moment of download.
         </p>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <h2 className="text-lg font-semibold tracking-tight">AR aging</h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             Open invoices grouped into Current / 1–30 / 31–60 / 61–90 / 90+
             day buckets, with totals by bucket.
           </p>
@@ -53,11 +53,11 @@ export default async function ReportsPage() {
           </a>
         </section>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <h2 className="text-lg font-semibold tracking-tight">
             Monthly reconciliation
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             Every payment we processed in a given month, including platform
             fees and refunds, with totals — designed to match your Stripe
             payouts at month end.
@@ -68,14 +68,14 @@ export default async function ReportsPage() {
             className="mt-4 flex flex-wrap items-end gap-3"
           >
             <label className="block">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 Month
               </span>
               <input
                 type="month"
                 name="month"
                 defaultValue={defaultMonth}
-                className="mt-1 block rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+                className="mt-1 block rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
               />
             </label>
             <button

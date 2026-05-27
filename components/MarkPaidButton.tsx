@@ -31,7 +31,7 @@ export function MarkPaidButton({ commissionId }: { commissionId: number }) {
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="text-xs font-semibold text-slate-600 underline-offset-2 hover:text-slate-900 hover:underline disabled:opacity-50"
+        className="text-xs font-semibold text-stone-400 underline-offset-2 hover:text-stone-100 hover:underline disabled:opacity-50"
       >
         {pending ? "Saving…" : "Mark paid"}
       </button>

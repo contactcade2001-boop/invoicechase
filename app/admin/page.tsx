@@ -53,7 +53,7 @@ export default async function AdminHomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-stone-800 bg-stone-900/70">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-lg font-bold tracking-tight">
@@ -63,7 +63,7 @@ export default async function AdminHomePage() {
               admin
             </span>
           </div>
-          <span className="text-sm text-slate-500">{user.email}</span>
+          <span className="text-sm text-stone-500">{user.email}</span>
         </div>
       </header>
       <main className="mx-auto w-full max-w-6xl flex-1 space-y-8 px-4 py-8">
@@ -88,10 +88,10 @@ export default async function AdminHomePage() {
 
         <section>
           <h2 className="text-lg font-semibold tracking-tight">Organizations</h2>
-          <div className="mt-3 overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="mt-3 overflow-x-auto rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 text-left">Name</th>
                   <th className="px-4 py-3 text-left">Created</th>
                   <th className="px-4 py-3 text-left">Subscription</th>
@@ -104,22 +104,22 @@ export default async function AdminHomePage() {
                   return (
                     <tr
                       key={o.id}
-                      className="border-b border-slate-100 last:border-b-0"
+                      className="border-b border-stone-800/60 last:border-b-0"
                     >
-                      <td className="px-4 py-3 font-medium text-slate-800">
+                      <td className="px-4 py-3 font-medium text-stone-200">
                         {o.name}
-                        <span className="ml-2 text-xs text-slate-400">
+                        <span className="ml-2 text-xs text-stone-500">
                           #{o.id}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-stone-400">
                         {formatRelativeTime(o.createdAt)}
                       </td>
-                      <td className="px-4 py-3 text-slate-600">
+                      <td className="px-4 py-3 text-stone-400">
                         {sub ? sub.status : "—"}
                         {sub?.cancelAtPeriodEnd === 1 ? " (cancelling)" : ""}
                       </td>
-                      <td className="px-4 py-3 text-xs text-slate-500">
+                      <td className="px-4 py-3 text-xs text-stone-500">
                         {[
                           o.autopilotEnabled === 1 ? "autopilot" : null,
                           o.depositEnabled === 1 ? "deposits" : null,
@@ -140,12 +140,12 @@ export default async function AdminHomePage() {
         <section>
           <h2 className="text-lg font-semibold tracking-tight">Partners</h2>
           {partnersList.length === 0 ? (
-            <p className="mt-3 text-sm text-slate-500">No partners yet.</p>
+            <p className="mt-3 text-sm text-stone-500">No partners yet.</p>
           ) : (
-            <div className="mt-3 overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+            <div className="mt-3 overflow-x-auto rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                     <th className="px-4 py-3 text-left">Partner</th>
                     <th className="px-4 py-3 text-left">Code</th>
                     <th className="px-4 py-3 text-left">Stripe</th>
@@ -156,21 +156,21 @@ export default async function AdminHomePage() {
                   {partnersList.map((p) => (
                     <tr
                       key={p.id}
-                      className="border-b border-slate-100 last:border-b-0"
+                      className="border-b border-stone-800/60 last:border-b-0"
                     >
                       <td className="px-4 py-3">
                         <div className="font-medium">
                           {p.displayName ?? p.email}
                         </div>
-                        <div className="text-xs text-slate-500">{p.email}</div>
+                        <div className="text-xs text-stone-500">{p.email}</div>
                       </td>
                       <td className="px-4 py-3 font-mono text-xs">
                         {p.referralCode}
                       </td>
-                      <td className="px-4 py-3 text-xs text-slate-600">
+                      <td className="px-4 py-3 text-xs text-stone-400">
                         {p.stripeAccountId ?? "not connected"}
                       </td>
-                      <td className="px-4 py-3 text-slate-600">{p.status}</td>
+                      <td className="px-4 py-3 text-stone-400">{p.status}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -183,10 +183,10 @@ export default async function AdminHomePage() {
           <h2 className="text-lg font-semibold tracking-tight">
             Recent webhook events
           </h2>
-          <div className="mt-3 overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="mt-3 overflow-x-auto rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 text-left">When</th>
                   <th className="px-4 py-3 text-left">Source</th>
                   <th className="px-4 py-3 text-left">Type</th>
@@ -198,13 +198,13 @@ export default async function AdminHomePage() {
                 {recentWebhooks.map((w) => (
                   <tr
                     key={w.id}
-                    className="border-b border-slate-100 last:border-b-0"
+                    className="border-b border-stone-800/60 last:border-b-0"
                   >
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-stone-400">
                       {formatRelativeTime(w.createdAt)}
                     </td>
                     <td className="px-4 py-3">{w.source}</td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-stone-400">
                       {w.type ?? "—"}
                     </td>
                     <td className="px-4 py-3">
@@ -218,7 +218,7 @@ export default async function AdminHomePage() {
                         {w.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-600">
+                    <td className="px-4 py-3 text-xs text-stone-400">
                       {w.errorMessage ?? "—"}
                     </td>
                   </tr>
@@ -242,12 +242,12 @@ function Stat({
   sub?: string;
 }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+      <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
         {label}
       </p>
       <p className="mt-2 text-2xl font-bold tabular-nums">{value}</p>
-      {sub ? <p className="mt-1 text-xs text-slate-500">{sub}</p> : null}
+      {sub ? <p className="mt-1 text-xs text-stone-500">{sub}</p> : null}
     </div>
   );
 }

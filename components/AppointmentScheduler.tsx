@@ -77,7 +77,7 @@ export function AppointmentScheduler({
   }
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
       <div className="flex items-center gap-2">
         <Calendar className="h-3.5 w-3.5 text-orange-600" aria-hidden />
         <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
@@ -92,10 +92,10 @@ export function AppointmentScheduler({
           {appts.map((a) => (
             <li
               key={a.id}
-              className="flex items-start gap-2 rounded-md bg-stone-50 px-3 py-2 text-xs ring-1 ring-inset ring-stone-200"
+              className="flex items-start gap-2 rounded-md bg-stone-950 px-3 py-2 text-xs ring-1 ring-inset ring-stone-800"
             >
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-stone-900">
+                <p className="font-semibold text-stone-100">
                   {new Date(a.scheduledFor).toLocaleString("en-US", {
                     weekday: "short",
                     month: "short",
@@ -105,7 +105,7 @@ export function AppointmentScheduler({
                   })}
                 </p>
                 {a.description ? (
-                  <p className="text-stone-600">{a.description}</p>
+                  <p className="text-stone-400">{a.description}</p>
                 ) : null}
                 <p className="mt-0.5 text-[10px] uppercase tracking-wider text-stone-400">
                   {a.reminderSentAt
@@ -117,7 +117,7 @@ export function AppointmentScheduler({
                 type="button"
                 onClick={() => cancel(a.id)}
                 disabled={pending}
-                className="rounded-md p-1 text-stone-400 transition hover:bg-stone-100 hover:text-stone-700 disabled:opacity-50"
+                className="rounded-md p-1 text-stone-400 transition hover:bg-orange-700 hover:text-stone-300 disabled:opacity-50"
                 aria-label="Cancel"
               >
                 <Trash2 className="h-3 w-3" />
@@ -135,7 +135,7 @@ export function AppointmentScheduler({
             type="datetime-local"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="mt-1 block w-full rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block">
@@ -147,7 +147,7 @@ export function AppointmentScheduler({
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
             placeholder="HVAC tune-up"
-            className="mt-1 block w-full rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block">
@@ -161,7 +161,7 @@ export function AppointmentScheduler({
             max={14}
             step={1}
             onChange={(e) => setReminderDays(parseInt(e.target.value) || 0)}
-            className="mt-1 block w-24 rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-24 rounded-md border-0 px-2.5 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         {err ? <p className="text-xs text-red-700">{err}</p> : null}
@@ -169,7 +169,7 @@ export function AppointmentScheduler({
           type="button"
           onClick={create}
           disabled={pending}
-          className="inline-flex items-center justify-center gap-1.5 rounded-md bg-stone-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-stone-800 disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-md bg-orange-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:opacity-50"
         >
           <CalendarPlus className="h-3 w-3" />
           Schedule visit

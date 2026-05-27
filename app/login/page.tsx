@@ -40,11 +40,11 @@ export default async function LoginPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-stone-800 bg-stone-900/70">
         <div className="mx-auto flex h-14 max-w-5xl items-center px-4">
           <Link href="/" className="flex items-center gap-2">
             <BrandMark size={20} />
-            <span className="font-display text-base font-bold tracking-tight text-stone-900">
+            <span className="font-display text-base font-bold tracking-tight text-stone-100">
               Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </Link>
@@ -52,26 +52,26 @@ export default async function LoginPage({
       </header>
 
       <main className="flex flex-1 items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+        <div className="w-full max-w-md rounded-2xl bg-stone-900/70 p-8 shadow-sm ring-1 ring-stone-800">
           {sent ? (
             <div className="text-center">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200">
                 <Mail className="h-6 w-6 text-emerald-700" aria-hidden />
               </div>
               <h1 className="mt-4 text-2xl font-bold">Check your email</h1>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-stone-400">
                 We sent a sign-in link to{" "}
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-stone-100">
                   {sp.email ?? "your inbox"}
                 </span>
                 . Click it to log in.
               </p>
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="mt-4 text-xs text-stone-500">
                 Don&apos;t see it? Check spam, or use a different email.
               </p>
               <Link
                 href="/login"
-                className="mt-6 inline-block text-sm font-semibold text-slate-700 underline-offset-2 hover:underline"
+                className="mt-6 inline-block text-sm font-semibold text-stone-300 underline-offset-2 hover:underline"
               >
                 ← Back
               </Link>
@@ -79,7 +79,7 @@ export default async function LoginPage({
           ) : (
             <>
               <h1 className="font-display text-2xl font-bold">Sign in</h1>
-              <p className="mt-1 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-stone-400">
                 One click with Google — no email check required.
               </p>
               {errorMessage ? (
@@ -91,7 +91,7 @@ export default async function LoginPage({
               {googleOn ? (
                 <a
                   href="/api/auth/google/start"
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50 hover:ring-slate-400 hover:shadow"
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-md bg-stone-900/70 px-4 py-2.5 text-sm font-semibold text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 hover:ring-slate-400 hover:shadow"
                 >
                   <GoogleGlyph />
                   Continue with Google
@@ -99,7 +99,7 @@ export default async function LoginPage({
               ) : null}
 
               {googleOn ? (
-                <div className="my-6 flex items-center gap-3 text-[11px] uppercase tracking-widest text-slate-400">
+                <div className="my-6 flex items-center gap-3 text-[11px] uppercase tracking-widest text-stone-500">
                   <span className="h-px flex-1 bg-slate-200" />
                   or email a magic link
                   <span className="h-px flex-1 bg-slate-200" />
@@ -112,7 +112,7 @@ export default async function LoginPage({
                 className={googleOn ? "space-y-3" : "mt-6 space-y-3"}
               >
                 <label className="block">
-                  <span className="text-sm font-medium text-slate-700">
+                  <span className="text-sm font-medium text-stone-300">
                     Email
                   </span>
                   <input
@@ -122,7 +122,7 @@ export default async function LoginPage({
                     autoFocus={!googleOn}
                     autoComplete="email"
                     placeholder="you@business.com"
-                    className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
                   />
                 </label>
                 <button

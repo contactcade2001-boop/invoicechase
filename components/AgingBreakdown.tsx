@@ -12,7 +12,7 @@ type Bucket = {
 };
 
 const BUCKETS: Bucket[] = [
-  { key: "current", label: "Current", color: "bg-slate-300", ringColor: "ring-slate-300" },
+  { key: "current", label: "Current", color: "bg-slate-300", ringColor: "ring-stone-700" },
   { key: "1-30", label: "1–30", color: "bg-amber-400", ringColor: "ring-amber-300" },
   { key: "31-60", label: "31–60", color: "bg-orange-500", ringColor: "ring-orange-300" },
   { key: "61-90", label: "61–90", color: "bg-red-500", ringColor: "ring-red-300" },
@@ -51,12 +51,12 @@ export function AgingBreakdown({ customers }: { customers: Customer[] }) {
   if (grand === 0) return null;
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-900">
+        <h2 className="text-sm font-semibold text-stone-100">
           Aging breakdown
         </h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-stone-500">
           {formatCurrencyDetailed(grand)} outstanding
         </p>
       </div>
@@ -78,14 +78,14 @@ export function AgingBreakdown({ customers }: { customers: Customer[] }) {
       <dl className="mt-4 grid grid-cols-5 gap-2 text-center">
         {BUCKETS.map((b) => (
           <div key={b.key}>
-            <dt className="flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            <dt className="flex items-center justify-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
               <span
                 className={`h-1.5 w-1.5 rounded-full ${b.color}`}
                 aria-hidden
               />
               {b.label}
             </dt>
-            <dd className="mt-1 text-sm font-semibold tabular-nums text-slate-900">
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-stone-100">
               {formatCurrencyDetailed(totals[b.key])}
             </dd>
           </div>

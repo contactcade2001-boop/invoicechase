@@ -33,7 +33,7 @@ export function BrandMark({
         <circle cx="20" cy="6" r="1.6" fill="currentColor" />
       </svg>
       {withWordmark ? (
-        <span className="font-display text-[15px] font-bold tracking-tight text-stone-900 dark:text-stone-100">
+        <span className="font-display text-[15px] font-bold tracking-tight text-stone-100 dark:text-stone-100">
           Invoice Chase<span className="text-orange-600">.</span>
         </span>
       ) : null}

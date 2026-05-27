@@ -81,22 +81,22 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900"
+          className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-stone-100"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
           Back
         </button>
 
-        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <h2 className="text-2xl font-bold tracking-tight">
             {selected.name}
           </h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             {selected.phone || "No phone on file"}
           </p>
 
-          <div className="mt-5 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <div className="mt-5 rounded-xl bg-stone-950 p-4 ring-1 ring-stone-800">
+            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Amount due
             </p>
             <p className="mt-1 text-3xl font-bold tabular-nums">
@@ -104,7 +104,7 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
             </p>
             <p
               className={`mt-1 text-sm font-medium tabular-nums ${
-                selected.daysLate > 0 ? "text-red-600" : "text-slate-500"
+                selected.daysLate > 0 ? "text-red-600" : "text-stone-500"
               }`}
             >
               {describeDays(selected.daysLate)}
@@ -117,7 +117,7 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
               onClick={onSendText}
               disabled={textPending || !selected.phone}
               title={!selected.phone ? "No phone on file" : undefined}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-4 text-base font-bold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-600 px-5 py-4 text-base font-bold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-stone-500"
             >
               {textPending ? (
                 <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
@@ -148,11 +148,11 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
             </div>
           ) : null}
           {status.kind === "linked" ? (
-            <div className="mt-4 rounded-md bg-slate-50 px-3 py-2 text-sm ring-1 ring-inset ring-slate-200">
-              <p className="font-semibold text-slate-900">
+            <div className="mt-4 rounded-md bg-stone-950 px-3 py-2 text-sm ring-1 ring-inset ring-stone-800">
+              <p className="font-semibold text-stone-100">
                 Link copied to clipboard
               </p>
-              <p className="mt-1 break-all text-xs text-slate-600">
+              <p className="mt-1 break-all text-xs text-stone-400">
                 {status.url}
               </p>
             </div>
@@ -171,7 +171,7 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
     <div className="space-y-4">
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+          className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-500"
           aria-hidden
         />
         <input
@@ -181,34 +181,34 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search customer…"
           autoFocus
-          className="w-full rounded-lg border-0 bg-white py-3.5 pl-11 pr-4 text-base shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+          className="w-full rounded-lg border-0 bg-stone-900/70 py-3.5 pl-11 pr-4 text-base shadow-sm ring-1 ring-inset ring-stone-700 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-slate-200">
-          <p className="text-sm text-slate-600">
+        <div className="rounded-2xl bg-stone-900/70 p-8 text-center shadow-sm ring-1 ring-stone-800">
+          <p className="text-sm text-stone-400">
             {query
               ? "No customers match that search."
               : "No customers with outstanding balances."}
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+        <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
           {filtered.map((c) => (
             <button
               key={c.id}
               type="button"
               onClick={() => setSelected(c)}
-              className="flex w-full items-center justify-between gap-4 border-b border-slate-100 px-4 py-4 text-left last:border-b-0 transition hover:bg-slate-50 active:bg-slate-100"
+              className="flex w-full items-center justify-between gap-4 border-b border-stone-800/60 px-4 py-4 text-left last:border-b-0 transition hover:bg-stone-950 active:bg-slate-100"
             >
               <div className="min-w-0 flex-1">
-                <div className="truncate text-base font-medium text-slate-900">
+                <div className="truncate text-base font-medium text-stone-100">
                   {c.name}
                 </div>
                 <div
                   className={`text-sm tabular-nums ${
-                    c.daysLate > 0 ? "text-red-600" : "text-slate-500"
+                    c.daysLate > 0 ? "text-red-600" : "text-stone-500"
                   }`}
                 >
                   {describeDays(c.daysLate)}
@@ -219,7 +219,7 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
                   {formatCurrencyDetailed(c.amountOwed)}
                 </div>
                 {c.phone ? (
-                  <div className="text-xs text-slate-500">has phone</div>
+                  <div className="text-xs text-stone-500">has phone</div>
                 ) : (
                   <div className="text-xs text-amber-600">no phone</div>
                 )}

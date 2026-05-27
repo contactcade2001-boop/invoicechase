@@ -28,10 +28,10 @@ export default async function RecoveryPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
             Last-resort recovery
           </p>
-          <h1 className="font-display mt-2 text-3xl font-bold text-stone-900">
+          <h1 className="font-display mt-2 text-3xl font-bold text-stone-100">
             Recovery toolkit.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-stone-600">
+          <p className="mt-3 text-sm leading-6 text-stone-400">
             For balances that AI reminders + payment plans couldn&apos;t move.
             Escalation in graduated steps — settle, demand, lien, or sue.
           </p>
@@ -65,14 +65,14 @@ export default async function RecoveryPage() {
           />
         </div>
 
-        <section className="mt-10 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+        <section className="mt-10 rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
             <Sparkles className="h-3 w-3 text-orange-600" /> Settlement offer
           </p>
-          <h2 className="font-display mt-1 text-xl font-bold text-stone-900">
+          <h2 className="font-display mt-1 text-xl font-bold text-stone-100">
             Make an offer
           </h2>
-          <p className="mt-1 text-sm text-stone-600">
+          <p className="mt-1 text-sm text-stone-400">
             We send the customer an SMS like &ldquo;Pay $X in 48h, we&apos;ll
             waive $Y.&rdquo; Tracks acceptance + payment automatically.
           </p>
@@ -90,14 +90,14 @@ export default async function RecoveryPage() {
           </div>
         </section>
 
-        <section className="mt-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+        <section className="mt-6 rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
           <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
             <FileText className="h-3 w-3 text-orange-600" /> Demand letter
           </p>
-          <h2 className="font-display mt-1 text-xl font-bold text-stone-900">
+          <h2 className="font-display mt-1 text-xl font-bold text-stone-100">
             Generate a formal demand letter
           </h2>
-          <p className="mt-1 text-sm text-stone-600">
+          <p className="mt-1 text-sm text-stone-400">
             Downloads as a plain-text file ready to print, mail certified, or
             paste into your letterhead.
           </p>
@@ -132,19 +132,19 @@ function Tile({
     emerald: "bg-emerald-50 text-emerald-700 ring-emerald-200",
     amber: "bg-amber-50 text-amber-700 ring-amber-200",
     orange: "bg-orange-50 text-orange-700 ring-orange-200",
-    stone: "bg-stone-100 text-stone-700 ring-stone-200",
+    stone: "bg-stone-800 text-stone-300 ring-stone-800",
   }[color];
   const content = (
-    <div className="group rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200 transition hover:shadow-md hover:ring-stone-300">
+    <div className="group rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800 transition hover:shadow-md hover:ring-stone-700">
       <span
         className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ring-1 ring-inset transition group-hover:scale-110 ${bg}`}
       >
         <Icon className="h-4 w-4" />
       </span>
-      <p className="font-display mt-3 text-base font-semibold text-stone-900">
+      <p className="font-display mt-3 text-base font-semibold text-stone-100">
         {title}
       </p>
-      <p className="mt-1 text-sm leading-6 text-stone-600">{body}</p>
+      <p className="mt-1 text-sm leading-6 text-stone-400">{body}</p>
     </div>
   );
   return href ? <Link href={href}>{content}</Link> : content;

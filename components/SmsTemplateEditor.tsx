@@ -66,8 +66,8 @@ export function SmsTemplateEditor({
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-sm font-semibold text-slate-900">Pick a tone</p>
-        <p className="mt-0.5 text-xs text-slate-500">
+        <p className="text-sm font-semibold text-stone-100">Pick a tone</p>
+        <p className="mt-0.5 text-xs text-stone-500">
           One click sets your active template. Tweak anything if you want — most
           owners don&apos;t need to.
         </p>
@@ -82,18 +82,18 @@ export function SmsTemplateEditor({
                 className={`rounded-xl border p-3 text-left transition ${
                   isActive
                     ? "border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-200"
-                    : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                    : "border-stone-800 bg-stone-900/70 hover:border-slate-300 hover:bg-stone-950"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-slate-900">
+                  <span className="text-sm font-semibold text-stone-100">
                     {preset.name}
                   </span>
                   {isActive ? (
                     <Check className="h-4 w-4 text-emerald-600" aria-hidden />
                   ) : null}
                 </div>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
+                <p className="mt-1 text-xs leading-5 text-stone-500">
                   {preset.description}
                 </p>
               </button>
@@ -103,7 +103,7 @@ export function SmsTemplateEditor({
       </div>
 
       <div className="rounded-xl bg-slate-900 p-4 text-sm text-slate-100">
-        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
           <Sparkles className="h-3 w-3" aria-hidden /> Live preview · what the
           customer sees
         </p>
@@ -115,24 +115,24 @@ export function SmsTemplateEditor({
       <details
         open={showAdvanced}
         onToggle={(e) => setShowAdvanced((e.target as HTMLDetailsElement).open)}
-        className="rounded-xl border border-slate-200 bg-white"
+        className="rounded-xl border border-stone-800 bg-stone-900/70"
       >
-        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500 hover:text-slate-700">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500 hover:text-stone-300">
           Customize the wording
-          <span className="ml-2 text-[10px] font-normal normal-case text-slate-400">
+          <span className="ml-2 text-[10px] font-normal normal-case text-stone-500">
             (optional)
           </span>
         </summary>
-        <div className="space-y-3 border-t border-slate-200 p-4">
+        <div className="space-y-3 border-t border-stone-800 p-4">
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             rows={3}
             maxLength={320}
             placeholder={DEFAULT_SMS_TEMPLATE}
-            className="block w-full resize-none rounded-md border-0 px-3 py-2 font-mono text-sm text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="block w-full resize-none rounded-md border-0 px-3 py-2 font-mono text-sm text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
-          <div className="flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center justify-between text-xs text-stone-500">
             <span>{value.length} / 320 characters</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
@@ -142,7 +142,7 @@ export function SmsTemplateEditor({
                 type="button"
                 onClick={() => setValue((v) => v + t.token)}
                 title={t.description}
-                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-slate-700 hover:bg-slate-200"
+                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-stone-300 hover:bg-slate-200"
               >
                 {t.token}
               </button>

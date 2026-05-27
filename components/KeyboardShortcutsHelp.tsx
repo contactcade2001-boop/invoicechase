@@ -43,11 +43,11 @@ export function KeyboardShortcutsHelp() {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-stone-200"
+        className="w-full max-w-md overflow-hidden rounded-2xl bg-stone-900/70 shadow-2xl ring-1 ring-stone-800"
       >
-        <div className="flex items-center justify-between border-b border-stone-100 px-5 py-3">
+        <div className="flex items-center justify-between border-b border-stone-800/60 px-5 py-3">
           <div>
-            <p className="font-display text-sm font-semibold text-stone-900">
+            <p className="font-display text-sm font-semibold text-stone-100">
               Keyboard shortcuts
             </p>
             <p className="text-xs text-stone-500">Power-user moves only</p>
@@ -56,23 +56,23 @@ export function KeyboardShortcutsHelp() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close"
-            className="rounded-md p-1.5 text-stone-400 hover:bg-stone-100 hover:text-stone-700"
+            className="rounded-md p-1.5 text-stone-400 hover:bg-orange-700 hover:text-stone-300"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>
         </div>
-        <ul className="divide-y divide-stone-100">
+        <ul className="divide-y divide-stone-800">
           {SHORTCUTS.map((s) => (
             <li
               key={s.label}
               className="flex items-center justify-between px-5 py-3 text-sm"
             >
-              <span className="text-stone-700">{s.label}</span>
+              <span className="text-stone-300">{s.label}</span>
               <span className="flex items-center gap-1">
                 {s.keys.map((k, i) => (
                   <kbd
                     key={i}
-                    className="rounded border border-stone-200 bg-stone-50 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-stone-700"
+                    className="rounded border border-stone-800 bg-stone-950 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-stone-300"
                   >
                     {k}
                   </kbd>

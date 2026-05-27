@@ -61,7 +61,7 @@ export default async function AuditEventsPage({
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-8 sm:py-10">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Audit log</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-stone-400">
             Who did what, when. Useful for tracing role changes, settings edits,
             manual replies, and refund retries across your team.
           </p>
@@ -69,24 +69,24 @@ export default async function AuditEventsPage({
 
         <form
           method="get"
-          className="flex flex-wrap items-end gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200"
+          className="flex flex-wrap items-end gap-3 rounded-2xl bg-stone-900/70 p-4 shadow-sm ring-1 ring-stone-800"
         >
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+          <label className="flex flex-col gap-1 text-xs font-medium text-stone-400">
             Kind contains
             <input
               type="search"
               name="kind"
               defaultValue={sp.kind ?? ""}
               placeholder="team, sms, settings, qbo…"
-              className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             />
           </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+          <label className="flex flex-col gap-1 text-xs font-medium text-stone-400">
             Time
             <select
               name="since"
               defaultValue={sp.since ?? ""}
-              className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+              className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
             >
               <option value="">All time</option>
               <option value="1h">Last hour</option>
@@ -104,16 +104,16 @@ export default async function AuditEventsPage({
         </form>
 
         {events.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-            <p className="text-sm text-slate-600">
+          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <p className="text-sm text-stone-400">
               No matching audit events.
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
                   <th className="px-4 py-3 text-left">When</th>
                   <th className="px-4 py-3 text-left">Actor</th>
                   <th className="px-4 py-3 text-left">Kind</th>
@@ -125,23 +125,23 @@ export default async function AuditEventsPage({
                 {events.map((e) => (
                   <tr
                     key={e.id}
-                    className="border-b border-slate-100 last:border-b-0"
+                    className="border-b border-stone-800/60 last:border-b-0"
                   >
-                    <td className="whitespace-nowrap px-4 py-2 text-slate-500">
+                    <td className="whitespace-nowrap px-4 py-2 text-stone-500">
                       {formatRelativeTime(e.createdAt)}
                     </td>
-                    <td className="px-4 py-2 text-slate-700">
+                    <td className="px-4 py-2 text-stone-300">
                       {e.actorEmail ?? "system"}
                     </td>
-                    <td className="px-4 py-2 font-mono text-xs text-slate-700">
+                    <td className="px-4 py-2 font-mono text-xs text-stone-300">
                       {e.kind}
                     </td>
-                    <td className="px-4 py-2 text-xs text-slate-500">
+                    <td className="px-4 py-2 text-xs text-stone-500">
                       {e.targetType
                         ? `${e.targetType}:${e.targetId ?? ""}`
                         : ""}
                     </td>
-                    <td className="px-4 py-2 text-xs text-slate-500">
+                    <td className="px-4 py-2 text-xs text-stone-500">
                       {describe(e)}
                     </td>
                   </tr>
@@ -150,7 +150,7 @@ export default async function AuditEventsPage({
             </table>
           </div>
         )}
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-stone-500">
           The most recent {PAGE_SIZE} events are shown.
         </p>
       </main>

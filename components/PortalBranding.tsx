@@ -47,14 +47,14 @@ export function PortalBranding({
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Portal slug
           </span>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-stone-500">
             Your customers will see this URL when paying or signing in.
           </p>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
-            <span className="inline-flex items-center rounded-l-md bg-slate-50 px-3 text-xs text-slate-500">
+          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-stone-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
+            <span className="inline-flex items-center rounded-l-md bg-stone-950 px-3 text-xs text-stone-500">
               {baseUrl.replace(/^https?:\/\//, "")}/p/
             </span>
             <input
@@ -70,11 +70,11 @@ export function PortalBranding({
           </div>
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-slate-700">
+          <span className="text-sm font-medium text-stone-300">
             Accent color
           </span>
-          <p className="text-xs text-slate-500">Used on buttons + headings.</p>
-          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
+          <p className="text-xs text-stone-500">Used on buttons + headings.</p>
+          <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-stone-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
             <input
               type="color"
               value={color || "#0f172a"}
@@ -93,8 +93,8 @@ export function PortalBranding({
         </label>
       </div>
       <label className="block">
-        <span className="text-sm font-medium text-slate-700">Logo URL</span>
-        <p className="text-xs text-slate-500">
+        <span className="text-sm font-medium text-stone-300">Logo URL</span>
+        <p className="text-xs text-stone-500">
           Direct https:// URL to your logo image (PNG/SVG/JPG).
         </p>
         <input
@@ -103,21 +103,21 @@ export function PortalBranding({
           onChange={(e) => setLogoUrl(e.target.value.trim())}
           placeholder="https://yourcompany.com/logo.png"
           maxLength={400}
-          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+          className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
         />
         {logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={logoUrl}
             alt="Logo preview"
-            className="mt-2 h-12 w-auto rounded ring-1 ring-slate-200"
+            className="mt-2 h-12 w-auto rounded ring-1 ring-stone-800"
           />
         ) : null}
       </label>
       {portalUrl ? (
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-stone-500">
           Customers can sign in at:{" "}
-          <code className="font-mono text-slate-700">{portalUrl}</code>
+          <code className="font-mono text-stone-300">{portalUrl}</code>
         </p>
       ) : null}
       {error ? (

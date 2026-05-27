@@ -66,7 +66,7 @@ export default async function CustomerDetailPage({
               />
             </div>
             <div className="space-y-4">
-              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+              <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
                 <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
                   Autopay
                 </h3>
@@ -114,9 +114,9 @@ export default async function CustomerDetailPage({
             </div>
           </div>
         ) : detail.reason === "not_connected" ? (
-          <div className="rounded-2xl bg-white p-8 text-center ring-1 ring-slate-200">
+          <div className="rounded-2xl bg-stone-900/70 p-8 text-center ring-1 ring-stone-800">
             <h1 className="text-xl font-bold">Not connected</h1>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-stone-400">
               Reconnect QuickBooks from{" "}
               <Link href="/dashboard" className="underline">
                 the dashboard

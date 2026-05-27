@@ -46,7 +46,7 @@ export function WorkizConnectForm({
         onChange={(e) => setAccountName(e.target.value)}
         placeholder="Account name"
         maxLength={120}
-        className="block w-full rounded-md border-0 px-2.5 py-1.5 text-xs shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+        className="block w-full rounded-md border-0 px-2.5 py-1.5 text-xs shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
       />
       <input
         type="password"
@@ -54,7 +54,7 @@ export function WorkizConnectForm({
         onChange={(e) => setApiToken(e.target.value)}
         placeholder="API token"
         autoComplete="off"
-        className="block w-full rounded-md border-0 px-2.5 py-1.5 font-mono text-xs shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+        className="block w-full rounded-md border-0 px-2.5 py-1.5 font-mono text-xs shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
       />
       <input
         type="password"
@@ -62,7 +62,7 @@ export function WorkizConnectForm({
         onChange={(e) => setApiSecret(e.target.value)}
         placeholder="API secret (optional)"
         autoComplete="off"
-        className="block w-full rounded-md border-0 px-2.5 py-1.5 font-mono text-xs shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+        className="block w-full rounded-md border-0 px-2.5 py-1.5 font-mono text-xs shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
       />
       <div className="flex items-center gap-2">
         <button

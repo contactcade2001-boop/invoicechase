@@ -71,7 +71,7 @@ export function NotificationsBell() {
         type="button"
         aria-label="Notifications"
         onClick={() => setOpen((v) => !v)}
-        className="relative inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
+        className="relative inline-flex h-8 w-8 items-center justify-center rounded-md text-stone-500 transition hover:bg-orange-700 hover:text-stone-100"
       >
         <Bell className="h-4 w-4" aria-hidden />
         {unread > 0 ? (
@@ -81,9 +81,9 @@ export function NotificationsBell() {
         ) : null}
       </button>
       {open ? (
-        <div className="absolute right-0 top-full z-30 mt-2 w-80 overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-stone-200">
-          <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
-            <p className="font-display text-sm font-semibold text-stone-900">
+        <div className="absolute right-0 top-full z-30 mt-2 w-80 overflow-hidden rounded-xl bg-stone-900/70 shadow-2xl ring-1 ring-stone-800">
+          <div className="flex items-center justify-between border-b border-stone-800/60 px-4 py-3">
+            <p className="font-display text-sm font-semibold text-stone-100">
               Activity
             </p>
             {unread > 0 ? (
@@ -96,11 +96,11 @@ export function NotificationsBell() {
               </button>
             ) : null}
           </div>
-          <ul className="max-h-96 divide-y divide-stone-100 overflow-y-auto">
+          <ul className="max-h-96 divide-y divide-stone-800 overflow-y-auto">
             {notifs.map((n) => (
               <li
                 key={n.id}
-                className={`flex items-start gap-3 px-4 py-3 transition hover:bg-stone-50 ${
+                className={`flex items-start gap-3 px-4 py-3 transition hover:bg-stone-950 ${
                   n.unread ? "bg-orange-50/30" : ""
                 }`}
               >
@@ -110,10 +110,10 @@ export function NotificationsBell() {
                   <n.icon className="h-3.5 w-3.5" aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-stone-900">
+                  <p className="text-sm font-medium text-stone-100">
                     {n.title}
                   </p>
-                  <p className="mt-0.5 text-xs leading-5 text-stone-600">
+                  <p className="mt-0.5 text-xs leading-5 text-stone-400">
                     {n.body}
                   </p>
                   <p className="mt-1 text-[10px] uppercase tracking-wider text-stone-400">
@@ -126,10 +126,10 @@ export function NotificationsBell() {
               </li>
             ))}
           </ul>
-          <div className="border-t border-stone-100 bg-stone-50/60 px-4 py-2 text-center">
+          <div className="border-t border-stone-800/60 bg-stone-900/40 px-4 py-2 text-center">
             <a
               href="/inbox"
-              className="text-[11px] font-semibold text-stone-600 hover:text-stone-900"
+              className="text-[11px] font-semibold text-stone-400 hover:text-stone-100"
             >
               Open inbox →
             </a>

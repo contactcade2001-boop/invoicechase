@@ -19,12 +19,12 @@ export const metadata = { title: "Payment plans — Invoice Chase" };
 const STATUS_CLASSES: Record<string, string> = {
   pending: "bg-amber-50 text-amber-800 ring-amber-200",
   paid: "bg-emerald-50 text-emerald-700 ring-emerald-200",
-  cancelled: "bg-slate-100 text-slate-700 ring-slate-200",
+  cancelled: "bg-slate-100 text-stone-300 ring-stone-800",
 };
 
 function StatusPill({ status }: { status: string }) {
   const cls =
-    STATUS_CLASSES[status] ?? "bg-slate-100 text-slate-700 ring-slate-200";
+    STATUS_CLASSES[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}
@@ -56,16 +56,16 @@ export default async function PaymentPlansPage() {
       <AppHeader user={user} current="payments" />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <h1 className="text-3xl font-bold tracking-tight">Payment plans</h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-stone-400">
           Split a balance into a sequence of fixed installments. Each one gets
           its own pay link you can text or email.
         </p>
 
         {enriched.length === 0 ? (
-          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-slate-200">
-            <Inbox className="mx-auto h-8 w-8 text-slate-400" aria-hidden />
+          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <Inbox className="mx-auto h-8 w-8 text-stone-500" aria-hidden />
             <h3 className="mt-3 text-sm font-semibold">No plans yet</h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-stone-500">
               Open a customer&apos;s detail page and click{" "}
               <strong>New payment plan</strong>.
             </p>
@@ -76,15 +76,15 @@ export default async function PaymentPlansPage() {
             return (
               <section
                 key={plan.id}
-                className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200"
+                className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800"
               >
-                <div className="flex items-center justify-between gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3">
+                <div className="flex items-center justify-between gap-4 border-b border-stone-800 bg-stone-950 px-5 py-3">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-stone-100">
                       {plan.customerName ?? "Customer"} ·{" "}
                       {formatCurrencyDetailed(plan.totalCents)}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-stone-500">
                       {plan.installmentCount} installments · every{" "}
                       {plan.frequencyDays} days · {paid}/{plan.installmentCount}{" "}
                       paid
@@ -94,7 +94,7 @@ export default async function PaymentPlansPage() {
                 </div>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <tr className="border-b border-stone-800 text-xs font-semibold uppercase tracking-wide text-stone-500">
                       <th className="px-5 py-3 text-left">#</th>
                       <th className="px-5 py-3 text-left">Due</th>
                       <th className="px-5 py-3 text-right">Amount</th>
@@ -106,12 +106,12 @@ export default async function PaymentPlansPage() {
                     {installments.map((inst) => (
                       <tr
                         key={inst.id}
-                        className="border-b border-slate-100 last:border-b-0"
+                        className="border-b border-stone-800/60 last:border-b-0"
                       >
-                        <td className="px-5 py-3 text-slate-500">
+                        <td className="px-5 py-3 text-stone-500">
                           {inst.sequence}
                         </td>
-                        <td className="px-5 py-3 text-slate-700">
+                        <td className="px-5 py-3 text-stone-300">
                           {inst.dueDate}
                         </td>
                         <td className="px-5 py-3 text-right tabular-nums">
@@ -126,7 +126,7 @@ export default async function PaymentPlansPage() {
                               href={`${baseUrl}/pay/${inst.payLinkToken}`}
                               target="_blank"
                               rel="noopener"
-                              className="font-mono text-xs text-slate-600 underline-offset-2 hover:underline"
+                              className="font-mono text-xs text-stone-400 underline-offset-2 hover:underline"
                             >
                               /pay/{inst.payLinkToken.slice(0, 6)}…
                             </a>

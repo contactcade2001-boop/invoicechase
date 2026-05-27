@@ -16,7 +16,7 @@ const CONFIDENCE_STYLE: Record<
   },
   low: {
     label: "Speculative",
-    classes: "bg-slate-100 text-slate-600 ring-slate-200",
+    classes: "bg-slate-100 text-stone-400 ring-stone-800",
   },
 };
 
@@ -34,10 +34,10 @@ export function BehavioralPatternsCard({
 }) {
   if (result.patterns.length === 0) return null;
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <Lightbulb className="h-3 w-3" aria-hidden /> What we noticed
             {result.source === "claude" ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
@@ -45,12 +45,12 @@ export function BehavioralPatternsCard({
               </span>
             ) : null}
           </p>
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-1 text-xs text-stone-500">
             Daily patterns spotted in your customer data — refreshed every
             24h.
           </p>
         </div>
-        <p className="text-[10px] text-slate-400">
+        <p className="text-[10px] text-stone-500">
           {relativeAge(result.generatedAt)}
         </p>
       </div>
@@ -60,7 +60,7 @@ export function BehavioralPatternsCard({
           return (
             <li
               key={`${p.customerId ?? "org"}-${i}`}
-              className="rounded-xl border border-slate-200 bg-slate-50/40 p-3"
+              className="rounded-xl border border-stone-800 bg-stone-950/40 p-3"
             >
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
@@ -71,12 +71,12 @@ export function BehavioralPatternsCard({
                     {p.customerName && p.customerId ? (
                       <Link
                         href={`/dashboard/customer/${p.customerId}`}
-                        className="text-xs font-semibold text-slate-900 underline-offset-2 hover:underline"
+                        className="text-xs font-semibold text-stone-100 underline-offset-2 hover:underline"
                       >
                         {p.customerName}
                       </Link>
                     ) : (
-                      <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                         Org-wide
                       </span>
                     )}
@@ -86,7 +86,7 @@ export function BehavioralPatternsCard({
                       {conf.label}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm leading-6 text-slate-700">
+                  <p className="mt-1 text-sm leading-6 text-stone-300">
                     {p.observation}
                   </p>
                 </div>

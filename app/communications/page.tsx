@@ -44,14 +44,14 @@ export default async function CommunicationsPage() {
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-8 px-4 py-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Communications</h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-stone-400">
             Pick how Invoice Chase texts and emails your customers. Six tones
             built-in — one click and you&apos;re done. You can customize the
             wording any time, but you don&apos;t have to.
           </p>
         </div>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-7">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 sm:p-7">
           <div className="flex items-center gap-2">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-slate-900 text-white">
               <MessageSquare className="h-4 w-4" aria-hidden />
@@ -60,7 +60,7 @@ export default async function CommunicationsPage() {
               <h2 className="text-lg font-semibold tracking-tight">
                 SMS template
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-stone-500">
                 What gets sent on every single-customer text and every bulk
                 Text-with-AI.
               </p>
@@ -74,7 +74,7 @@ export default async function CommunicationsPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-7">
+        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 sm:p-7">
           <div className="flex items-center gap-2">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-slate-900 text-white">
               <Mail className="h-4 w-4" aria-hidden />
@@ -83,7 +83,7 @@ export default async function CommunicationsPage() {
               <h2 className="text-lg font-semibold tracking-tight">
                 Email reminder template
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-stone-500">
                 Used for single-customer emails and bulk Email-with-AI sends.
               </p>
             </div>
