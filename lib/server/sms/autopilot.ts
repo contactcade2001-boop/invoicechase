@@ -10,6 +10,7 @@ import {
   recentMessages,
   setConversationAutopilotPaused,
 } from "../db/sms";
+import { getCustomerMetadata } from "../db/customerMetadata";
 import { findUserById } from "../db/users";
 import { getOrCreatePayLink } from "../pay/links";
 import { getDashboardData } from "../qbo/sync";
@@ -120,6 +121,9 @@ export async function recordInboundAndMaybeReply(input: {
   // Pull the owner's SMS template — it's our best signal for how they talk
   // to customers, so Claude uses it as a voice anchor.
   const owner = findUserById(input.org.ownerUserId);
+  const customerMeta = customer
+    ? getCustomerMetadata(input.org.id, customer.id)
+    : null;
   const ctx: AutopilotContext = {
     businessName,
     customerName: customer?.name ?? null,
@@ -129,6 +133,7 @@ export async function recordInboundAndMaybeReply(input: {
     history: recentMessages(conversation.id, HISTORY_DEPTH),
     totalMessageCount: countMessagesInConversation(conversation.id),
     voiceExample: owner?.smsTemplate ?? null,
+    toneOverride: customerMeta?.tone ?? null,
   };
 
   const result = await generateAutopilotReply(ctx);

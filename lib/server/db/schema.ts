@@ -187,6 +187,34 @@ export const autopayMethods = sqliteTable(
   (t) => [primaryKey({ columns: [t.organizationId, t.customerId] })],
 );
 
+export const jobPhotos = sqliteTable("job_photos", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  invoiceId: text("invoice_id"),
+  /** Absolute file path on the Fly volume. */
+  filePath: text("file_path").notNull(),
+  mimeType: text("mime_type").notNull(),
+  sizeBytes: integer("size_bytes").notNull(),
+  caption: text("caption"),
+  uploadedByUserId: integer("uploaded_by_user_id"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const scheduledAppointments = sqliteTable("scheduled_appointments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  customerName: text("customer_name"),
+  customerPhone: text("customer_phone"),
+  scheduledFor: integer("scheduled_for").notNull(),
+  description: text("description"),
+  reminderDaysBefore: integer("reminder_days_before").notNull().default(3),
+  reminderSentAt: integer("reminder_sent_at"),
+  status: text("status").notNull().default("scheduled"),
+  createdAt: integer("created_at").notNull(),
+});
+
 export const customerSendPrefs = sqliteTable("customer_send_prefs", {
   organizationId: integer("organization_id").notNull(),
   customerId: text("customer_id").notNull(),

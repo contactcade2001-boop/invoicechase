@@ -9,6 +9,7 @@ import {
 import { BehavioralPatternsCard } from "@/components/BehavioralPatternsCard";
 import { ChurnRiskCard } from "@/components/ChurnRiskCard";
 import { ConnectPrompt } from "@/components/ConnectPrompt";
+import { RecoveryAndBenchmarks } from "@/components/RecoveryAndBenchmarks";
 import { Dashboard } from "@/components/Dashboard";
 import { DashboardForecastSnippet } from "@/components/DashboardForecastSnippet";
 import {
@@ -33,10 +34,18 @@ import {
 } from "@/lib/server/db/subscriptions";
 import { getBehavioralPatterns } from "@/lib/server/insights/patterns";
 import { computeChurnRisk } from "@/lib/server/insights/churnRisk";
+import { getBenchmark } from "@/lib/server/insights/benchmarks";
 import { getTodaysPlays } from "@/lib/server/insights/plays";
 import { computePulse } from "@/lib/server/insights/pulse";
-import { isOnboarded } from "@/lib/server/db/onboarding";
+import { autoTagVips } from "@/lib/server/insights/autoVip";
+import { getRecoveryStats } from "@/lib/server/insights/recoveryStats";
+import { listCustomerMetadata } from "@/lib/server/db/customerMetadata";
+import {
+  getOnboardingState,
+  isOnboarded,
+} from "@/lib/server/db/onboarding";
 import { getDashboardData } from "@/lib/server/qbo/sync";
+import { computeDSO } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -162,7 +171,22 @@ export default async function DashboardPage({
                 />
               }
             />
+            {/* Auto-tag top 10% as VIPs. Idempotent — doesn't re-tag. */}
+            {(() => {
+              const meta = listCustomerMetadata(orgId);
+              const tagsByCustomer = new Map<string, string[]>();
+              for (const [id, m] of meta) tagsByCustomer.set(id, m.tags);
+              autoTagVips(orgId, data.customers, tagsByCustomer);
+              return null;
+            })()}
             <ChurnRiskCard result={computeChurnRisk(data.customers)} />
+            <RecoveryAndBenchmarks
+              recovery={getRecoveryStats(orgId)}
+              benchmark={getBenchmark(
+                getOnboardingState(orgId)?.industry ?? null,
+              )}
+              yourDso={computeDSO(data.customers)}
+            />
             <DashboardForecastSnippet organizationId={orgId} />
           </>
         ) : (

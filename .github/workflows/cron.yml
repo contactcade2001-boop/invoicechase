@@ -33,6 +33,7 @@ jobs:
           - deposit-poller
           - payment-plan-reminders
           - reminder-sequences
+          - pre-bill-reminders
     steps:
       - name: Hit ${{ matrix.endpoint }}
         run: |

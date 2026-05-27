@@ -1,13 +1,17 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { AppHeader } from "@/components/AppHeader";
+import { AppointmentScheduler } from "@/components/AppointmentScheduler";
 import { AutopayEnrollButton } from "@/components/AutopayEnrollButton";
 import { CustomerDetail } from "@/components/CustomerDetail";
 import { CustomerMetadataPanel } from "@/components/CustomerMetadataPanel";
+import { JobPhotoUploader } from "@/components/JobPhotoUploader";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { listUpcomingAppointments } from "@/lib/server/db/appointments";
 import { getAutopayMethod } from "@/lib/server/db/autopay";
 import { getCustomerMetadata } from "@/lib/server/db/customerMetadata";
 import { findActivePayLink } from "@/lib/server/db/payLinks";
+import { listJobPhotos } from "@/lib/server/jobPhotos/store";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -36,6 +40,8 @@ export default async function CustomerDetailPage({
   const activePayLink = findActivePayLink(orgId, id);
   const metadata = getCustomerMetadata(orgId, id);
   const autopay = getAutopayMethod(orgId, id);
+  const appointments = listUpcomingAppointments(orgId, id);
+  const photos = listJobPhotos(orgId, id);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -43,12 +49,20 @@ export default async function CustomerDetailPage({
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:py-10">
         {detail.ok ? (
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-            <div>
+            <div className="space-y-6">
               <CustomerDetail
                 customer={detail.customer}
                 invoices={detail.invoices}
                 payLinkViewedAt={activePayLink?.viewedAt ?? null}
                 payLinkViewedCount={activePayLink?.viewedCount ?? 0}
+              />
+              <JobPhotoUploader
+                customerId={id}
+                initialPhotos={photos.map((p) => ({
+                  id: p.id,
+                  caption: p.caption,
+                  createdAt: p.createdAt,
+                }))}
               />
             </div>
             <div className="space-y-4">
@@ -83,6 +97,19 @@ export default async function CustomerDetailPage({
                 initialNote={metadata?.note ?? null}
                 initialSnoozedUntil={metadata?.snoozedUntil ?? null}
                 initialTags={metadata?.tags ?? []}
+                initialTone={metadata?.tone ?? null}
+              />
+              <AppointmentScheduler
+                customerId={id}
+                customerName={detail.customer.name}
+                customerPhone={detail.customer.phone || null}
+                initialAppointments={appointments.map((a) => ({
+                  id: a.id,
+                  scheduledFor: a.scheduledFor,
+                  description: a.description,
+                  reminderDaysBefore: a.reminderDaysBefore,
+                  reminderSentAt: a.reminderSentAt,
+                }))}
               />
             </div>
           </div>

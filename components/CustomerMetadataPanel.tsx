@@ -16,6 +16,7 @@ type Props = {
   initialNote: string | null;
   initialSnoozedUntil: number | null;
   initialTags: string[];
+  initialTone?: "gentle" | "neutral" | "firm" | null;
 };
 
 const SUGGESTED_TAGS = [
@@ -31,12 +32,16 @@ export function CustomerMetadataPanel({
   initialNote,
   initialSnoozedUntil,
   initialTags,
+  initialTone,
 }: Props) {
   const [note, setNote] = useState(initialNote ?? "");
   const [snoozedUntil, setSnoozedUntil] = useState<number | null>(
     initialSnoozedUntil,
   );
   const [tags, setTags] = useState<string[]>(initialTags);
+  const [tone, setTone] = useState<"gentle" | "neutral" | "firm" | "">(
+    initialTone ?? "",
+  );
   const [newTag, setNewTag] = useState("");
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState<string | null>(null);
@@ -45,6 +50,7 @@ export function CustomerMetadataPanel({
     note?: string | null;
     snoozeDays?: number | null;
     tags?: string[];
+    tone?: "gentle" | "neutral" | "firm" | null;
   }) {
     startTransition(async () => {
       const res = await fetch("/api/customer-metadata", {
@@ -99,6 +105,39 @@ export function CustomerMetadataPanel({
         ) : pending ? (
           <span className="text-[11px] text-stone-400">Saving…</span>
         ) : null}
+      </div>
+
+      {/* Tone */}
+      <div>
+        <p className="text-xs font-semibold text-stone-700 dark:text-stone-300">
+          AI tone for this customer
+        </p>
+        <div className="mt-2 grid grid-cols-3 gap-1.5">
+          {(["gentle", "neutral", "firm"] as const).map((t) => {
+            const active = tone === t;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => {
+                  const next = active ? "" : t;
+                  setTone(next);
+                  void save({ tone: next === "" ? null : next });
+                }}
+                className={`rounded-md px-2.5 py-1 text-xs font-semibold capitalize transition ${
+                  active
+                    ? "bg-orange-600 text-white shadow-sm"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                }`}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1 text-[11px] text-stone-500">
+          Overrides your default template tone for this customer.
+        </p>
       </div>
 
       {/* Tags */}

@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     note?: string | null;
     snoozeDays?: number | null;
     tags?: string[];
+    tone?: "gentle" | "neutral" | "firm" | null;
   };
   if (!body.customerId) {
     return NextResponse.json({ error: "missing_customer_id" }, { status: 400 });
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     note: body.note,
     snoozedUntil,
     tags: body.tags,
+    tone: body.tone,
   });
   return NextResponse.json({ ok: true, metadata: result });
 }

@@ -9,6 +9,7 @@ export type CustomerMetadata = {
   note: string | null;
   snoozedUntil: number | null;
   tags: string[];
+  tone: "gentle" | "neutral" | "firm" | null;
   updatedAt: number;
 };
 
@@ -18,14 +19,20 @@ function rowToMeta(r: {
   note: string | null;
   snoozedUntil: number | null;
   tags: string | null;
+  tone: string | null;
   updatedAt: number;
 }): CustomerMetadata {
+  const tone =
+    r.tone === "gentle" || r.tone === "neutral" || r.tone === "firm"
+      ? r.tone
+      : null;
   return {
     organizationId: r.organizationId,
     customerId: r.customerId,
     note: r.note,
     snoozedUntil: r.snoozedUntil,
     tags: r.tags ? r.tags.split(",").filter(Boolean) : [],
+    tone,
     updatedAt: r.updatedAt,
   };
 }
@@ -68,6 +75,7 @@ export function upsertCustomerMetadata(input: {
   note?: string | null;
   snoozedUntil?: number | null;
   tags?: string[];
+  tone?: "gentle" | "neutral" | "firm" | null;
 }): CustomerMetadata {
   const db = getDb();
   const existing = getCustomerMetadata(input.organizationId, input.customerId);
@@ -80,6 +88,8 @@ export function upsertCustomerMetadata(input: {
     input.tags !== undefined
       ? Array.from(new Set(input.tags.map((t) => t.trim()).filter(Boolean)))
       : (existing?.tags ?? []);
+  const tone =
+    input.tone !== undefined ? input.tone : (existing?.tone ?? null);
   const now = Date.now();
   db.insert(customerMetadata)
     .values({
@@ -88,6 +98,7 @@ export function upsertCustomerMetadata(input: {
       note,
       snoozedUntil,
       tags: tags.join(","),
+      tone,
       updatedAt: now,
     })
     .onConflictDoUpdate({
@@ -96,6 +107,7 @@ export function upsertCustomerMetadata(input: {
         note,
         snoozedUntil,
         tags: tags.join(","),
+        tone,
         updatedAt: now,
       },
     })
@@ -106,6 +118,7 @@ export function upsertCustomerMetadata(input: {
     note,
     snoozedUntil,
     tags,
+    tone,
     updatedAt: now,
   };
 }

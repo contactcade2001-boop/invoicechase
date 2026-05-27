@@ -488,6 +488,35 @@ CREATE TABLE IF NOT EXISTS autopay_methods (
 );
 CREATE INDEX IF NOT EXISTS autopay_methods_org ON autopay_methods(organization_id);
 
+CREATE TABLE IF NOT EXISTS job_photos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  invoice_id TEXT,
+  file_path TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  size_bytes INTEGER NOT NULL,
+  caption TEXT,
+  uploaded_by_user_id INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS job_photos_org_customer ON job_photos(organization_id, customer_id);
+
+CREATE TABLE IF NOT EXISTS scheduled_appointments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  customer_phone TEXT,
+  scheduled_for INTEGER NOT NULL,
+  description TEXT,
+  reminder_days_before INTEGER NOT NULL DEFAULT 3,
+  reminder_sent_at INTEGER,
+  status TEXT NOT NULL DEFAULT 'scheduled',
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS scheduled_appointments_org_when ON scheduled_appointments(organization_id, scheduled_for);
+
 CREATE TABLE IF NOT EXISTS customer_send_prefs (
   organization_id INTEGER NOT NULL,
   customer_id TEXT NOT NULL,

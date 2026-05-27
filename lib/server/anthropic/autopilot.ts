@@ -24,6 +24,16 @@ export type AutopilotContext = {
   // Owner's saved SMS template — fed to Claude as a voice example so the
   // reply matches the business owner's tone instead of generic AI-speak.
   voiceExample?: string | null;
+  /** Per-customer tone override (set on the customer detail page). */
+  toneOverride?: "gentle" | "neutral" | "firm" | null;
+};
+
+const TONE_INSTRUCTIONS: Record<"gentle" | "neutral" | "firm", string> = {
+  gentle:
+    "Use a GENTLE tone — empathetic, no urgency language. Acknowledge that life happens. Offer flexibility.",
+  neutral:
+    "Use a NEUTRAL tone — professional, matter-of-fact, neither warm nor cold.",
+  firm: "Use a FIRM tone — direct, clear about the consequence of non-payment, but never threatening or rude. Time-bound the ask.",
 };
 
 const SYSTEM_PROMPT = `You are a polite, professional collections assistant texting on behalf of a small business.
@@ -73,6 +83,9 @@ function buildUserPrompt(ctx: AutopilotContext): string {
       : null,
     voice
       ? `\nOwner's voice example (match this tone — sentence length, formality, vocabulary):\n"""\n${voice}\n"""`
+      : null,
+    ctx.toneOverride
+      ? `\nTone override for this specific customer: ${TONE_INSTRUCTIONS[ctx.toneOverride]}`
       : null,
     "",
     prior ? `Recent conversation:\n${prior}\n` : null,
