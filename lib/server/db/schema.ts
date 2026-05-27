@@ -164,6 +164,29 @@ export const templateStats = sqliteTable(
   (t) => [primaryKey({ columns: [t.organizationId, t.templateKey] })],
 );
 
+export const autopayMethods = sqliteTable(
+  "autopay_methods",
+  {
+    organizationId: integer("organization_id").notNull(),
+    customerId: text("customer_id").notNull(),
+    /** Email used at enrollment — also the Stripe customer identifier. */
+    customerEmail: text("customer_email").notNull(),
+    /** Stripe Customer id on the connected account. */
+    stripeCustomerId: text("stripe_customer_id").notNull(),
+    /** PaymentMethod id saved via SetupIntent — used for off-session charges. */
+    stripePaymentMethodId: text("stripe_payment_method_id").notNull(),
+    /** Card brand for display ("visa", "mastercard", "amex", "ach"). */
+    brand: text("brand"),
+    last4: text("last4"),
+    /** When the customer confirmed the autopay agreement. */
+    enrolledAt: integer("enrolled_at").notNull(),
+    /** Owner can disable without the customer removing the saved method. */
+    paused: integer("paused").notNull().default(0),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.organizationId, t.customerId] })],
+);
+
 export const customerSendPrefs = sqliteTable("customer_send_prefs", {
   organizationId: integer("organization_id").notNull(),
   customerId: text("customer_id").notNull(),

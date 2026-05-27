@@ -35,8 +35,21 @@ export async function createPayCheckoutUrl(input: {
     ? `Deposit for ${input.companyName}`
     : `Invoice from ${input.companyName}`;
 
+  // Offer cards, ACH, and BNPL (Klarna for $50–$10k, Afterpay for $35–$2k).
+  // Stripe gracefully ignores methods not enabled on the connected account,
+  // so listing them is safe and unlocks adoption when the merchant enables
+  // each from their Stripe dashboard.
+  const paymentMethodTypes: ("card" | "us_bank_account" | "klarna" | "afterpay_clearpay")[] = [
+    "card",
+    "us_bank_account",
+  ];
+  // Klarna minimum is $50, Afterpay minimum is $35 (both USD).
+  if (amount >= 5000) paymentMethodTypes.push("klarna");
+  if (amount >= 3500 && amount <= 200_000) paymentMethodTypes.push("afterpay_clearpay");
+
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
+    payment_method_types: paymentMethodTypes,
     line_items: [
       {
         quantity: 1,

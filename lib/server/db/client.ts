@@ -473,6 +473,21 @@ CREATE TABLE IF NOT EXISTS settlement_offers (
 );
 CREATE INDEX IF NOT EXISTS settlement_offers_org ON settlement_offers(organization_id);
 
+CREATE TABLE IF NOT EXISTS autopay_methods (
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_email TEXT NOT NULL,
+  stripe_customer_id TEXT NOT NULL,
+  stripe_payment_method_id TEXT NOT NULL,
+  brand TEXT,
+  last4 TEXT,
+  enrolled_at INTEGER NOT NULL,
+  paused INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (organization_id, customer_id)
+);
+CREATE INDEX IF NOT EXISTS autopay_methods_org ON autopay_methods(organization_id);
+
 CREATE TABLE IF NOT EXISTS customer_send_prefs (
   organization_id INTEGER NOT NULL,
   customer_id TEXT NOT NULL,

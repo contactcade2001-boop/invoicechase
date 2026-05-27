@@ -1,9 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { AppHeader } from "@/components/AppHeader";
+import { AutopayEnrollButton } from "@/components/AutopayEnrollButton";
 import { CustomerDetail } from "@/components/CustomerDetail";
 import { CustomerMetadataPanel } from "@/components/CustomerMetadataPanel";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { getAutopayMethod } from "@/lib/server/db/autopay";
 import { getCustomerMetadata } from "@/lib/server/db/customerMetadata";
 import { findActivePayLink } from "@/lib/server/db/payLinks";
 import {
@@ -33,6 +35,7 @@ export default async function CustomerDetailPage({
   const detail = await getCustomerDetail(orgId, id);
   const activePayLink = findActivePayLink(orgId, id);
   const metadata = getCustomerMetadata(orgId, id);
+  const autopay = getAutopayMethod(orgId, id);
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
@@ -48,12 +51,40 @@ export default async function CustomerDetailPage({
                 payLinkViewedCount={activePayLink?.viewedCount ?? 0}
               />
             </div>
-            <CustomerMetadataPanel
-              customerId={id}
-              initialNote={metadata?.note ?? null}
-              initialSnoozedUntil={metadata?.snoozedUntil ?? null}
-              initialTags={metadata?.tags ?? []}
-            />
+            <div className="space-y-4">
+              <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+                <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
+                  Autopay
+                </h3>
+                <p className="mt-1 text-xs text-stone-500">
+                  Save a card or bank to charge automatically when invoices
+                  issue.
+                </p>
+                <div className="mt-3">
+                  {detail.customer.email ? (
+                    <AutopayEnrollButton
+                      customerId={id}
+                      customerEmail={detail.customer.email}
+                      customerName={detail.customer.name}
+                      enrolled={!!autopay}
+                      paused={autopay?.paused === 1}
+                      brand={autopay?.brand ?? null}
+                      last4={autopay?.last4 ?? null}
+                    />
+                  ) : (
+                    <p className="text-xs text-stone-500">
+                      Add a customer email to enable autopay.
+                    </p>
+                  )}
+                </div>
+              </section>
+              <CustomerMetadataPanel
+                customerId={id}
+                initialNote={metadata?.note ?? null}
+                initialSnoozedUntil={metadata?.snoozedUntil ?? null}
+                initialTags={metadata?.tags ?? []}
+              />
+            </div>
           </div>
         ) : detail.reason === "not_connected" ? (
           <div className="rounded-2xl bg-white p-8 text-center ring-1 ring-slate-200">
