@@ -46,6 +46,18 @@ function pickPhone(c: JobberClient): string {
   return c.phones?.find((p) => p.number)?.number ?? "";
 }
 
+function pickAddress(c: JobberClient): string | undefined {
+  const a = c.billingAddress;
+  if (!a) return undefined;
+  const parts = [
+    a.street,
+    [a.city, a.province].filter(Boolean).join(", "),
+    a.postalCode,
+  ].filter((p) => p && p.length > 0);
+  const joined = parts.join(" · ").trim();
+  return joined.length > 0 ? joined : undefined;
+}
+
 function collectSignals(
   paidInvoices: JobberInvoice[],
 ): Map<string, PaymentSignal[]> {
@@ -116,6 +128,7 @@ function aggregate(
       riskTier: tierFromScore(reputationScore),
       phone: pickPhone(c),
       email: pickEmail(c),
+      address: pickAddress(c),
     });
   }
   out.sort((a, b) => b.amountOwed - a.amountOwed);

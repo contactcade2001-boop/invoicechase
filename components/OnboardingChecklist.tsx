@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 export type OnboardingStep = {
   key: string;
@@ -8,6 +9,11 @@ export type OnboardingStep = {
   href: string;
   cta: string;
   done: boolean;
+  /**
+   * Optional inline element — a row of brand logos, a single brand mark,
+   * an icon, etc. Renders between the title and the body when set.
+   */
+  badge?: ReactNode;
 };
 
 export function OnboardingChecklist({ steps }: { steps: OnboardingStep[] }) {
@@ -59,6 +65,9 @@ export function OnboardingChecklist({ steps }: { steps: OnboardingStep[] }) {
                 >
                   {step.title}
                 </div>
+                {step.badge && !step.done ? (
+                  <div className="mt-1.5">{step.badge}</div>
+                ) : null}
                 <p
                   className={`mt-0.5 text-xs ${
                     step.done ? "text-slate-400" : "text-slate-600"

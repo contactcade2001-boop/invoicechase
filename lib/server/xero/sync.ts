@@ -49,6 +49,24 @@ function pickPhone(c: XeroContact): string {
   return parts.filter(Boolean).join(" ").trim();
 }
 
+function pickAddress(c: XeroContact): string | undefined {
+  if (!c.Addresses || c.Addresses.length === 0) return undefined;
+  // Prefer street address; fall back to whatever's first with content.
+  const street = c.Addresses.find(
+    (a) => a.AddressType === "STREET" && (a.AddressLine1 || a.City),
+  );
+  const any = c.Addresses.find((a) => a.AddressLine1 || a.City);
+  const chosen = street ?? any;
+  if (!chosen) return undefined;
+  const parts = [
+    chosen.AddressLine1,
+    [chosen.City, chosen.Region].filter(Boolean).join(", "),
+    chosen.PostalCode,
+  ].filter((p) => p && p.length > 0);
+  const joined = parts.join(" · ").trim();
+  return joined.length > 0 ? joined : undefined;
+}
+
 function collectXeroPaymentSignals(
   paidInvoices: XeroInvoice[],
 ): Map<string, PaymentSignal[]> {
@@ -115,6 +133,7 @@ function aggregate(
       riskTier: tierFromScore(reputationScore),
       phone: pickPhone(xero),
       email: xero.EmailAddress,
+      address: pickAddress(xero),
     });
   }
   out.sort((a, b) => b.amountOwed - a.amountOwed);

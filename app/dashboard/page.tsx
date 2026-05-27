@@ -1,7 +1,14 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
+import {
+  JobberLogo,
+  QuickBooksLogo,
+  StripeLogo,
+  XeroLogo,
+} from "@/components/BrandLogos";
 import { ConnectPrompt } from "@/components/ConnectPrompt";
 import { Dashboard } from "@/components/Dashboard";
+import { DashboardForecastSnippet } from "@/components/DashboardForecastSnippet";
 import {
   OnboardingChecklist,
   type OnboardingStep,
@@ -64,11 +71,28 @@ export default async function DashboardPage({
             title: "Connect your accounting or FSM",
             body:
               supportedSources.length > 1
-                ? `Connect ${supportedSources.join(", ")}. Customers and invoices sync automatically.`
+                ? `Customers and invoices sync automatically. Pick one — switch any time.`
                 : "Pull your customers and unpaid invoices automatically.",
             href: "/settings",
             cta: "Connect",
             done: !!qboConn || !!xeroConn || !!jobberConn,
+            badge: (
+              <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <span className="inline-flex items-center gap-1">
+                  <QuickBooksLogo size={14} /> QuickBooks
+                </span>
+                {isXeroConfigured() ? (
+                  <span className="inline-flex items-center gap-1">
+                    <XeroLogo size={14} /> Xero
+                  </span>
+                ) : null}
+                {isJobberConfigured() ? (
+                  <span className="inline-flex items-center gap-1">
+                    <JobberLogo size={14} /> Jobber
+                  </span>
+                ) : null}
+              </div>
+            ),
           },
           {
             key: "stripe",
@@ -77,6 +101,11 @@ export default async function DashboardPage({
             href: "/billing",
             cta: "Set up",
             done: canAcceptPayments(connectAccount),
+            badge: (
+              <span className="inline-flex items-center gap-1 text-xs text-slate-500">
+                <StripeLogo size={14} /> Stripe Connect
+              </span>
+            ),
           },
           {
             key: "team",
@@ -97,15 +126,18 @@ export default async function DashboardPage({
           <OnboardingChecklist steps={onboarding} />
         ) : null}
         {data.connected ? (
-          <Dashboard
-            companyName={data.companyName}
-            customers={data.customers}
-            refreshedAt={data.refreshedAt ?? null}
-            stale={data.stale ?? false}
-            source={
-              qboConn ? "qbo" : xeroConn ? "xero" : jobberConn ? "jobber" : null
-            }
-          />
+          <>
+            <Dashboard
+              companyName={data.companyName}
+              customers={data.customers}
+              refreshedAt={data.refreshedAt ?? null}
+              stale={data.stale ?? false}
+              source={
+                qboConn ? "qbo" : xeroConn ? "xero" : jobberConn ? "jobber" : null
+              }
+            />
+            <DashboardForecastSnippet organizationId={orgId} />
+          </>
         ) : (
           <ConnectPrompt
             error={sp.qbo_error}

@@ -66,6 +66,14 @@ async function graphql<T>(
   return json.data;
 }
 
+export type JobberAddress = {
+  street?: string | null;
+  city?: string | null;
+  province?: string | null;
+  postalCode?: string | null;
+  country?: string | null;
+};
+
 export type JobberClient = {
   id: string;
   name: string;
@@ -74,6 +82,7 @@ export type JobberClient = {
   companyName?: string | null;
   emails?: { description?: string | null; address: string }[];
   phones?: { description?: string | null; number: string }[];
+  billingAddress?: JobberAddress | null;
 };
 
 export type JobberInvoice = {
@@ -104,6 +113,7 @@ const CLIENTS_QUERY = `
         companyName
         emails { description address }
         phones { description number }
+        billingAddress { street city province postalCode country }
       } }
       pageInfo { hasNextPage endCursor }
     }

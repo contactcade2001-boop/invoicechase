@@ -85,6 +85,18 @@ function pickPhone(c: QboCustomer): string {
   );
 }
 
+function pickAddress(c: QboCustomer): string | undefined {
+  const a = c.BillAddr;
+  if (!a) return undefined;
+  const parts = [
+    a.Line1,
+    [a.City, a.CountrySubDivisionCode].filter(Boolean).join(", "),
+    a.PostalCode,
+  ].filter((p) => p && p.length > 0);
+  const joined = parts.join(" · ").trim();
+  return joined.length > 0 ? joined : undefined;
+}
+
 function aggregate(
   customers: QboCustomer[],
   openInvoices: QboInvoice[],
@@ -134,6 +146,7 @@ function aggregate(
       riskTier: tierFromScore(reputationScore),
       phone: pickPhone(qbo),
       email: qbo.PrimaryEmailAddr?.Address,
+      address: pickAddress(qbo),
     });
   }
   out.sort((a, b) => b.amountOwed - a.amountOwed);

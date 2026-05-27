@@ -67,11 +67,21 @@ export type XeroPhone = {
   PhoneCountryCode?: string;
 };
 
+export type XeroAddress = {
+  AddressType?: "POBOX" | "STREET" | "DELIVERY" | string;
+  AddressLine1?: string;
+  City?: string;
+  Region?: string;
+  PostalCode?: string;
+  Country?: string;
+};
+
 export type XeroContact = {
   ContactID: string;
   Name: string;
   EmailAddress?: string;
   Phones?: XeroPhone[];
+  Addresses?: XeroAddress[];
   IsCustomer?: boolean;
 };
 

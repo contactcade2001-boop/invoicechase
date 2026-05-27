@@ -11,6 +11,7 @@ export type Customer = {
   reputationScore: number;
   phone: string;
   email?: string;
+  address?: string;
 };
 
 export const REPUTATION_MIN = 300;
