@@ -49,7 +49,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 # Runtime helpers.
 COPY --chown=nextjs:nodejs litestream.yml /etc/litestream.yml
 COPY --chown=nextjs:nodejs scripts/start.sh /app/start.sh
-RUN chmod +x /app/start.sh
+# Strip Windows CRLF if a contributor checked out the script with CRLF
+# endings — Linux can't exec a script with CR bytes in the shebang line.
+RUN sed -i 's/\r$//' /app/start.sh && chmod +x /app/start.sh
 
 # Volume mount point.
 RUN mkdir -p /data && chown nextjs:nodejs /data
