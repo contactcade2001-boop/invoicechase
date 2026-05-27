@@ -14,14 +14,14 @@ export function BrandMark({
   withWordmark = false,
 }: Props) {
   return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
+    <span className={`group inline-flex items-center gap-2 ${className}`}>
       <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden
-        className="text-orange-600"
+        className="animate-brand-breathe text-orange-600 transition-transform group-hover:scale-110"
       >
         <path
           d="M4 18 L10 12 L14 15 L20 6"

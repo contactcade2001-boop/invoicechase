@@ -566,13 +566,13 @@ export default function LandingPage() {
                 Every feature for $49/month + 1.9% on collected payments.
               </p>
             </div>
-            <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="stagger-children mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f) => {
                 const a = ACCENT_CLASSES[f.accent];
                 return (
                   <div
                     key={f.title}
-                    className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-stone-300"
+                    className="card-hover group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 hover:ring-stone-300"
                   >
                     <span
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${a.bg} ring-1 ring-inset ${a.ring} transition group-hover:scale-110`}

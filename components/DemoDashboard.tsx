@@ -33,6 +33,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { Confetti } from "@/components/Confetti";
 import {
   FieldPulseLogo,
   HousecallProLogo,
@@ -394,6 +395,7 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [payModal, setPayModal] = useState<Customer | null>(null);
   const [refreshedAt, setRefreshedAt] = useState(Date.now());
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
 
   const customers = mockCustomers;
   const totalOwed = computeTotalOwed(customers);
@@ -539,6 +541,7 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
 
   return (
     <>
+      <Confetti trigger={confettiTrigger} />
       <ViewTabs view={view} onChange={setView} />
 
       {view === "dashboard" ? (
@@ -680,6 +683,7 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
                 type="button"
                 onClick={() => {
                   setPayModal(null);
+                  setConfettiTrigger((t) => t + 1);
                   pushToast(
                     `Payment received from ${payModal.name}`,
                     `${formatCurrencyDetailed(payModal.amountOwed)} posted to QuickBooks automatically.`,

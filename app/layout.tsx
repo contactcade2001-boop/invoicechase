@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AppBackground } from "@/components/AppBackground";
+import { PageMount } from "@/components/PageMount";
 import "./globals.css";
 
 const inter = Inter({
@@ -61,8 +63,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="min-h-screen bg-stone-50 font-sans text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100">
-        {children}
+      <body className="relative min-h-screen bg-stone-50 font-sans text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100">
+        <AppBackground />
+        <PageMount>{children}</PageMount>
       </body>
     </html>
   );

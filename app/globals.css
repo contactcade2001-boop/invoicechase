@@ -48,7 +48,8 @@
   font-feature-settings: "ss01", "cv11";
 }
 
-/* Pulsing dot in the hero badge. */
+/* ───────── Animations ──────────────────────────────────────────────── */
+
 @keyframes pulseGlow {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
@@ -57,3 +58,144 @@
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
+/* Soft breathe on the brand mark — subtle "alive" signal. */
+@keyframes brandBreathe {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.05); filter: brightness(1.08); }
+}
+.animate-brand-breathe {
+  animation: brandBreathe 4s ease-in-out infinite;
+}
+
+/* Aurora — three drifting orange blobs behind every authenticated page.
+   GPU-accelerated, no JS. Each blob moves on its own offset so the mesh
+   never repeats exactly. */
+@keyframes auroraA {
+  0%, 100% { transform: translate3d(0%, 0%, 0) scale(1); }
+  33% { transform: translate3d(8%, 4%, 0) scale(1.08); }
+  66% { transform: translate3d(-4%, 6%, 0) scale(0.95); }
+}
+@keyframes auroraB {
+  0%, 100% { transform: translate3d(0%, 0%, 0) scale(1); }
+  33% { transform: translate3d(-6%, -3%, 0) scale(1.1); }
+  66% { transform: translate3d(5%, -6%, 0) scale(0.92); }
+}
+@keyframes auroraC {
+  0%, 100% { transform: translate3d(0%, 0%, 0) scale(1); }
+  50% { transform: translate3d(-8%, 2%, 0) scale(1.12); }
+}
+.aurora-blob-a {
+  animation: auroraA 22s ease-in-out infinite;
+}
+.aurora-blob-b {
+  animation: auroraB 28s ease-in-out infinite;
+}
+.aurora-blob-c {
+  animation: auroraC 34s ease-in-out infinite;
+}
+
+/* Page mount: fade content up smoothly when a route loads. */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-page-enter {
+  animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger children — apply .stagger-children to a container and each direct
+   child gets a slight delay on enter. Pure CSS, no JS. */
+.stagger-children > * {
+  animation: pageEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+.stagger-children > *:nth-child(n+9) { animation-delay: 480ms; }
+
+/* Card hover: smoother lift + soft orange glow. Apply .card-hover. */
+.card-hover {
+  transition:
+    transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 280ms ease,
+    background-color 280ms ease;
+  will-change: transform;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 28px -12px rgba(249, 115, 22, 0.18),
+    0 6px 12px -6px rgba(28, 25, 23, 0.06);
+}
+
+/* Shimmer for skeletons. Replace plain animate-pulse where you want
+   premium feel. */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(231, 229, 228, 0.6) 0%,
+    rgba(252, 165, 117, 0.18) 50%,
+    rgba(231, 229, 228, 0.6) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+/* Floating subtle parallax — for hero illustrations. */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: floatY 6s ease-in-out infinite;
+}
+
+/* Confetti piece — set --x, --rot, --delay on each piece. */
+@keyframes confettiFall {
+  0% {
+    transform: translate3d(0, -10px, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--x, 0), 120vh, 0) rotate(720deg);
+    opacity: 0;
+  }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confettiFall 1.6s cubic-bezier(0.2, 0.7, 0.4, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Respect reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-glow,
+  .animate-brand-breathe,
+  .aurora-blob-a,
+  .aurora-blob-b,
+  .aurora-blob-c,
+  .animate-page-enter,
+  .stagger-children > *,
+  .animate-shimmer,
+  .animate-float,
+  .confetti-piece {
+    animation: none !important;
+  }
+  .card-hover {
+    transition: none;
+  }
+}

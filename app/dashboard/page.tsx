@@ -142,7 +142,7 @@ export default async function DashboardPage({
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <AppHeader user={user} current="dashboard" />
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:py-10">
+      <main className="stagger-children mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:py-10">
         {onboarding.length > 0 ? (
           <OnboardingChecklist steps={onboarding} />
         ) : null}
