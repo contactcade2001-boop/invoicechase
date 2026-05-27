@@ -100,13 +100,13 @@ export async function AppHeader({
       t.key === "inbox" && unread > 0 ? { ...t, badge: unread } : t,
     );
   return (
-    <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-6 px-5 lg:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm ring-1 ring-emerald-900/20">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
             <span className="text-xs font-black text-white">ic</span>
           </span>
-          <span className="font-display text-[15px] font-bold tracking-tight text-slate-900">
+          <span className="font-display text-[15px] font-bold tracking-tight text-stone-900">
             Invoice Chase
           </span>
         </Link>
@@ -119,19 +119,19 @@ export async function AppHeader({
                 href={t.href}
                 className={`relative inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition ${
                   active
-                    ? "text-slate-900"
-                    : "text-slate-500 hover:bg-slate-100/70 hover:text-slate-900"
+                    ? "text-stone-900"
+                    : "text-stone-500 hover:bg-stone-100/70 hover:text-stone-900"
                 }`}
               >
                 {t.label}
                 {t.badge ? (
-                  <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-emerald-600 px-1.5 text-[10px] font-semibold text-white">
+                  <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-orange-600 px-1.5 text-[10px] font-semibold text-white">
                     {t.badge}
                   </span>
                 ) : null}
                 {active ? (
                   <span
-                    className="absolute inset-x-2 -bottom-[5px] h-0.5 rounded-full bg-emerald-600"
+                    className="absolute inset-x-2 -bottom-[5px] h-0.5 rounded-full bg-orange-600"
                     aria-hidden
                   />
                 ) : null}
@@ -139,12 +139,12 @@ export async function AppHeader({
             );
           })}
         </nav>
-        <div className="hidden items-center gap-3 text-xs text-slate-500 sm:flex">
+        <div className="hidden items-center gap-3 text-xs text-stone-500 sm:flex">
           <span className="hidden lg:inline">{user.email}</span>
           <form action="/api/auth/logout" method="post">
             <button
               type="submit"
-              className="rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              className="rounded-md px-2.5 py-1.5 text-xs font-medium text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
             >
               Sign out
             </button>

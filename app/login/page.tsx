@@ -42,7 +42,7 @@ export default async function LoginPage({
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex h-14 max-w-5xl items-center px-4">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm ring-1 ring-emerald-900/20">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
               <span className="text-xs font-black text-white">ic</span>
             </span>
             <span className="font-display text-base font-bold tracking-tight text-slate-900">

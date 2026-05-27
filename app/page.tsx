@@ -21,11 +21,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import {
+  FieldPulseLogo,
   HousecallProLogo,
   JobberLogo,
   QuickBooksLogo,
   ServiceTitanLogo,
   StripeLogo,
+  WorkizLogo,
   XeroLogo,
 } from "@/components/BrandLogos";
 
@@ -41,25 +43,25 @@ const features = [
     icon: Sparkles,
     title: "AI autopilot, in your voice",
     body: "Claude — Anthropic's flagship model — handles every reply using your business name, your payment terms, and the customer's exact balance. Polite, personalized, on-brand. The moment you reply manually, autopilot pauses for that thread.",
-    accent: "emerald",
+    accent: "orange",
   },
   {
     icon: Gauge,
     title: "300–850 customer reputation",
     body: "Every customer gets a credit-style score from their actual payment history. Spot the riskiest accounts in seconds. The score is private — only you see it.",
-    accent: "violet",
+    accent: "amber",
   },
   {
     icon: Building2,
     title: "Live accounting + FSM sync",
     body: "QuickBooks, Xero, Jobber, Housecall Pro, ServiceTitan. 60-second OAuth, no CSV uploads. Payments + refunds post back automatically.",
-    accent: "sky",
+    accent: "stone",
   },
   {
     icon: MessageSquare,
     title: "Bulk + 1-tap SMS reminders",
     body: "Text every overdue customer at once with a personalized message and Stripe pay link. STOP / HELP / START handled per CTIA rules.",
-    accent: "emerald",
+    accent: "orange",
   },
   {
     icon: Mail,
@@ -71,25 +73,25 @@ const features = [
     icon: CreditCard,
     title: "Stripe pay links",
     body: "Apple Pay, Google Pay, ACH, cards. Customers tap once and the payment lands in QuickBooks automatically.",
-    accent: "sky",
+    accent: "stone",
   },
   {
     icon: CalendarClock,
     title: "Payment plans",
     body: "Split a balance into 2–24 installments with auto-generated pay links and reminders before each due date. Recover money that would otherwise become bad debt.",
-    accent: "violet",
+    accent: "amber",
   },
   {
     icon: TrendingUp,
     title: "13-week cash forecast",
     body: "Reputation-weighted cash projection so you know exactly how much will land — and when. Plug in recurring outflows for a true runway view.",
-    accent: "emerald",
+    accent: "orange",
   },
   {
     icon: TrendingDown,
     title: "Churn risk + revenue-at-risk",
     body: "Top customers ranked by likelihood of leaving for a competitor — with the exact dollars you'd forfeit (annual revenue + replacement cost + open balance). Intervene before they walk.",
-    accent: "violet",
+    accent: "stone",
   },
   {
     icon: Users,
@@ -101,19 +103,19 @@ const features = [
     icon: FileSpreadsheet,
     title: "Accountant-ready exports",
     body: "AR aging by bucket, monthly reconciliation, payment plan tracker — all as CSV. Hand them to your bookkeeper; they'll thank you.",
-    accent: "sky",
+    accent: "stone",
   },
   {
     icon: Palette,
     title: "Custom branding",
     body: "Upload your logo, pick an accent color, claim a portal slug. Receipts, portal, and reminders carry your brand — not ours.",
-    accent: "violet",
+    accent: "orange",
   },
   {
     icon: Zap,
     title: "Roles for office + field",
     body: "Owner sees everything, manager runs collections, technician gets a mobile-only fast-pay screen. One subscription, no per-seat surprises.",
-    accent: "emerald",
+    accent: "amber",
   },
 ];
 
@@ -121,18 +123,17 @@ const ACCENT_CLASSES: Record<
   string,
   { bg: string; text: string; ring: string }
 > = {
-  emerald: {
-    bg: "bg-emerald-50",
-    text: "text-emerald-700",
-    ring: "ring-emerald-200",
-  },
-  sky: { bg: "bg-sky-50", text: "text-sky-700", ring: "ring-sky-200" },
-  violet: {
-    bg: "bg-violet-50",
-    text: "text-violet-700",
-    ring: "ring-violet-200",
+  orange: {
+    bg: "bg-orange-50",
+    text: "text-orange-700",
+    ring: "ring-orange-200",
   },
   amber: { bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-200" },
+  stone: {
+    bg: "bg-stone-100",
+    text: "text-stone-700",
+    ring: "ring-stone-200",
+  },
 };
 
 const reputationTiers = [
@@ -185,17 +186,30 @@ const faq = [
   },
 ];
 
+const INTEGRATIONS: {
+  Logo: typeof QuickBooksLogo;
+  name: string;
+  sub: string;
+}[] = [
+  { Logo: QuickBooksLogo, name: "QuickBooks Online", sub: "Accounting" },
+  { Logo: XeroLogo, name: "Xero", sub: "Cloud accounting" },
+  { Logo: JobberLogo, name: "Jobber", sub: "Field service" },
+  { Logo: HousecallProLogo, name: "Housecall Pro", sub: "Field service" },
+  { Logo: ServiceTitanLogo, name: "ServiceTitan", sub: "Enterprise FSM" },
+  { Logo: FieldPulseLogo, name: "FieldPulse", sub: "Field service" },
+  { Logo: WorkizLogo, name: "Workiz", sub: "Field service" },
+  { Logo: StripeLogo, name: "Stripe", sub: "Payments" },
+];
+
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-slate-900">
+    <div className="flex min-h-screen flex-col bg-white text-stone-900">
       {/* ── Sticky nav ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-6">
-          <Link href="/" className="group flex items-center gap-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm ring-1 ring-emerald-900/20">
-              <span className="text-xs font-black text-white">ic</span>
-            </span>
-            <span className="font-display text-base font-bold tracking-tight text-slate-900">
+          <Link href="/" className="flex items-center gap-2.5">
+            <BrandMark />
+            <span className="font-display text-base font-bold tracking-tight text-stone-900">
               Invoice Chase
             </span>
           </Link>
@@ -204,7 +218,7 @@ export default function LandingPage() {
               <a
                 key={l.href}
                 href={l.href}
-                className="text-slate-600 transition hover:text-slate-900"
+                className="text-stone-600 transition hover:text-stone-900"
               >
                 {l.label}
               </a>
@@ -213,13 +227,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/login"
-              className="hidden text-sm font-medium text-slate-600 transition hover:text-slate-900 sm:inline"
+              className="hidden text-sm font-medium text-stone-600 transition hover:text-stone-900 sm:inline"
             >
               Sign in
             </Link>
             <Link
               href="/login"
-              className="group inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 hover:shadow-md"
+              className="group inline-flex items-center gap-1.5 rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-stone-800 hover:shadow-md"
             >
               Get Started
               <ArrowRight
@@ -236,21 +250,21 @@ export default function LandingPage() {
         <section className="bg-hero-mesh relative overflow-hidden">
           <div className="mx-auto max-w-6xl px-5 pb-20 pt-20 sm:pt-28 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-orange-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-orange-800 shadow-sm backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-pulse-glow absolute inline-flex h-full w-full rounded-full bg-emerald-500" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                  <span className="animate-pulse-glow absolute inline-flex h-full w-full rounded-full bg-orange-500" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-orange-600" />
                 </span>
                 AI collections for service-based SMBs
               </div>
-              <h1 className="font-display mt-6 text-5xl font-bold text-slate-900 sm:text-6xl lg:text-7xl">
+              <h1 className="font-display mt-6 text-5xl font-bold text-stone-900 sm:text-6xl lg:text-7xl">
                 Get paid 15 days faster.
                 <br />
-                <span className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-700 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 bg-clip-text text-transparent">
                   Without sending a reminder.
                 </span>
               </h1>
-              <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">
+              <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-stone-600">
                 Connect QuickBooks. Claude AI handles every overdue invoice —
                 texts, emails, replies, payment plans — all in your voice.
                 You sleep. The money still lands.
@@ -258,7 +272,7 @@ export default function LandingPage() {
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <Link
                   href="/login"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/30"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-stone-900/20 transition hover:bg-stone-800 hover:shadow-xl hover:shadow-stone-900/30"
                 >
                   Start free
                   <ArrowRight
@@ -268,26 +282,26 @@ export default function LandingPage() {
                 </Link>
                 <Link
                   href="/demo"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-slate-900 ring-1 ring-inset ring-slate-300 transition hover:ring-slate-400 hover:shadow-md"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-stone-900 ring-1 ring-inset ring-stone-300 transition hover:ring-stone-400 hover:shadow-md"
                 >
                   See live demo
                   <ArrowRight
-                    className="h-4 w-4 text-slate-500 transition group-hover:translate-x-0.5"
+                    className="h-4 w-4 text-stone-500 transition group-hover:translate-x-0.5"
                     aria-hidden
                   />
                 </Link>
               </div>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-stone-500">
                 <span className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-600" />
                   No credit card
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-600" />
                   60-second setup
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  <CheckCircle2 className="h-3.5 w-3.5 text-orange-600" />
                   Cancel anytime
                 </span>
               </div>
@@ -295,13 +309,13 @@ export default function LandingPage() {
 
             {/* Product mockup card */}
             <div className="relative mx-auto mt-16 max-w-5xl">
-              <div className="absolute -inset-x-8 -inset-y-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-emerald-200/30 via-sky-200/20 to-violet-200/30 blur-2xl" />
-              <div className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-slate-900/10 ring-1 ring-slate-200/80">
-                <div className="flex items-center gap-1.5 border-b border-slate-200 bg-slate-50/80 px-4 py-3">
+              <div className="absolute -inset-x-8 -inset-y-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-orange-200/40 via-amber-200/30 to-rose-200/30 blur-2xl" />
+              <div className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-stone-900/10 ring-1 ring-stone-200/80">
+                <div className="flex items-center gap-1.5 border-b border-stone-200 bg-stone-50/80 px-4 py-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  <span className="ml-3 font-mono text-[11px] text-slate-500">
+                  <span className="ml-3 font-mono text-[11px] text-stone-500">
                     app.invoicechase.com/dashboard
                   </span>
                 </div>
@@ -311,49 +325,44 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Trust strip ─────────────────────────────────────────────── */}
-        <section className="border-y border-slate-200 bg-white py-10">
+        {/* ── Trust credits — animated vertical marquee of integrations ── */}
+        <section className="relative border-y border-stone-200 bg-white py-16">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-              Connects with the tools your business already runs on
-            </p>
-            <div className="mt-7 grid grid-cols-3 items-center gap-x-8 gap-y-6 sm:grid-cols-6">
-              {[
-                { Logo: QuickBooksLogo, name: "QuickBooks" },
-                { Logo: XeroLogo, name: "Xero" },
-                { Logo: JobberLogo, name: "Jobber" },
-                { Logo: HousecallProLogo, name: "Housecall Pro" },
-                { Logo: ServiceTitanLogo, name: "ServiceTitan" },
-                { Logo: StripeLogo, name: "Stripe" },
-              ].map(({ Logo, name }) => (
-                <div
-                  key={name}
-                  className="flex items-center justify-center gap-2 grayscale transition hover:grayscale-0"
-                  title={name}
-                >
-                  <Logo size={26} />
-                  <span className="text-sm font-semibold text-slate-700">
-                    {name}
-                  </span>
-                </div>
-              ))}
+            <div className="text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
+                Built on the rails your business already runs
+              </p>
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-3xl font-bold text-stone-900 sm:text-4xl">
+                Connects with everything.
+                <br className="hidden sm:inline" /> Replaces nothing.
+              </h2>
             </div>
+
+            <div className="credits-track mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3">
+              <CreditsColumn speed="fast" offset={0} />
+              <CreditsColumn speed="normal" offset={3} />
+              <CreditsColumn speed="slow" offset={5} />
+            </div>
+
+            <p className="mt-6 text-center text-[11px] text-stone-400">
+              Hover any column to pause. One-click OAuth for each.
+            </p>
           </div>
         </section>
 
-        {/* ── Metrics — Ramp-style big numbers ───────────────────────── */}
+        {/* ── Metrics ────────────────────────────────────────────────── */}
         <section className="bg-white py-20">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 The cashflow math
               </p>
-              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-900 sm:text-5xl">
                 Built to move every dollar you&apos;re owed —{" "}
-                <span className="text-slate-400">faster.</span>
+                <span className="text-stone-400">faster.</span>
               </h2>
             </div>
-            <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl bg-stone-200 sm:grid-cols-2 lg:grid-cols-4">
               <MetricCard
                 value="15–30"
                 unit="days"
@@ -371,21 +380,18 @@ export default function LandingPage() {
         </section>
 
         {/* ── Product / How it works ─────────────────────────────────── */}
-        <section
-          id="product"
-          className="bg-slate-50 py-24"
-        >
+        <section id="product" className="bg-stone-50 py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 How it works
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Set it up once. Watch the deposits land.
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-600">
                 The average service-based SMB carries{" "}
-                <strong className="text-slate-900">$30k–$300k</strong> of
+                <strong className="text-stone-900">$30k–$300k</strong> of
                 unpaid invoices at any time. We compress that timeline so the
                 cash you&apos;re owed actually shows up in your bank.
               </p>
@@ -410,17 +416,17 @@ export default function LandingPage() {
               ].map((s) => (
                 <div
                   key={s.step}
-                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-sm ring-1 ring-slate-200 transition hover:shadow-lg hover:ring-slate-300"
+                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg hover:ring-stone-300"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-display flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 text-base font-bold text-white shadow-sm">
+                    <span className="font-display flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 text-base font-bold text-white shadow-sm">
                       {s.step}
                     </span>
-                    <h3 className="font-display text-xl font-semibold text-slate-900">
+                    <h3 className="font-display text-xl font-semibold text-stone-900">
                       {s.title}
                     </h3>
                   </div>
-                  <p className="mt-4 text-[15px] leading-7 text-slate-600">
+                  <p className="mt-4 text-[15px] leading-7 text-stone-600">
                     {s.body}
                   </p>
                 </div>
@@ -433,13 +439,13 @@ export default function LandingPage() {
         <section id="features" className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Everything in the box
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 A complete AR platform. One price.
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-600">
                 Nothing here is an add-on, an extra seat fee, or a higher tier.
                 Every feature for $49/month + 1.9% on collected payments.
               </p>
@@ -450,17 +456,17 @@ export default function LandingPage() {
                 return (
                   <div
                     key={f.title}
-                    className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-slate-300"
+                    className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-stone-300"
                   >
                     <span
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${a.bg} ring-1 ring-inset ${a.ring} transition group-hover:scale-110`}
                     >
                       <f.icon className={`h-4 w-4 ${a.text}`} aria-hidden />
                     </span>
-                    <h3 className="font-display mt-5 text-base font-semibold text-slate-900">
+                    <h3 className="font-display mt-5 text-base font-semibold text-stone-900">
                       {f.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                    <p className="mt-2 text-sm leading-6 text-stone-600">
                       {f.body}
                     </p>
                   </div>
@@ -470,60 +476,60 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Reputation — feature deep-dive ─────────────────────────── */}
+        {/* ── Reputation ─────────────────────────────────────────────── */}
         <section
           id="reputation"
-          className="border-y border-slate-200 bg-slate-50 py-24"
+          className="border-y border-stone-200 bg-stone-50 py-24"
         >
           <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-2 lg:items-start lg:gap-16 lg:px-6">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Reputation scoring
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Know who&apos;s going to pay you.
                 <br />
-                <span className="text-slate-400">Before they don&apos;t.</span>
+                <span className="text-stone-400">Before they don&apos;t.</span>
               </h2>
-              <p className="mt-6 text-lg leading-8 text-slate-600">
+              <p className="mt-6 text-lg leading-8 text-stone-600">
                 Every customer gets a 300–850 score — exactly like a personal
                 credit score, but private to you. Computed from their payment
                 history: on-time rate, average days late, 60+ day incidents,
                 and current open balance.
               </p>
-              <ul className="mt-8 space-y-4 text-[15px] leading-7 text-slate-700">
+              <ul className="mt-8 space-y-4 text-[15px] leading-7 text-stone-700">
                 {[
                   "Bulk-text the riskiest customers first — sorted automatically.",
                   "Auto-collect deposits from low-rep customers before you do the work.",
                   "Make data-driven payment terms instead of universal Net-30.",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-3">
-                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-orange-600" />
                     <span>{t}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="overflow-hidden rounded-2xl bg-white shadow-xl shadow-slate-900/5 ring-1 ring-slate-200">
-              <div className="border-b border-slate-200 bg-slate-50/60 px-6 py-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="overflow-hidden rounded-2xl bg-white shadow-xl shadow-stone-900/5 ring-1 ring-stone-200">
+              <div className="border-b border-stone-200 bg-stone-50/60 px-6 py-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
                   Reputation tiers
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-slate-900">
+                <p className="mt-0.5 text-sm font-semibold text-stone-900">
                   How we map score → action
                 </p>
               </div>
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-stone-100">
                 {reputationTiers.map((t) => (
                   <div
                     key={t.range}
-                    className="flex items-center gap-4 px-6 py-4 transition hover:bg-slate-50/60"
+                    className="flex items-center gap-4 px-6 py-4 transition hover:bg-stone-50/60"
                   >
-                    <span className="font-mono text-xs tabular-nums text-slate-500">
+                    <span className="font-mono text-xs tabular-nums text-stone-500">
                       {t.range}
                     </span>
                     <span className={`h-1.5 w-12 rounded-full ${t.color}`} />
-                    <span className="text-sm font-semibold text-slate-900">
+                    <span className="text-sm font-semibold text-stone-900">
                       {t.label}
                     </span>
                   </div>
@@ -537,37 +543,37 @@ export default function LandingPage() {
         <section id="pricing" className="bg-white py-24">
           <div className="mx-auto max-w-3xl px-5 lg:px-6">
             <div className="text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Pricing
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 One plan. Everything included.
               </h2>
-              <p className="mt-4 text-lg text-slate-600">
+              <p className="mt-4 text-lg text-stone-600">
                 Cancel anytime. No contracts, no exit fees.
               </p>
             </div>
             <div className="relative mt-12">
-              <div className="absolute -inset-0.5 rounded-[1.6rem] bg-gradient-to-br from-emerald-400 via-emerald-600 to-teal-700 opacity-60 blur-md" />
-              <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl shadow-emerald-900/10 ring-1 ring-slate-200 sm:p-10">
+              <div className="absolute -inset-0.5 rounded-[1.6rem] bg-gradient-to-br from-orange-400 via-orange-600 to-amber-600 opacity-60 blur-md" />
+              <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl shadow-orange-900/10 ring-1 ring-stone-200 sm:p-10">
                 <div className="flex flex-wrap items-baseline justify-between gap-4">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                       Invoice Chase
                     </p>
                     <div className="mt-1 flex items-baseline gap-1.5">
-                      <span className="font-display text-6xl font-bold tracking-tight text-slate-900">
+                      <span className="font-display text-6xl font-bold tracking-tight text-stone-900">
                         $49
                       </span>
-                      <span className="text-lg text-slate-500">/month</span>
+                      <span className="text-lg text-stone-500">/month</span>
                     </div>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm text-stone-600">
                       Plus 1.9% on each payment we collect for you.
                     </p>
                   </div>
                   <Link
                     href="/login"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 hover:shadow-xl"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-stone-900/20 transition hover:bg-stone-800 hover:shadow-xl"
                   >
                     Start free
                     <ArrowRight
@@ -580,27 +586,27 @@ export default function LandingPage() {
                   {pricingFeatures.map((f) => (
                     <li
                       key={f}
-                      className="flex items-start gap-2.5 text-sm text-slate-700"
+                      className="flex items-start gap-2.5 text-sm text-stone-700"
                     >
                       <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
+                        className="mt-0.5 h-4 w-4 shrink-0 text-orange-600"
                         aria-hidden
                       />
                       {f}
                     </li>
                   ))}
                 </ul>
-                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-100 pt-6 text-[11px] text-slate-500">
+                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-stone-100 pt-6 text-[11px] text-stone-500">
                   <span className="inline-flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
                     SOC 2 posture
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                    <Lock className="h-3.5 w-3.5 text-orange-600" />
                     Encrypted at rest
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <Banknote className="h-3.5 w-3.5 text-emerald-600" />
+                    <Banknote className="h-3.5 w-3.5 text-orange-600" />
                     Stripe-secured payments
                   </span>
                 </div>
@@ -610,13 +616,13 @@ export default function LandingPage() {
         </section>
 
         {/* ── FAQ ────────────────────────────────────────────────────── */}
-        <section className="bg-slate-50 py-24">
+        <section className="bg-stone-50 py-24">
           <div className="mx-auto max-w-3xl px-5 lg:px-6">
             <div className="text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Frequently asked
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Questions, answered.
               </h2>
             </div>
@@ -624,12 +630,12 @@ export default function LandingPage() {
               {faq.map((item) => (
                 <div
                   key={item.q}
-                  className="group rounded-2xl bg-white p-6 ring-1 ring-slate-200 transition hover:shadow-sm"
+                  className="group rounded-2xl bg-white p-6 ring-1 ring-stone-200 transition hover:shadow-sm"
                 >
-                  <dt className="font-display text-base font-semibold text-slate-900">
+                  <dt className="font-display text-base font-semibold text-stone-900">
                     {item.q}
                   </dt>
-                  <dd className="mt-2 text-[15px] leading-7 text-slate-600">
+                  <dd className="mt-2 text-[15px] leading-7 text-stone-600">
                     {item.a}
                   </dd>
                 </div>
@@ -644,14 +650,14 @@ export default function LandingPage() {
             <h2 className="font-display text-4xl font-bold text-white sm:text-5xl">
               Stop chasing. Start collecting.
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-lg text-slate-300">
+            <p className="mx-auto mt-5 max-w-xl text-lg text-stone-300">
               Connect QuickBooks in 60 seconds and let Claude handle the
               follow-up. Sleep through the 11pm reply storm.
             </p>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 href="/login"
-                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-slate-900 shadow-xl transition hover:bg-slate-100 hover:shadow-2xl"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-stone-900 shadow-xl transition hover:bg-stone-100 hover:shadow-2xl"
               >
                 Start free
                 <ArrowRight
@@ -671,19 +677,17 @@ export default function LandingPage() {
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 bg-white">
+      <footer className="border-t border-stone-200 bg-white">
         <div className="mx-auto max-w-6xl px-5 py-14 lg:px-6">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             <div className="col-span-2 sm:col-span-1">
               <Link href="/" className="flex items-center gap-2.5">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 ring-1 ring-emerald-900/20">
-                  <span className="text-xs font-black text-white">ic</span>
-                </span>
-                <span className="font-display text-base font-bold tracking-tight text-slate-900">
+                <BrandMark />
+                <span className="font-display text-base font-bold tracking-tight text-stone-900">
                   Invoice Chase
                 </span>
               </Link>
-              <p className="mt-4 max-w-xs text-sm leading-6 text-slate-600">
+              <p className="mt-4 max-w-xs text-sm leading-6 text-stone-600">
                 AI-powered AR for service-based SMBs. Built on Claude, Stripe,
                 and your existing accounting tools.
               </p>
@@ -714,15 +718,15 @@ export default function LandingPage() {
               ]}
             />
           </div>
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6 text-xs text-slate-500">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-6 text-xs text-stone-500">
             <span>&copy; {new Date().getFullYear()} Invoice Chase, Inc.</span>
             <div className="flex items-center gap-4">
               <span className="inline-flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
                 SOC 2 posture
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                <Lock className="h-3.5 w-3.5 text-orange-600" />
                 Encrypted at rest
               </span>
             </div>
@@ -730,6 +734,14 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function BrandMark() {
+  return (
+    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-700 shadow-sm ring-1 ring-orange-900/20">
+      <span className="text-xs font-black text-white">ic</span>
+    </span>
   );
 }
 
@@ -742,7 +754,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-500">
         {title}
       </p>
       <ul className="mt-4 space-y-2.5 text-sm">
@@ -750,7 +762,7 @@ function FooterCol({
           <li key={l.href}>
             <Link
               href={l.href}
-              className="text-slate-600 transition hover:text-slate-900"
+              className="text-stone-600 transition hover:text-stone-900"
             >
               {l.label}
             </Link>
@@ -771,32 +783,76 @@ function MetricCard({
   label: string;
 }) {
   return (
-    <div className="bg-white px-7 py-9 transition hover:bg-slate-50/60">
-      <p className="font-display text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
+    <div className="bg-white px-7 py-9 transition hover:bg-stone-50/60">
+      <p className="font-display text-5xl font-bold tracking-tight text-stone-900 sm:text-6xl">
         {value}
         {unit ? (
-          <span className="ml-1.5 text-2xl font-semibold text-slate-400 sm:text-3xl">
+          <span className="ml-1.5 text-2xl font-semibold text-stone-400 sm:text-3xl">
             {unit}
           </span>
         ) : null}
       </p>
-      <p className="mt-3 text-sm leading-6 text-slate-600">{label}</p>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{label}</p>
     </div>
   );
 }
 
-// ── Product mockup card ────────────────────────────────────────────────────
+// ── Animated credits column ─────────────────────────────────────────────────
+
+function CreditsColumn({
+  speed,
+  offset,
+}: {
+  speed: "slow" | "normal" | "fast";
+  offset: number;
+}) {
+  // Start each column at a different point so they aren't synchronized.
+  const rotated = [
+    ...INTEGRATIONS.slice(offset),
+    ...INTEGRATIONS.slice(0, offset),
+  ];
+  const cls =
+    speed === "slow"
+      ? "animate-credits-slow"
+      : speed === "fast"
+        ? "animate-credits-fast"
+        : "animate-credits";
+  return (
+    <div className="credits-mask relative h-64 overflow-hidden rounded-2xl bg-stone-50 ring-1 ring-inset ring-stone-200">
+      <div className={`flex flex-col gap-3 p-3 ${cls}`}>
+        {[...rotated, ...rotated].map((it, i) => (
+          <div
+            key={`${it.name}-${i}`}
+            className="flex items-center gap-3 rounded-xl bg-white px-4 py-3.5 shadow-sm ring-1 ring-stone-200"
+          >
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-stone-50 ring-1 ring-stone-200">
+              <it.Logo size={20} />
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-stone-900">
+                {it.name}
+              </p>
+              <p className="text-[11px] text-stone-500">{it.sub}</p>
+            </div>
+            <span className="ml-auto text-[10px] font-semibold uppercase tracking-wider text-orange-700">
+              Connect
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Product mockup ────────────────────────────────────────────────────────
 
 function ProductMockup() {
   return (
-    <div className="grid grid-cols-1 gap-0 bg-slate-50/30 lg:grid-cols-[260px_minmax(0,1fr)]">
-      {/* sidebar */}
-      <aside className="hidden border-r border-slate-200 bg-white p-5 lg:block">
+    <div className="grid grid-cols-1 gap-0 bg-stone-50/30 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <aside className="hidden border-r border-stone-200 bg-white p-5 lg:block">
         <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-emerald-500 to-emerald-700">
-            <span className="text-[10px] font-black text-white">ic</span>
-          </span>
-          <span className="text-sm font-semibold text-slate-900">
+          <BrandMark />
+          <span className="text-sm font-semibold text-stone-900">
             Honest Plumbing
           </span>
         </div>
@@ -813,13 +869,13 @@ function ProductMockup() {
               key={t.label}
               className={`flex items-center justify-between rounded-md px-3 py-1.5 ${
                 t.active
-                  ? "bg-slate-900 font-semibold text-white"
-                  : "text-slate-600"
+                  ? "bg-stone-900 font-semibold text-white"
+                  : "text-stone-600"
               }`}
             >
               <span>{t.label}</span>
               {t.badge ? (
-                <span className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-semibold text-white">
+                <span className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-orange-600 px-1 text-[10px] font-semibold text-white">
                   {t.badge}
                 </span>
               ) : null}
@@ -828,7 +884,6 @@ function ProductMockup() {
         </nav>
       </aside>
 
-      {/* main */}
       <div className="p-6">
         <div className="grid grid-cols-3 gap-4">
           <MockStat label="Outstanding" value="$54,820" />
@@ -836,9 +891,8 @@ function ProductMockup() {
           <MockStat label="Avg days late" value="21" unit="days" />
         </div>
 
-        {/* Pulse + Plays */}
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
             <div className="flex items-center gap-3">
               <div className="relative h-14 w-14">
                 <svg className="h-14 w-14 -rotate-90" viewBox="0 0 100 100">
@@ -847,7 +901,7 @@ function ProductMockup() {
                     cy="50"
                     r="42"
                     fill="none"
-                    stroke="rgb(241 245 249)"
+                    stroke="rgb(245 245 244)"
                     strokeWidth="10"
                   />
                   <circle
@@ -855,7 +909,7 @@ function ProductMockup() {
                     cy="50"
                     r="42"
                     fill="none"
-                    stroke="rgb(16 185 129)"
+                    stroke="rgb(249 115 22)"
                     strokeWidth="10"
                     strokeDasharray="263.9"
                     strokeDashoffset="73.9"
@@ -863,25 +917,25 @@ function ProductMockup() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-base font-bold tabular-nums text-slate-900">
+                  <span className="text-base font-bold tabular-nums text-stone-900">
                     72
                   </span>
                 </div>
               </div>
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">
                   Pulse score
                 </p>
-                <p className="text-sm font-semibold text-emerald-700">
+                <p className="text-sm font-semibold text-orange-700">
                   Healthy ·{" "}
-                  <span className="text-emerald-600">+8 this week</span>
+                  <span className="text-orange-600">+8 this week</span>
                 </p>
               </div>
             </div>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-              <Sparkles className="h-2.5 w-2.5 text-emerald-600" /> Today&apos;s
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
+            <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
+              <Sparkles className="h-2.5 w-2.5 text-orange-600" /> Today&apos;s
               plays
             </p>
             <ul className="mt-2 space-y-1.5 text-xs">
@@ -891,8 +945,7 @@ function ProductMockup() {
           </div>
         </div>
 
-        {/* customer rows */}
-        <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="mt-4 overflow-hidden rounded-xl border border-stone-200 bg-white">
           {[
             { name: "Riverside Diner", days: 47, amt: "$4,200", rep: 612 },
             { name: "Wells Brothers HVAC", days: 21, amt: "$1,850", rep: 480 },
@@ -900,17 +953,17 @@ function ProductMockup() {
           ].map((r, i) => (
             <div
               key={r.name}
-              className={`flex items-center gap-3 px-4 py-3 text-sm ${i > 0 ? "border-t border-slate-100" : ""}`}
+              className={`flex items-center gap-3 px-4 py-3 text-sm ${i > 0 ? "border-t border-stone-100" : ""}`}
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-slate-900">{r.name}</p>
-                <p className="text-[11px] text-slate-500">{r.days}d overdue</p>
+                <p className="truncate font-medium text-stone-900">{r.name}</p>
+                <p className="text-[11px] text-stone-500">{r.days}d overdue</p>
               </div>
-              <span className="text-xs font-semibold tabular-nums text-slate-700">
+              <span className="text-xs font-semibold tabular-nums text-stone-700">
                 {r.amt}
               </span>
               <RepBadge score={r.rep} />
-              <button className="inline-flex h-7 items-center gap-1 rounded-md bg-emerald-600 px-2.5 text-[11px] font-semibold text-white">
+              <button className="inline-flex h-7 items-center gap-1 rounded-md bg-orange-600 px-2.5 text-[11px] font-semibold text-white">
                 <CreditCard className="h-3 w-3" /> Pay
               </button>
             </div>
@@ -931,14 +984,14 @@ function MockStat({
   unit?: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+    <div className="rounded-xl border border-stone-200 bg-white p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">
         {label}
       </p>
-      <p className="font-display mt-1 text-2xl font-bold tabular-nums text-slate-900">
+      <p className="font-display mt-1 text-2xl font-bold tabular-nums text-stone-900">
         {value}
         {unit ? (
-          <span className="ml-1 text-xs font-normal text-slate-500">
+          <span className="ml-1 text-xs font-normal text-stone-500">
             {unit}
           </span>
         ) : null}
@@ -960,14 +1013,14 @@ function MockPlay({
 }) {
   return (
     <li className="flex items-center gap-2">
-      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[9px] font-bold text-white">
+      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-stone-900 text-[9px] font-bold text-white">
         {rank}
       </span>
-      <span className="truncate font-medium text-slate-900">{name}</span>
-      <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+      <span className="truncate font-medium text-stone-900">{name}</span>
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-orange-700">
         {action}
       </span>
-      <span className="ml-auto text-[11px] font-semibold tabular-nums text-emerald-700">
+      <span className="ml-auto text-[11px] font-semibold tabular-nums text-orange-700">
         ~{amount}
       </span>
     </li>
@@ -986,7 +1039,7 @@ function RepBadge({ score }: { score: number }) {
   return (
     <span className="hidden items-center gap-1.5 sm:inline-flex">
       <span className={`h-1.5 w-1.5 rounded-full ${color}`} />
-      <span className="font-mono text-[11px] tabular-nums text-slate-500">
+      <span className="font-mono text-[11px] tabular-nums text-stone-500">
         {score}
       </span>
     </span>
