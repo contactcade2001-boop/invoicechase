@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Shell scripts must keep LF line endings even when checked out on Windows.
+# Without this, Docker on Linux can't exec start.sh and fails with code 127.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.dockerignore text eol=lf
