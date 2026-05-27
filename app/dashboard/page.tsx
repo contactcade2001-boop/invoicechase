@@ -7,6 +7,7 @@ import {
   XeroLogo,
 } from "@/components/BrandLogos";
 import { BehavioralPatternsCard } from "@/components/BehavioralPatternsCard";
+import { ChurnRiskCard } from "@/components/ChurnRiskCard";
 import { ConnectPrompt } from "@/components/ConnectPrompt";
 import { Dashboard } from "@/components/Dashboard";
 import { DashboardForecastSnippet } from "@/components/DashboardForecastSnippet";
@@ -31,6 +32,7 @@ import {
   isActive,
 } from "@/lib/server/db/subscriptions";
 import { getBehavioralPatterns } from "@/lib/server/insights/patterns";
+import { computeChurnRisk } from "@/lib/server/insights/churnRisk";
 import { getTodaysPlays } from "@/lib/server/insights/plays";
 import { computePulse } from "@/lib/server/insights/pulse";
 import { getDashboardData } from "@/lib/server/qbo/sync";
@@ -156,6 +158,7 @@ export default async function DashboardPage({
                 />
               }
             />
+            <ChurnRiskCard result={computeChurnRisk(data.customers)} />
             <DashboardForecastSnippet organizationId={orgId} />
           </>
         ) : (

@@ -4,372 +4,424 @@ import {
   Building2,
   CalendarClock,
   Check,
+  CheckCircle2,
   CreditCard,
   FileSpreadsheet,
   Gauge,
+  Lock,
   Mail,
   MessageSquare,
   Palette,
+  ShieldCheck,
   Sparkles,
+  TrendingDown,
   TrendingUp,
   Users,
   Zap,
 } from "lucide-react";
 import Link from "next/link";
 import {
+  HousecallProLogo,
   JobberLogo,
   QuickBooksLogo,
+  ServiceTitanLogo,
   StripeLogo,
   XeroLogo,
 } from "@/components/BrandLogos";
 
 const navLinks = [
-  { href: "#how-it-works", label: "How it works" },
+  { href: "#product", label: "Product" },
   { href: "#features", label: "Features" },
   { href: "#reputation", label: "Reputation" },
   { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
 ];
 
 const features = [
   {
     icon: Sparkles,
-    title: "AI replies in your voice (powered by Claude)",
-    body: "Customers text back. Claude — Anthropic's flagship AI — answers using your business name, your payment terms, and the customer's exact balance and days late. Personalized, polite, on-brand. The moment you reply manually, autopilot pauses so you don't tag-team.",
+    title: "AI autopilot, in your voice",
+    body: "Claude — Anthropic's flagship model — handles every reply using your business name, your payment terms, and the customer's exact balance. Polite, personalized, on-brand. The moment you reply manually, autopilot pauses for that thread.",
+    accent: "emerald",
   },
   {
     icon: Gauge,
-    title: "Reputation score for every customer",
-    body: "A 300–850 score (like a credit score) computed from each customer's payment history — how often they pay on time, how late they typically run, how big their unpaid balance is. Spot the riskiest customers in seconds. Score is only visible to you.",
+    title: "300–850 customer reputation",
+    body: "Every customer gets a credit-style score from their actual payment history. Spot the riskiest accounts in seconds. The score is private — only you see it.",
+    accent: "violet",
   },
   {
     icon: Building2,
-    title: "Live QuickBooks Online sync",
-    body: "OAuth in 60 seconds. We read customers, invoices, and payments — and write payments and refund receipts back to QuickBooks. No CSV uploads, no daily exports, no double entry.",
+    title: "Live accounting + FSM sync",
+    body: "QuickBooks, Xero, Jobber, Housecall Pro, ServiceTitan. 60-second OAuth, no CSV uploads. Payments + refunds post back automatically.",
+    accent: "sky",
   },
   {
     icon: MessageSquare,
-    title: "One-click + bulk SMS reminders",
-    body: "Text any customer a personalized reminder with a payment link. Or hit the big red button and text every overdue customer at once. STOP / HELP / START handled automatically per CTIA rules.",
+    title: "Bulk + 1-tap SMS reminders",
+    body: "Text every overdue customer at once with a personalized message and Stripe pay link. STOP / HELP / START handled per CTIA rules.",
+    accent: "emerald",
   },
   {
     icon: Mail,
-    title: "Email reminders with your branding",
-    body: "Same one-click + bulk experience for email — your logo, your accent color, your tone. Pairs with SMS to maximize the chance someone actually reads it.",
+    title: "Branded email reminders",
+    body: "Your logo, your accent color, your tone. Pairs with SMS to maximize the chance someone actually pays.",
+    accent: "amber",
   },
   {
     icon: CreditCard,
-    title: "One-click Stripe payment links",
-    body: "Every reminder includes a Stripe Checkout URL. Customers tap once, pay, and the payment posts back to QuickBooks automatically. Apple Pay, Google Pay, ACH, cards — Stripe handles all of it.",
+    title: "Stripe pay links",
+    body: "Apple Pay, Google Pay, ACH, cards. Customers tap once and the payment lands in QuickBooks automatically.",
+    accent: "sky",
   },
   {
     icon: CalendarClock,
     title: "Payment plans",
-    body: "Split a balance into 2–24 installments with auto-generated pay links and reminder texts before each due date. Recover money that would otherwise become bad debt.",
+    body: "Split a balance into 2–24 installments with auto-generated pay links and reminders before each due date. Recover money that would otherwise become bad debt.",
+    accent: "violet",
   },
   {
     icon: TrendingUp,
-    title: "Deposit collection",
-    body: "When a low-reputation customer gets a new invoice, we auto-text them for a deposit before the work starts. Your highest-risk receivables collect themselves.",
+    title: "13-week cash forecast",
+    body: "Reputation-weighted cash projection so you know exactly how much will land — and when. Plug in recurring outflows for a true runway view.",
+    accent: "emerald",
+  },
+  {
+    icon: TrendingDown,
+    title: "Churn risk + revenue-at-risk",
+    body: "Top customers ranked by likelihood of leaving for a competitor — with the exact dollars you'd forfeit (annual revenue + replacement cost + open balance). Intervene before they walk.",
+    accent: "violet",
   },
   {
     icon: Users,
     title: "Branded customer portal",
-    body: "Each customer gets a self-serve portal at /p/your-business — outstanding balance, payment history, pay-now button — with your logo and color. They feel served, not chased.",
+    body: "Each customer gets a self-serve portal at /p/your-business — outstanding balance, history, Pay Now — branded as yours, not ours.",
+    accent: "amber",
   },
   {
     icon: FileSpreadsheet,
-    title: "AR aging + reconciliation exports",
-    body: "Built-in CSV exports of your aging buckets (Current / 1–30 / 31–60 / 61–90 / 90+) and monthly reconciliation report. Hand them to your bookkeeper; they'll thank you.",
+    title: "Accountant-ready exports",
+    body: "AR aging by bucket, monthly reconciliation, payment plan tracker — all as CSV. Hand them to your bookkeeper; they'll thank you.",
+    accent: "sky",
   },
   {
     icon: Palette,
     title: "Custom branding",
-    body: "Upload your logo, pick an accent color, claim a portal slug. Receipts, customer portal, and invoice reminders all carry your brand — not ours.",
+    body: "Upload your logo, pick an accent color, claim a portal slug. Receipts, portal, and reminders carry your brand — not ours.",
+    accent: "violet",
   },
   {
     icon: Zap,
-    title: "Multi-seat with role-based access",
-    body: "Bring your office team and your field techs onto one account. Owner sees everything, manager runs collections, technician gets a fast-pay-only mobile screen.",
+    title: "Roles for office + field",
+    body: "Owner sees everything, manager runs collections, technician gets a mobile-only fast-pay screen. One subscription, no per-seat surprises.",
+    accent: "emerald",
   },
 ];
 
+const ACCENT_CLASSES: Record<
+  string,
+  { bg: string; text: string; ring: string }
+> = {
+  emerald: {
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    ring: "ring-emerald-200",
+  },
+  sky: { bg: "bg-sky-50", text: "text-sky-700", ring: "ring-sky-200" },
+  violet: {
+    bg: "bg-violet-50",
+    text: "text-violet-700",
+    ring: "ring-violet-200",
+  },
+  amber: { bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-200" },
+};
+
 const reputationTiers = [
-  {
-    range: "800–850",
-    label: "Excellent",
-    color: "bg-emerald-500",
-    desc: "Pays consistently on or before due date.",
-  },
-  {
-    range: "740–799",
-    label: "Strong",
-    color: "bg-lime-500",
-    desc: "Reliable, occasionally a few days late.",
-  },
-  {
-    range: "670–739",
-    label: "Good",
-    color: "bg-amber-500",
-    desc: "Average. Pays but sometimes needs a nudge.",
-  },
-  {
-    range: "580–669",
-    label: "Fair",
-    color: "bg-orange-500",
-    desc: "Recurring late payer. Worth requiring deposits.",
-  },
-  {
-    range: "300–579",
-    label: "Poor",
-    color: "bg-red-500",
-    desc: "High risk. Demand deposits or stop service.",
-  },
+  { range: "800–850", label: "Excellent", color: "bg-emerald-500" },
+  { range: "740–799", label: "Strong", color: "bg-lime-500" },
+  { range: "670–739", label: "Good", color: "bg-amber-500" },
+  { range: "580–669", label: "Fair", color: "bg-orange-500" },
+  { range: "300–579", label: "Poor", color: "bg-red-500" },
 ];
 
 const pricingFeatures = [
-  "Live QuickBooks Online sync",
-  "AI autopilot — replies in your voice, powered by Claude",
+  "QuickBooks, Xero, Jobber + FSM live sync",
+  "Claude AI autopilot — replies in your voice",
   "Customer reputation scoring (300–850)",
-  "One-click + bulk SMS reminders",
-  "One-click + bulk email reminders",
-  "Stripe payment links + auto-posting to QuickBooks",
+  "1-tap + bulk SMS + email reminders",
+  "Stripe pay links auto-posted to QuickBooks",
+  "13-week reputation-weighted cash forecast",
+  "Payment plans + scheduled installments",
   "Branded customer payment portal",
-  "Payment plans + scheduled reminders",
-  "Auto-deposit collection for low-rep customers",
-  "AR aging + monthly reconciliation CSV exports",
-  "Multi-seat: owner / manager / technician roles",
-  "Cancel anytime",
+  "AR aging + monthly reconciliation CSVs",
+  "Owner / manager / technician seats included",
+  "SOC 2-aligned posture, encrypted at rest",
+  "Cancel anytime — no contract",
 ];
 
 const faq = [
   {
-    q: "How does the AI personalization work?",
-    a: "Claude (Anthropic's AI) gets your business name, your SMS template style, the customer's name + balance + days late, and the conversation history — then replies in your voice. If it's unsure, the thread lands in your inbox and autopilot pauses.",
+    q: "How does the AI personalization actually work?",
+    a: "Claude (Anthropic) gets your business name, your template style, the customer's name + balance + days late, plus the full conversation history — then replies in your voice. If it's unsure, the thread lands in your inbox and autopilot pauses for that customer.",
   },
   {
-    q: "What's the reputation score?",
-    a: "A 300–850 score per customer (like a credit score) based on their payment history. Tells you who to chase first and who to require deposits from. Private to you — customers never see it.",
+    q: "What's the reputation score based on?",
+    a: "A 300–850 score per customer computed from payment history: how often they pay on time, how late they typically run, how often they've gone 60+ days overdue, and how big their current open balance is.",
   },
   {
     q: "How much faster will I get paid?",
-    a: "Most SMBs see DSO drop 15–30 days within the first month — the combo of AI replies, one-click pay links, and bulk reminders compresses your collections timeline.",
+    a: "Most SMBs see DSO drop 15–30 days within the first month. The combination of AI replies, 1-tap pay links, and bulk reminders compresses the entire collections timeline.",
   },
   {
-    q: "What accounting software do you support?",
-    a: "QuickBooks Online, Xero, and Jobber. One connection per business; switching is one click in Settings.",
+    q: "Which accounting and FSM tools are supported?",
+    a: "QuickBooks Online, Xero, Jobber today — with Housecall Pro, ServiceTitan, FieldPulse, and Workiz connection scaffolding ready. One connection per business; switch in Settings any time.",
   },
   {
-    q: "How long does setup take?",
-    a: "About 60 seconds. Connect your accounting with one OAuth click and the dashboard fills with your data immediately.",
+    q: "Setup time?",
+    a: "Roughly 60 seconds. One OAuth click and your dashboard fills with real customers, invoices, and balances.",
   },
   {
-    q: "Can I cancel anytime?",
-    a: "Yes. Disconnect with one click; cancel the subscription from /billing. No contracts, no penalties.",
+    q: "Cancel anytime?",
+    a: "Yes. Disconnect with one click; cancel the subscription from /billing. No contracts, no exit fees.",
   },
 ];
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur">
-        <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <Link href="/" className="text-lg font-bold tracking-tight">
-            Invoice Chase
+      {/* ── Sticky nav ─────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
+        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-6">
+          <Link href="/" className="group flex items-center gap-2.5">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-sm ring-1 ring-emerald-900/20">
+              <span className="text-xs font-black text-white">ic</span>
+            </span>
+            <span className="font-display text-base font-bold tracking-tight text-slate-900">
+              Invoice Chase
+            </span>
           </Link>
-          <div className="flex items-center gap-6 text-sm">
-            {navLinks.map((link) => (
+          <div className="hidden items-center gap-7 text-sm font-medium md:flex">
+            {navLinks.map((l) => (
               <a
-                key={link.href}
-                href={link.href}
-                className="hidden text-slate-600 hover:text-slate-900 md:inline"
+                key={l.href}
+                href={l.href}
+                className="text-slate-600 transition hover:text-slate-900"
               >
-                {link.label}
+                {l.label}
               </a>
             ))}
+          </div>
+          <div className="flex items-center gap-2">
             <Link
               href="/login"
-              className="inline-flex items-center gap-1 rounded-md bg-slate-900 px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+              className="hidden text-sm font-medium text-slate-600 transition hover:text-slate-900 sm:inline"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/login"
+              className="group inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 hover:shadow-md"
             >
               Get Started
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+              <ArrowRight
+                className="h-3.5 w-3.5 transition group-hover:translate-x-0.5"
+                aria-hidden
+              />
             </Link>
           </div>
         </nav>
       </header>
 
       <main className="flex-1">
-        <section className="mx-auto max-w-3xl px-4 py-20 text-center sm:py-28">
-          <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
-            <Sparkles className="h-3 w-3" aria-hidden /> AI-powered AR for QuickBooks SMBs
-          </p>
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl">
-            Stop chasing invoices.
-            <br />
-            <span className="text-emerald-700">Let AI get you paid.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-7 text-slate-600">
-            Connect QuickBooks. We text and email your overdue customers, then{" "}
-            <strong>Claude AI handles their replies in your voice</strong> —
-            &ldquo;when can you pay?&rdquo;, &ldquo;can I split it?&rdquo;,
-            &ldquo;send it to my new email&rdquo; — so you don&apos;t have to.
-            You sleep; the money still comes in.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-slate-900 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
-              Get Started
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
-            <Link
-              href="/demo"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 transition hover:bg-slate-50"
-            >
-              See a live demo
-            </Link>
+        {/* ── Hero ─────────────────────────────────────────────────────── */}
+        <section className="bg-hero-mesh relative overflow-hidden">
+          <div className="mx-auto max-w-6xl px-5 pb-20 pt-20 sm:pt-28 lg:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-emerald-800 shadow-sm backdrop-blur">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-pulse-glow absolute inline-flex h-full w-full rounded-full bg-emerald-500" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                </span>
+                AI collections for service-based SMBs
+              </div>
+              <h1 className="font-display mt-6 text-5xl font-bold text-slate-900 sm:text-6xl lg:text-7xl">
+                Get paid 15 days faster.
+                <br />
+                <span className="bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-700 bg-clip-text text-transparent">
+                  Without sending a reminder.
+                </span>
+              </h1>
+              <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">
+                Connect QuickBooks. Claude AI handles every overdue invoice —
+                texts, emails, replies, payment plans — all in your voice.
+                You sleep. The money still lands.
+              </p>
+              <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/login"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/30"
+                >
+                  Start free
+                  <ArrowRight
+                    className="h-4 w-4 transition group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
+                </Link>
+                <Link
+                  href="/demo"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-slate-900 ring-1 ring-inset ring-slate-300 transition hover:ring-slate-400 hover:shadow-md"
+                >
+                  See live demo
+                  <ArrowRight
+                    className="h-4 w-4 text-slate-500 transition group-hover:translate-x-0.5"
+                    aria-hidden
+                  />
+                </Link>
+              </div>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  No credit card
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  60-second setup
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                  Cancel anytime
+                </span>
+              </div>
+            </div>
+
+            {/* Product mockup card */}
+            <div className="relative mx-auto mt-16 max-w-5xl">
+              <div className="absolute -inset-x-8 -inset-y-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-emerald-200/30 via-sky-200/20 to-violet-200/30 blur-2xl" />
+              <div className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-slate-900/10 ring-1 ring-slate-200/80">
+                <div className="flex items-center gap-1.5 border-b border-slate-200 bg-slate-50/80 px-4 py-3">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  <span className="ml-3 font-mono text-[11px] text-slate-500">
+                    app.invoicechase.com/dashboard
+                  </span>
+                </div>
+                <ProductMockup />
+              </div>
+            </div>
           </div>
-          <p className="mt-4 text-xs text-slate-500">
-            $49/month + 1.9% per collected payment. No setup fee. Connect in 60 seconds.
-          </p>
-          <p className="mt-3 text-xs text-slate-500">
-            By signing up you agree to our{" "}
-            <Link href="/terms" className="underline hover:text-slate-700">
-              Terms
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy" className="underline hover:text-slate-700">
-              Privacy Policy
-            </Link>
-            . We only text customers you already have a business relationship
-            with. Recipients can reply STOP at any time.
-          </p>
         </section>
 
-        {/* One-click integrations — CTA per app */}
-        <section className="border-y border-slate-200 bg-slate-50 py-14">
-          <div className="mx-auto max-w-5xl px-4">
-            <p className="text-center text-xs font-semibold uppercase tracking-widest text-emerald-700">
-              One-click integrations
+        {/* ── Trust strip ─────────────────────────────────────────────── */}
+        <section className="border-y border-slate-200 bg-white py-10">
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Connects with the tools your business already runs on
             </p>
-            <h2 className="mt-2 text-center text-2xl font-bold tracking-tight">
-              Connect what you already use
-            </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-slate-600">
-              60-second OAuth. No CSVs, no copy-paste. Pick yours and start
-              collecting today.
-            </p>
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mt-7 grid grid-cols-3 items-center gap-x-8 gap-y-6 sm:grid-cols-6">
               {[
-                { Logo: QuickBooksLogo, name: "QuickBooks", sub: "Online" },
-                { Logo: XeroLogo, name: "Xero", sub: "Cloud accounting" },
-                { Logo: JobberLogo, name: "Jobber", sub: "Field service" },
-                { Logo: StripeLogo, name: "Stripe", sub: "Get paid" },
-              ].map(({ Logo, name, sub }) => (
-                <Link
+                { Logo: QuickBooksLogo, name: "QuickBooks" },
+                { Logo: XeroLogo, name: "Xero" },
+                { Logo: JobberLogo, name: "Jobber" },
+                { Logo: HousecallProLogo, name: "Housecall Pro" },
+                { Logo: ServiceTitanLogo, name: "ServiceTitan" },
+                { Logo: StripeLogo, name: "Stripe" },
+              ].map(({ Logo, name }) => (
+                <div
                   key={name}
-                  href="/login"
-                  className="group flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
+                  className="flex items-center justify-center gap-2 grayscale transition hover:grayscale-0"
+                  title={name}
                 >
-                  <Logo size={36} />
-                  <p className="mt-3 text-sm font-semibold text-slate-900">
+                  <Logo size={26} />
+                  <span className="text-sm font-semibold text-slate-700">
                     {name}
-                  </p>
-                  <p className="text-xs text-slate-500">{sub}</p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 transition-all group-hover:gap-1.5">
-                    Connect now
-                    <ArrowRight className="h-3 w-3" aria-hidden />
                   </span>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section
-          id="how-it-works"
-          className="border-y border-slate-200 bg-slate-50 py-20"
-        >
-          <div className="mx-auto max-w-5xl px-4">
-            <p className="text-center text-xs font-semibold uppercase tracking-wide text-emerald-700">
-              Cashflow on autopilot
-            </p>
-            <h2 className="mt-3 text-center text-3xl font-bold tracking-tight">
-              Set it up once. Watch the deposits land.
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600">
-              The average SMB carries{" "}
-              <strong>$30k–$300k of unpaid invoices</strong> at any time.
-              Invoice Chase compresses that timeline so the cash you&apos;re
-              owed actually shows up in your bank account.
-            </p>
-            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
-                  1
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">Connect QuickBooks</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  60-second OAuth click. Customers, invoices, and payments
-                  appear on your dashboard immediately. No CSVs, no
-                  reconciliation, no daily babysitting.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
-                  2
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">
-                  Hit the big red button
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  One click texts every overdue customer a personalized
-                  reminder + a Stripe pay link. They tap, pay, and the payment
-                  posts back to QuickBooks automatically.
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-sm font-bold text-white">
-                  3
-                </span>
-                <h3 className="mt-4 text-lg font-semibold">
-                  Let Claude handle the rest
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Customers reply at 11pm with questions, payment-plan
-                  requests, complaints. Our AI answers — in your voice, with
-                  the customer&apos;s exact balance and history — while you
-                  sleep. You only get pinged when it&apos;s actually time to
-                  step in.
-                </p>
-              </div>
+        {/* ── Metrics — Ramp-style big numbers ───────────────────────── */}
+        <section className="bg-white py-20">
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <div className="text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                The cashflow math
+              </p>
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-slate-900 sm:text-5xl">
+                Built to move every dollar you&apos;re owed —{" "}
+                <span className="text-slate-400">faster.</span>
+              </h2>
+            </div>
+            <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+              <MetricCard
+                value="15–30"
+                unit="days"
+                label="Typical DSO drop in month one"
+              />
+              <MetricCard value="94%" unit="" label="SMS open rate vs 22% email" />
+              <MetricCard
+                value="30s"
+                unit=""
+                label="To text every overdue customer"
+              />
+              <MetricCard value="24/7" unit="" label="Claude AI on-call replies" />
             </div>
           </div>
         </section>
 
-        <section id="features" className="py-20">
-          <div className="mx-auto max-w-5xl px-4">
-            <p className="text-center text-xs font-semibold uppercase tracking-wide text-emerald-700">
-              Everything in the box
-            </p>
-            <h2 className="mt-3 text-center text-3xl font-bold tracking-tight">
-              Twelve features. One subscription.
-            </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600">
-              Nothing here is an add-on, an extra seat fee, or a higher tier.
-              You get all of it for $49/month.
-            </p>
-            <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {features.map((f) => (
+        {/* ── Product / How it works ─────────────────────────────────── */}
+        <section
+          id="product"
+          className="bg-slate-50 py-24"
+        >
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                How it works
+              </p>
+              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+                Set it up once. Watch the deposits land.
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+                The average service-based SMB carries{" "}
+                <strong className="text-slate-900">$30k–$300k</strong> of
+                unpaid invoices at any time. We compress that timeline so the
+                cash you&apos;re owed actually shows up in your bank.
+              </p>
+            </div>
+            <div className="mt-16 grid grid-cols-1 gap-5 md:grid-cols-3">
+              {[
+                {
+                  step: 1,
+                  title: "Connect your accounting",
+                  body: "60-second OAuth. Customers, invoices, and payments populate your dashboard instantly — no CSVs, no daily babysitting.",
+                },
+                {
+                  step: 2,
+                  title: "Hit Text with AI",
+                  body: "One click texts every overdue customer a personalized reminder with a Stripe pay link. They tap, pay, and it posts back to QuickBooks automatically.",
+                },
+                {
+                  step: 3,
+                  title: "Claude handles the rest",
+                  body: "Customers reply at 11pm with questions, plan requests, complaints. Claude answers in your voice, with the customer's exact balance and history.",
+                },
+              ].map((s) => (
                 <div
-                  key={f.title}
-                  className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
+                  key={s.step}
+                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-sm ring-1 ring-slate-200 transition hover:shadow-lg hover:ring-slate-300"
                 >
-                  <f.icon className="h-5 w-5 text-emerald-600" aria-hidden />
-                  <h3 className="mt-3 text-base font-semibold">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
-                    {f.body}
+                  <div className="flex items-center gap-3">
+                    <span className="font-display flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-900 to-slate-700 text-base font-bold text-white shadow-sm">
+                      {s.step}
+                    </span>
+                    <h3 className="font-display text-xl font-semibold text-slate-900">
+                      {s.title}
+                    </h3>
+                  </div>
+                  <p className="mt-4 text-[15px] leading-7 text-slate-600">
+                    {s.body}
                   </p>
                 </div>
               ))}
@@ -377,201 +429,207 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Features grid ──────────────────────────────────────────── */}
+        <section id="features" className="bg-white py-24">
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                Everything in the box
+              </p>
+              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+                A complete AR platform. One price.
+              </h2>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+                Nothing here is an add-on, an extra seat fee, or a higher tier.
+                Every feature for $49/month + 1.9% on collected payments.
+              </p>
+            </div>
+            <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {features.map((f) => {
+                const a = ACCENT_CLASSES[f.accent];
+                return (
+                  <div
+                    key={f.title}
+                    className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg hover:ring-slate-300"
+                  >
+                    <span
+                      className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${a.bg} ring-1 ring-inset ${a.ring} transition group-hover:scale-110`}
+                    >
+                      <f.icon className={`h-4 w-4 ${a.text}`} aria-hidden />
+                    </span>
+                    <h3 className="font-display mt-5 text-base font-semibold text-slate-900">
+                      {f.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {f.body}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Reputation — feature deep-dive ─────────────────────────── */}
         <section
           id="reputation"
-          className="border-y border-slate-200 bg-slate-50 py-20"
+          className="border-y border-slate-200 bg-slate-50 py-24"
         >
-          <div className="mx-auto max-w-3xl px-4">
-            <p className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
-              <Gauge className="h-3 w-3" aria-hidden /> Reputation scoring
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">
-              Know who&apos;s going to pay you. Before they don&apos;t.
-            </h2>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              Every customer in your QuickBooks gets a 300–850 reputation
-              score — exactly like a personal credit score, but private to
-              you. We compute it from their payment history: how often they
-              pay on time, how many days they typically run late, how often
-              they&apos;ve gone 60+ days overdue, and how big their open
-              balance is right now.
-            </p>
-
-            <div className="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    <th className="px-5 py-3 text-left">Score</th>
-                    <th className="px-5 py-3 text-left">Tier</th>
-                    <th className="px-5 py-3 text-left">What it means</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reputationTiers.map((t) => (
-                    <tr
-                      key={t.range}
-                      className="border-b border-slate-100 last:border-b-0"
-                    >
-                      <td className="px-5 py-4 font-mono text-sm text-slate-900">
-                        {t.range}
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="inline-flex items-center gap-2">
-                          <span
-                            className={`h-2 w-8 rounded-full ${t.color}`}
-                            aria-hidden
-                          />
-                          <span className="text-sm font-semibold">
-                            {t.label}
-                          </span>
-                        </span>
-                      </td>
-                      <td className="px-5 py-4 text-slate-600">{t.desc}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <h3 className="mt-10 text-xl font-semibold">
-              Why this changes your cashflow
-            </h3>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                <span>
-                  <strong>Bulk-text the riskiest customers first.</strong> The
-                  dashboard sorts overdue customers by score so your time goes
-                  to the accounts most likely to slip into bad debt.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                <span>
-                  <strong>
-                    Auto-collect deposits from low-reputation customers.
-                  </strong>{" "}
-                  When a Poor- or Fair-rated customer gets a new invoice, we
-                  text them a deposit link automatically — before you do the
-                  work. No more bait-and-switch.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                <span>
-                  <strong>Make data-driven payment terms.</strong> Stop
-                  extending Net-30 to people who&apos;ve always taken Net-90.
-                  The score tells you who deserves what.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <section className="py-20">
-          <div className="mx-auto max-w-3xl px-4 text-center">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
-              The cashflow math
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight">
-              What does $49/month actually return?
-            </h2>
-            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <Banknote
-                  className="mx-auto h-6 w-6 text-emerald-600"
-                  aria-hidden
-                />
-                <p className="mt-3 text-3xl font-bold tabular-nums">15–30</p>
-                <p className="mt-1 text-sm font-semibold text-slate-700">days</p>
-                <p className="mt-2 text-xs text-slate-500">
-                  Typical DSO drop within the first month
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <Zap className="mx-auto h-6 w-6 text-emerald-600" aria-hidden />
-                <p className="mt-3 text-3xl font-bold tabular-nums">30s</p>
-                <p className="mt-1 text-sm font-semibold text-slate-700">
-                  to text everyone
-                </p>
-                <p className="mt-2 text-xs text-slate-500">
-                  Bulk-text every overdue customer in one click
-                </p>
-              </div>
-              <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <Sparkles
-                  className="mx-auto h-6 w-6 text-emerald-600"
-                  aria-hidden
-                />
-                <p className="mt-3 text-3xl font-bold tabular-nums">24/7</p>
-                <p className="mt-1 text-sm font-semibold text-slate-700">
-                  AI on-call
-                </p>
-                <p className="mt-2 text-xs text-slate-500">
-                  Customer replies handled at 2am, in your voice
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="pricing"
-          className="border-t border-slate-200 bg-slate-50 py-20"
-        >
-          <div className="mx-auto max-w-2xl px-4">
-            <h2 className="text-center text-3xl font-bold tracking-tight">
-              Simple pricing
-            </h2>
-            <p className="mt-3 text-center text-slate-600">
-              One plan. Everything included. Cancel anytime.
-            </p>
-            <div className="mt-10 rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-              <div className="flex items-baseline gap-1">
-                <span className="text-5xl font-bold tracking-tight">$49</span>
-                <span className="text-lg text-slate-500">/month</span>
-              </div>
-              <p className="mt-1 text-sm text-slate-600">
-                Plus 1.9% on each payment we collect for you.
+          <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-2 lg:items-start lg:gap-16 lg:px-6">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                Reputation scoring
               </p>
-              <ul className="mt-6 space-y-2.5">
-                {pricingFeatures.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2 text-sm text-slate-700"
-                  >
-                    <Check
-                      className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
-                      aria-hidden
-                    />
-                    {feature}
+              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+                Know who&apos;s going to pay you.
+                <br />
+                <span className="text-slate-400">Before they don&apos;t.</span>
+              </h2>
+              <p className="mt-6 text-lg leading-8 text-slate-600">
+                Every customer gets a 300–850 score — exactly like a personal
+                credit score, but private to you. Computed from their payment
+                history: on-time rate, average days late, 60+ day incidents,
+                and current open balance.
+              </p>
+              <ul className="mt-8 space-y-4 text-[15px] leading-7 text-slate-700">
+                {[
+                  "Bulk-text the riskiest customers first — sorted automatically.",
+                  "Auto-collect deposits from low-rep customers before you do the work.",
+                  "Make data-driven payment terms instead of universal Net-30.",
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-3">
+                    <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
+                    <span>{t}</span>
                   </li>
                 ))}
               </ul>
-              <Link
-                href="/login"
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-              >
-                Get Started
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
+            </div>
+            <div className="overflow-hidden rounded-2xl bg-white shadow-xl shadow-slate-900/5 ring-1 ring-slate-200">
+              <div className="border-b border-slate-200 bg-slate-50/60 px-6 py-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Reputation tiers
+                </p>
+                <p className="mt-0.5 text-sm font-semibold text-slate-900">
+                  How we map score → action
+                </p>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {reputationTiers.map((t) => (
+                  <div
+                    key={t.range}
+                    className="flex items-center gap-4 px-6 py-4 transition hover:bg-slate-50/60"
+                  >
+                    <span className="font-mono text-xs tabular-nums text-slate-500">
+                      {t.range}
+                    </span>
+                    <span className={`h-1.5 w-12 rounded-full ${t.color}`} />
+                    <span className="text-sm font-semibold text-slate-900">
+                      {t.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="faq" className="py-20">
-          <div className="mx-auto max-w-2xl px-4">
-            <h2 className="text-center text-3xl font-bold tracking-tight">
-              Questions?
-            </h2>
-            <dl className="mt-10 space-y-6">
+        {/* ── Pricing ─────────────────────────────────────────────────── */}
+        <section id="pricing" className="bg-white py-24">
+          <div className="mx-auto max-w-3xl px-5 lg:px-6">
+            <div className="text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                Pricing
+              </p>
+              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+                One plan. Everything included.
+              </h2>
+              <p className="mt-4 text-lg text-slate-600">
+                Cancel anytime. No contracts, no exit fees.
+              </p>
+            </div>
+            <div className="relative mt-12">
+              <div className="absolute -inset-0.5 rounded-[1.6rem] bg-gradient-to-br from-emerald-400 via-emerald-600 to-teal-700 opacity-60 blur-md" />
+              <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl shadow-emerald-900/10 ring-1 ring-slate-200 sm:p-10">
+                <div className="flex flex-wrap items-baseline justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                      Invoice Chase
+                    </p>
+                    <div className="mt-1 flex items-baseline gap-1.5">
+                      <span className="font-display text-6xl font-bold tracking-tight text-slate-900">
+                        $49
+                      </span>
+                      <span className="text-lg text-slate-500">/month</span>
+                    </div>
+                    <p className="mt-2 text-sm text-slate-600">
+                      Plus 1.9% on each payment we collect for you.
+                    </p>
+                  </div>
+                  <Link
+                    href="/login"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition hover:bg-slate-800 hover:shadow-xl"
+                  >
+                    Start free
+                    <ArrowRight
+                      className="h-4 w-4 transition group-hover:translate-x-0.5"
+                      aria-hidden
+                    />
+                  </Link>
+                </div>
+                <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
+                  {pricingFeatures.map((f) => (
+                    <li
+                      key={f}
+                      className="flex items-start gap-2.5 text-sm text-slate-700"
+                    >
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
+                        aria-hidden
+                      />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-slate-100 pt-6 text-[11px] text-slate-500">
+                  <span className="inline-flex items-center gap-1.5">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                    SOC 2 posture
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                    Encrypted at rest
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Banknote className="h-3.5 w-3.5 text-emerald-600" />
+                    Stripe-secured payments
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ ────────────────────────────────────────────────────── */}
+        <section className="bg-slate-50 py-24">
+          <div className="mx-auto max-w-3xl px-5 lg:px-6">
+            <div className="text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                Frequently asked
+              </p>
+              <h2 className="font-display mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">
+                Questions, answered.
+              </h2>
+            </div>
+            <dl className="mt-12 space-y-3">
               {faq.map((item) => (
                 <div
                   key={item.q}
-                  className="rounded-xl bg-white p-5 ring-1 ring-slate-200"
+                  className="group rounded-2xl bg-white p-6 ring-1 ring-slate-200 transition hover:shadow-sm"
                 >
-                  <dt className="font-semibold text-slate-900">{item.q}</dt>
-                  <dd className="mt-2 text-sm leading-6 text-slate-600">
+                  <dt className="font-display text-base font-semibold text-slate-900">
+                    {item.q}
+                  </dt>
+                  <dd className="mt-2 text-[15px] leading-7 text-slate-600">
                     {item.a}
                   </dd>
                 </div>
@@ -580,55 +638,357 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="bg-slate-900 py-16 text-white">
-          <div className="mx-auto flex max-w-3xl flex-col items-center px-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tight">
+        {/* ── Final CTA ──────────────────────────────────────────────── */}
+        <section className="bg-dark-mesh relative overflow-hidden">
+          <div className="mx-auto max-w-4xl px-5 py-24 text-center lg:px-6">
+            <h2 className="font-display text-4xl font-bold text-white sm:text-5xl">
               Stop chasing. Start collecting.
             </h2>
-            <p className="mt-3 text-slate-300">
-              Connect QuickBooks in 60 seconds and let AI handle the
+            <p className="mx-auto mt-5 max-w-xl text-lg text-slate-300">
+              Connect QuickBooks in 60 seconds and let Claude handle the
               follow-up. Sleep through the 11pm reply storm.
             </p>
-            <Link
-              href="/login"
-              className="mt-8 inline-flex items-center gap-2 rounded-md bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-sm transition hover:bg-slate-100"
-            >
-              Get Started
-              <ArrowRight className="h-4 w-4" aria-hidden />
-            </Link>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/login"
+                className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-slate-900 shadow-xl transition hover:bg-slate-100 hover:shadow-2xl"
+              >
+                Start free
+                <ArrowRight
+                  className="h-4 w-4 transition group-hover:translate-x-0.5"
+                  aria-hidden
+                />
+              </Link>
+              <Link
+                href="/demo"
+                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold text-white/90 ring-1 ring-inset ring-white/20 transition hover:bg-white/5 hover:text-white"
+              >
+                See live demo
+              </Link>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-8">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 text-sm text-slate-500 sm:flex-row">
-          <span className="font-semibold text-slate-700">Invoice Chase</span>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link href="/help" className="hover:text-slate-700">
-              Help
-            </Link>
-            <Link href="/changelog" className="hover:text-slate-700">
-              Changelog
-            </Link>
-            <Link href="/privacy" className="hover:text-slate-700">
-              Privacy
-            </Link>
-            <Link href="/terms" className="hover:text-slate-700">
-              Terms
-            </Link>
-            <Link href="/partners" className="hover:text-slate-700">
-              Partner program
-            </Link>
-            <Link
-              href="/integrations/quickbooks"
-              className="hover:text-slate-700"
-            >
-              QuickBooks app
-            </Link>
-            <span>&copy; {new Date().getFullYear()} Invoice Chase</span>
+      {/* ── Footer ─────────────────────────────────────────────────────── */}
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="mx-auto max-w-6xl px-5 py-14 lg:px-6">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
+            <div className="col-span-2 sm:col-span-1">
+              <Link href="/" className="flex items-center gap-2.5">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-700 ring-1 ring-emerald-900/20">
+                  <span className="text-xs font-black text-white">ic</span>
+                </span>
+                <span className="font-display text-base font-bold tracking-tight text-slate-900">
+                  Invoice Chase
+                </span>
+              </Link>
+              <p className="mt-4 max-w-xs text-sm leading-6 text-slate-600">
+                AI-powered AR for service-based SMBs. Built on Claude, Stripe,
+                and your existing accounting tools.
+              </p>
+            </div>
+            <FooterCol
+              title="Product"
+              links={[
+                { href: "/demo", label: "Demo" },
+                { href: "#features", label: "Features" },
+                { href: "#reputation", label: "Reputation" },
+                { href: "#pricing", label: "Pricing" },
+                { href: "/changelog", label: "Changelog" },
+              ]}
+            />
+            <FooterCol
+              title="Company"
+              links={[
+                { href: "/help", label: "Help & docs" },
+                { href: "/partners", label: "Partner program" },
+                { href: "/integrations/quickbooks", label: "QuickBooks app" },
+              ]}
+            />
+            <FooterCol
+              title="Legal"
+              links={[
+                { href: "/privacy", label: "Privacy" },
+                { href: "/terms", label: "Terms" },
+              ]}
+            />
+          </div>
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-6 text-xs text-slate-500">
+            <span>&copy; {new Date().getFullYear()} Invoice Chase, Inc.</span>
+            <div className="flex items-center gap-4">
+              <span className="inline-flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                SOC 2 posture
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                Encrypted at rest
+              </span>
+            </div>
           </div>
         </div>
       </footer>
     </div>
+  );
+}
+
+function FooterCol({
+  title,
+  links,
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+}) {
+  return (
+    <div>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        {title}
+      </p>
+      <ul className="mt-4 space-y-2.5 text-sm">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              className="text-slate-600 transition hover:text-slate-900"
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function MetricCard({
+  value,
+  unit,
+  label,
+}: {
+  value: string;
+  unit: string;
+  label: string;
+}) {
+  return (
+    <div className="bg-white px-7 py-9 transition hover:bg-slate-50/60">
+      <p className="font-display text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl">
+        {value}
+        {unit ? (
+          <span className="ml-1.5 text-2xl font-semibold text-slate-400 sm:text-3xl">
+            {unit}
+          </span>
+        ) : null}
+      </p>
+      <p className="mt-3 text-sm leading-6 text-slate-600">{label}</p>
+    </div>
+  );
+}
+
+// ── Product mockup card ────────────────────────────────────────────────────
+
+function ProductMockup() {
+  return (
+    <div className="grid grid-cols-1 gap-0 bg-slate-50/30 lg:grid-cols-[260px_minmax(0,1fr)]">
+      {/* sidebar */}
+      <aside className="hidden border-r border-slate-200 bg-white p-5 lg:block">
+        <div className="flex items-center gap-2">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-emerald-500 to-emerald-700">
+            <span className="text-[10px] font-black text-white">ic</span>
+          </span>
+          <span className="text-sm font-semibold text-slate-900">
+            Honest Plumbing
+          </span>
+        </div>
+        <nav className="mt-6 space-y-0.5 text-sm">
+          {[
+            { label: "Dashboard", active: true },
+            { label: "Customers" },
+            { label: "Inbox", badge: 3 },
+            { label: "Payments" },
+            { label: "Forecast" },
+            { label: "Settings" },
+          ].map((t) => (
+            <div
+              key={t.label}
+              className={`flex items-center justify-between rounded-md px-3 py-1.5 ${
+                t.active
+                  ? "bg-slate-900 font-semibold text-white"
+                  : "text-slate-600"
+              }`}
+            >
+              <span>{t.label}</span>
+              {t.badge ? (
+                <span className="inline-flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-semibold text-white">
+                  {t.badge}
+                </span>
+              ) : null}
+            </div>
+          ))}
+        </nav>
+      </aside>
+
+      {/* main */}
+      <div className="p-6">
+        <div className="grid grid-cols-3 gap-4">
+          <MockStat label="Outstanding" value="$54,820" />
+          <MockStat label="Overdue customers" value="14" />
+          <MockStat label="Avg days late" value="21" unit="days" />
+        </div>
+
+        {/* Pulse + Plays */}
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center gap-3">
+              <div className="relative h-14 w-14">
+                <svg className="h-14 w-14 -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke="rgb(241 245 249)"
+                    strokeWidth="10"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="42"
+                    fill="none"
+                    stroke="rgb(16 185 129)"
+                    strokeWidth="10"
+                    strokeDasharray="263.9"
+                    strokeDashoffset="73.9"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-base font-bold tabular-nums text-slate-900">
+                    72
+                  </span>
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+                  Pulse score
+                </p>
+                <p className="text-sm font-semibold text-emerald-700">
+                  Healthy ·{" "}
+                  <span className="text-emerald-600">+8 this week</span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              <Sparkles className="h-2.5 w-2.5 text-emerald-600" /> Today&apos;s
+              plays
+            </p>
+            <ul className="mt-2 space-y-1.5 text-xs">
+              <MockPlay rank={1} name="Riverside Diner" action="Text" amount="$4,200" />
+              <MockPlay rank={2} name="Brown & Co" action="Email" amount="$2,825" />
+            </ul>
+          </div>
+        </div>
+
+        {/* customer rows */}
+        <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          {[
+            { name: "Riverside Diner", days: 47, amt: "$4,200", rep: 612 },
+            { name: "Wells Brothers HVAC", days: 21, amt: "$1,850", rep: 480 },
+            { name: "Cedar Park Schools", days: 8, amt: "$14,500", rep: 760 },
+          ].map((r, i) => (
+            <div
+              key={r.name}
+              className={`flex items-center gap-3 px-4 py-3 text-sm ${i > 0 ? "border-t border-slate-100" : ""}`}
+            >
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-slate-900">{r.name}</p>
+                <p className="text-[11px] text-slate-500">{r.days}d overdue</p>
+              </div>
+              <span className="text-xs font-semibold tabular-nums text-slate-700">
+                {r.amt}
+              </span>
+              <RepBadge score={r.rep} />
+              <button className="inline-flex h-7 items-center gap-1 rounded-md bg-emerald-600 px-2.5 text-[11px] font-semibold text-white">
+                <CreditCard className="h-3 w-3" /> Pay
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MockStat({
+  label,
+  value,
+  unit,
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+}) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+        {label}
+      </p>
+      <p className="font-display mt-1 text-2xl font-bold tabular-nums text-slate-900">
+        {value}
+        {unit ? (
+          <span className="ml-1 text-xs font-normal text-slate-500">
+            {unit}
+          </span>
+        ) : null}
+      </p>
+    </div>
+  );
+}
+
+function MockPlay({
+  rank,
+  name,
+  action,
+  amount,
+}: {
+  rank: number;
+  name: string;
+  action: string;
+  amount: string;
+}) {
+  return (
+    <li className="flex items-center gap-2">
+      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-900 text-[9px] font-bold text-white">
+        {rank}
+      </span>
+      <span className="truncate font-medium text-slate-900">{name}</span>
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
+        {action}
+      </span>
+      <span className="ml-auto text-[11px] font-semibold tabular-nums text-emerald-700">
+        ~{amount}
+      </span>
+    </li>
+  );
+}
+
+function RepBadge({ score }: { score: number }) {
+  const color =
+    score >= 740
+      ? "bg-emerald-500"
+      : score >= 670
+        ? "bg-amber-500"
+        : score >= 580
+          ? "bg-orange-500"
+          : "bg-red-500";
+  return (
+    <span className="hidden items-center gap-1.5 sm:inline-flex">
+      <span className={`h-1.5 w-1.5 rounded-full ${color}`} />
+      <span className="font-mono text-[11px] tabular-nums text-slate-500">
+        {score}
+      </span>
+    </span>
   );
 }

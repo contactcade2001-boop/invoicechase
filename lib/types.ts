@@ -12,6 +12,9 @@ export type Customer = {
   phone: string;
   email?: string;
   address?: string;
+  /** Trailing-12mo revenue from this customer (cents). Optional — when
+   * missing, churn-risk inference falls back to amountOwed × 4. */
+  annualRevenueCents?: number;
 };
 
 export const REPUTATION_MIN = 300;
