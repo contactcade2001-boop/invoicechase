@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { CashflowControlsForm } from "@/components/CashflowControlsForm";
+import { PlaidConnectButton } from "@/components/PlaidConnectButton";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getCashflowConfig } from "@/lib/server/db/cashflow";
+import { isPlaidConfigured } from "@/lib/server/plaid/client";
+import { getPlaidConnection } from "@/lib/server/plaid/repo";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +14,7 @@ export default async function CashflowSettingsPage() {
   if (!user) redirect("/login");
   if (user.role !== "owner") redirect("/dashboard");
   const cfg = getCashflowConfig(user.organizationId!);
+  const plaidConn = getPlaidConnection(user.organizationId!);
   return (
     <div className="flex min-h-screen flex-col bg-stone-50">
       <AppHeader user={user} current="settings" />
@@ -27,6 +31,31 @@ export default async function CashflowSettingsPage() {
             applies to your business — defaults are safe.
           </p>
         </header>
+
+        <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+            Bank connection
+          </p>
+          <h2 className="font-display mt-1 text-lg font-semibold text-stone-900">
+            Live cash on hand via Plaid
+          </h2>
+          <p className="mt-1 text-sm text-stone-600">
+            Securely connect your business bank account. We pull the balance
+            every few minutes so the runway widget and forecast stay accurate.
+          </p>
+          <div className="mt-4">
+            <PlaidConnectButton
+              connected={!!plaidConn}
+              institutionName={plaidConn?.institutionName ?? null}
+              balanceCents={plaidConn?.bankBalanceCents ?? cfg.bankBalanceCents}
+              refreshedAt={
+                plaidConn?.bankBalanceRefreshedAt ?? cfg.bankBalanceRefreshedAt
+              }
+              configured={isPlaidConfigured()}
+            />
+          </div>
+        </section>
+
         <CashflowControlsForm config={cfg} />
       </main>
     </div>

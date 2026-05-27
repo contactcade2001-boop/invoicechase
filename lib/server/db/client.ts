@@ -622,6 +622,8 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["bank_balance_cents", "INTEGER"],
     ["bank_balance_refreshed_at", "INTEGER"],
     ["plaid_item_id", "TEXT"],
+    ["plaid_access_token_enc", "TEXT"],
+    ["plaid_institution_name", "TEXT"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&

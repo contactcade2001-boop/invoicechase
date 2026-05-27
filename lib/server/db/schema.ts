@@ -75,6 +75,10 @@ export const organizations = sqliteTable("organizations", {
   bankBalanceRefreshedAt: integer("bank_balance_refreshed_at"),
   /** Plaid item id if connected, null otherwise. */
   plaidItemId: text("plaid_item_id"),
+  /** Encrypted Plaid access_token (long-lived). */
+  plaidAccessTokenEnc: text("plaid_access_token_enc"),
+  /** Display name for the connected institution (e.g. "Chase Personal"). */
+  plaidInstitutionName: text("plaid_institution_name"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
