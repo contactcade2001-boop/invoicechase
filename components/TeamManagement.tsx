@@ -45,6 +45,8 @@ export function TeamManagement({
       if (r.ok) {
         setInviteEmail("");
         setOkMessage(`Invite sent to ${inviteEmail}.`);
+        // Auto-clear the success banner after 5s so the form feels alive.
+        setTimeout(() => setOkMessage(null), 5000);
       } else {
         setError(r.error);
       }

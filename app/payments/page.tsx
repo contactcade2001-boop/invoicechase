@@ -1,4 +1,5 @@
-import { Inbox } from "lucide-react";
+import { ArrowRight, Inbox } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppHeader } from "@/components/AppHeader";
 import { RetrySyncButton } from "@/components/RetrySyncButton";
@@ -107,12 +108,13 @@ export default async function PaymentsPage() {
               Money collected through Invoice Chase.
             </p>
           </div>
-          <a
+          <Link
             href="/payment-plans"
             className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
           >
-            Payment plans →
-          </a>
+            Payment plans
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

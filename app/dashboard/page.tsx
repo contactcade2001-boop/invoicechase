@@ -108,6 +108,7 @@ export default async function DashboardPage({
             error={sp.qbo_error}
             showXero={isXeroConfigured()}
             showJobber={isJobberConfigured()}
+            canConnect={user.role === "owner"}
           />
         )}
       </main>

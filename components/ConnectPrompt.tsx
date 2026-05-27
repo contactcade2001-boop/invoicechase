@@ -4,10 +4,16 @@ export function ConnectPrompt({
   error,
   showXero = false,
   showJobber = false,
+  canConnect = true,
 }: {
   error?: string;
   showXero?: boolean;
   showJobber?: boolean;
+  /**
+   * Owners can run OAuth; managers/technicians get a "waiting on owner"
+   * message instead of a button that just redirects them right back here.
+   */
+  canConnect?: boolean;
 }) {
   return (
     <div className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center text-center">
@@ -27,6 +33,12 @@ export function ConnectPrompt({
             Connection failed: {error}
           </div>
         ) : null}
+        {!canConnect ? (
+          <div className="mt-6 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-800 ring-1 ring-inset ring-amber-200">
+            Only your account owner can connect the accounting system.
+            Once they do, your dashboard fills in automatically.
+          </div>
+        ) : (
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <a
             href="/api/qbo/connect"
@@ -51,9 +63,12 @@ export function ConnectPrompt({
             </a>
           ) : null}
         </div>
-        <p className="mt-3 text-xs text-slate-500">
-          Read-only access to customers and invoices. Disconnect any time.
-        </p>
+        )}
+        {canConnect ? (
+          <p className="mt-3 text-xs text-slate-500">
+            Read-only access to customers and invoices. Disconnect any time.
+          </p>
+        ) : null}
       </div>
     </div>
   );
