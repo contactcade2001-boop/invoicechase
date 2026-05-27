@@ -42,7 +42,7 @@ export default async function InboxThreadPage({
   const messages = listAllMessagesForConv(conversation.id);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="inbox" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 py-6 sm:py-8">
         <Link

@@ -44,7 +44,7 @@ export default async function CustomerDetailPage({
   const photos = listJobPhotos(orgId, id);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="dashboard" />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:py-10">
         {detail.ok ? (

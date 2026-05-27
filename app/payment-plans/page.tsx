@@ -52,7 +52,7 @@ export default async function PaymentPlansPage() {
   }));
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="payments" />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <h1 className="text-3xl font-bold tracking-tight">Payment plans</h1>

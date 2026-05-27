@@ -22,7 +22,7 @@ export default async function LeaderboardPage() {
   const top = board[0];
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="team" />
       <main className="mx-auto w-full max-w-3xl flex-1 px-5 py-10 lg:px-6">
         <header className="mb-8">

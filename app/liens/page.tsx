@@ -13,7 +13,7 @@ export default async function LiensPage() {
   if (user.role !== "owner") redirect("/dashboard");
   const liens = listOpenLiens(user.organizationId!);
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="reports" />
       <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10 lg:px-6">
         <header className="mb-8">

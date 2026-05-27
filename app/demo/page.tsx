@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function DemoPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       {/* Sticky demo banner */}
       <div className="sticky top-0 z-30 border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-center text-sm">
         <span className="font-semibold text-amber-900">Live demo</span>

@@ -71,7 +71,7 @@ export default async function PartnerDashboardPage() {
   ).length;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <header className="border-b border-slate-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">

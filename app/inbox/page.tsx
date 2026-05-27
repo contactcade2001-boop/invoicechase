@@ -62,7 +62,7 @@ export default async function InboxPage({
   const hasPrev = page > 1;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="inbox" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8 sm:py-10">
         <div className="flex items-end justify-between">

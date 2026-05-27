@@ -96,7 +96,7 @@ export default async function WebhookEventsPage({
   const exportHref = `/webhook-events/export.csv${exportQs.toString() ? `?${exportQs}` : ""}`;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="settings" />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-4 px-4 py-8 sm:py-10">
         <div>

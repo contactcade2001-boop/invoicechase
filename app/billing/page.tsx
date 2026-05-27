@@ -98,7 +98,7 @@ export default async function BillingPage({
   const referralUrl = `${getAppBaseUrl()}/r/biz/${org.customerReferralCode}`;
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="billing" />
 
       <main className="mx-auto w-full max-w-2xl flex-1 space-y-6 px-4 py-10">

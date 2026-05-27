@@ -19,7 +19,7 @@ export default async function TeamPage() {
   const invites = listInvitesForOrg(orgId);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="team" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8 sm:py-10">
         <div>

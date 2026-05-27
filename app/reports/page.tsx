@@ -30,7 +30,7 @@ export default async function ReportsPage() {
   const defaultMonth = defaultMonthValue();
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="reports" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8">
         <h1 className="text-3xl font-bold tracking-tight">Reports</h1>

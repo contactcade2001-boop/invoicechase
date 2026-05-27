@@ -2,7 +2,7 @@ import { Skeleton, SkeletonCard, SkeletonRow } from "@/components/Skeleton";
 
 export default function Loading() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50">
+    <div className="flex min-h-screen flex-col">
       <div className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 lg:px-6">
           <Skeleton className="h-5 w-40" />

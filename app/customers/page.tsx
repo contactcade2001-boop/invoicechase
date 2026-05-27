@@ -67,7 +67,7 @@ export default async function CustomersPage({
     : [];
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="customers" />
       <main className="mx-auto w-full max-w-5xl flex-1 space-y-5 px-4 py-8">
         <div className="flex flex-wrap items-end justify-between gap-3">

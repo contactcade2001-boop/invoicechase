@@ -65,7 +65,7 @@ const STATUS_STYLE: Record<
 export default function StatusPage() {
   const allUp = services.every((s) => s.status === "operational");
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50">
+    <div className="flex min-h-screen flex-col">
       <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-16 max-w-5xl items-center px-5 lg:px-6">
           <Link href="/" className="flex items-center gap-2">

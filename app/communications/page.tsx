@@ -39,7 +39,7 @@ export default async function CommunicationsPage() {
   const templateStats = listTemplateStats(orgId);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col">
       <AppHeader user={user} current="communications" />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-8 px-4 py-8">
         <div>
