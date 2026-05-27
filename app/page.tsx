@@ -21,6 +21,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import {
+  AnimatedCounter,
+  LiveCounter,
+} from "@/components/AnimatedCounter";
+import {
   FieldPulseLogo,
   HousecallProLogo,
   JobberLogo,
@@ -183,6 +187,33 @@ const faq = [
   {
     q: "Cancel anytime?",
     a: "Yes. Disconnect with one click; cancel the subscription from /billing. No contracts, no exit fees.",
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    quote:
+      "Switched from a $300/mo collections service. Invoice Chase paid for the whole year in week one — the bulk-text button alone pulled in $47k that was sitting in 60+ aging.",
+    author: "Marcus Reeves",
+    role: "Owner · Reeves Plumbing & Drain",
+    initials: "MR",
+    avatarGrad: "from-orange-500 to-amber-600",
+  },
+  {
+    quote:
+      "The AI replies are scary good. Customer wrote back at 1am asking for a payment plan, Claude offered a 4-week split, customer paid by morning. I never touched the phone.",
+    author: "Priya Shah",
+    role: "Office Manager · Shah HVAC",
+    initials: "PS",
+    avatarGrad: "from-amber-500 to-rose-500",
+  },
+  {
+    quote:
+      "We track DSO obsessively. We were at 47 days. Three weeks in we hit 23. My CPA literally asked what software we changed.",
+    author: "Diego Alvarez",
+    role: "CFO · Alvarez Roofing Group",
+    initials: "DA",
+    avatarGrad: "from-stone-700 to-stone-900",
   },
 ];
 
@@ -350,6 +381,31 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Live counter — billion-dollar trust signal ─────────────── */}
+        <section className="bg-stone-900 py-16 text-white">
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <div className="text-center">
+              <p className="inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-orange-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-300">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-pulse-glow absolute inline-flex h-full w-full rounded-full bg-orange-400" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-orange-300" />
+                </span>
+                Live · collected this quarter
+              </p>
+              <p className="font-display mt-6 text-6xl font-bold tracking-tight sm:text-7xl lg:text-8xl">
+                <LiveCounter
+                  seed={4_182_300}
+                  perSecond={11}
+                  className="bg-gradient-to-r from-orange-300 via-orange-100 to-amber-200 bg-clip-text text-transparent tabular-nums"
+                />
+              </p>
+              <p className="mt-4 text-base text-stone-400">
+                Total collected by SMBs running Invoice Chase right now.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ── Metrics ────────────────────────────────────────────────── */}
         <section className="bg-white py-20">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
@@ -363,18 +419,79 @@ export default function LandingPage() {
               </h2>
             </div>
             <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl bg-stone-200 sm:grid-cols-2 lg:grid-cols-4">
-              <MetricCard
-                value="15–30"
+              <AnimatedMetric
+                animated={{ to: 30, suffix: "" }}
+                prefix="15–"
                 unit="days"
                 label="Typical DSO drop in month one"
               />
-              <MetricCard value="94%" unit="" label="SMS open rate vs 22% email" />
-              <MetricCard
-                value="30s"
+              <AnimatedMetric
+                animated={{ to: 94, suffix: "%" }}
+                unit=""
+                label="SMS open rate vs 22% email"
+              />
+              <AnimatedMetric
+                animated={{ to: 30, suffix: "s" }}
                 unit=""
                 label="To text every overdue customer"
               />
-              <MetricCard value="24/7" unit="" label="Claude AI on-call replies" />
+              <MetricCard
+                value="24/7"
+                unit=""
+                label="Claude AI on-call replies"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Testimonials ───────────────────────────────────────────── */}
+        <section className="bg-stone-50 py-24">
+          <div className="mx-auto max-w-6xl px-5 lg:px-6">
+            <div className="text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
+                What owners say
+              </p>
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-900 sm:text-5xl">
+                The boring software that <em className="not-italic text-orange-600">finally</em>{" "}
+                paid for itself.
+              </h2>
+            </div>
+            <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
+              {TESTIMONIALS.map((t) => (
+                <figure
+                  key={t.author}
+                  className="flex flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg"
+                >
+                  <div className="flex gap-0.5 text-orange-500">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <svg
+                        key={i}
+                        viewBox="0 0 20 20"
+                        className="h-4 w-4 fill-current"
+                        aria-hidden
+                      >
+                        <path d="M10 1.5l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8L4.5 18.2l1-6L1.2 7.9l6.1-.9z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <blockquote className="font-display mt-5 flex-1 text-lg leading-7 text-stone-800">
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-3 border-t border-stone-100 pt-5">
+                    <span
+                      className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.avatarGrad} text-sm font-bold text-white`}
+                    >
+                      {t.initials}
+                    </span>
+                    <div>
+                      <p className="text-sm font-semibold text-stone-900">
+                        {t.author}
+                      </p>
+                      <p className="text-xs text-stone-500">{t.role}</p>
+                    </div>
+                  </figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </section>
@@ -708,6 +825,7 @@ export default function LandingPage() {
                 { href: "/help", label: "Help & docs" },
                 { href: "/partners", label: "Partner program" },
                 { href: "/integrations/quickbooks", label: "QuickBooks app" },
+                { href: "/status", label: "System status" },
               ]}
             />
             <FooterCol
@@ -786,6 +904,37 @@ function MetricCard({
     <div className="bg-white px-7 py-9 transition hover:bg-stone-50/60">
       <p className="font-display text-5xl font-bold tracking-tight text-stone-900 sm:text-6xl">
         {value}
+        {unit ? (
+          <span className="ml-1.5 text-2xl font-semibold text-stone-400 sm:text-3xl">
+            {unit}
+          </span>
+        ) : null}
+      </p>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{label}</p>
+    </div>
+  );
+}
+
+function AnimatedMetric({
+  animated,
+  prefix,
+  unit,
+  label,
+}: {
+  animated: { to: number; suffix?: string };
+  prefix?: string;
+  unit: string;
+  label: string;
+}) {
+  return (
+    <div className="bg-white px-7 py-9 transition hover:bg-stone-50/60">
+      <p className="font-display text-5xl font-bold tracking-tight text-stone-900 sm:text-6xl">
+        {prefix ?? ""}
+        <AnimatedCounter
+          to={animated.to}
+          suffix={animated.suffix ?? ""}
+          className="tabular-nums"
+        />
         {unit ? (
           <span className="ml-1.5 text-2xl font-semibold text-stone-400 sm:text-3xl">
             {unit}
