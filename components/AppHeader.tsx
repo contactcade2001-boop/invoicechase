@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { CommandPalette } from "@/components/CommandPalette";
+import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp";
+import { NotificationsBell } from "@/components/NotificationsBell";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { UserRole, UserRow } from "@/lib/server/db/schema";
 import { unreadInboxCountFor } from "@/lib/server/inboxBadge";
 
@@ -139,9 +143,13 @@ export async function AppHeader({
             );
           })}
         </nav>
-        <div className="hidden items-center gap-3 text-xs text-stone-500 sm:flex">
-          <span className="hidden lg:inline">{user.email}</span>
-          <form action="/api/auth/logout" method="post">
+        <div className="flex items-center gap-1">
+          <NotificationsBell />
+          <ThemeToggle />
+          <span className="hidden lg:inline lg:ml-2 lg:text-xs lg:text-stone-500">
+            {user.email}
+          </span>
+          <form action="/api/auth/logout" method="post" className="ml-1">
             <button
               type="submit"
               className="rounded-md px-2.5 py-1.5 text-xs font-medium text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
@@ -151,6 +159,8 @@ export async function AppHeader({
           </form>
         </div>
       </div>
+      <CommandPalette />
+      <KeyboardShortcutsHelp />
     </header>
   );
 }

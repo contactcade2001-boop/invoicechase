@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Class-based dark mode (toggle .dark on <html>). */
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-risk-low: #16a34a;
   --color-risk-medium: #d97706;
