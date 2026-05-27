@@ -6,6 +6,29 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
+export const customerMetadata = sqliteTable(
+  "customer_metadata",
+  {
+    organizationId: integer("organization_id").notNull(),
+    customerId: text("customer_id").notNull(),
+    note: text("note"),
+    snoozedUntil: integer("snoozed_until"),
+    tags: text("tags"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.organizationId, t.customerId] })],
+);
+
+export const onboardingState = sqliteTable("onboarding_state", {
+  organizationId: integer("organization_id").primaryKey(),
+  completed: integer("completed").notNull().default(0),
+  businessName: text("business_name"),
+  industry: text("industry"),
+  accentColor: text("accent_color"),
+  preferredIntegration: text("preferred_integration"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
 export const organizations = sqliteTable("organizations", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),

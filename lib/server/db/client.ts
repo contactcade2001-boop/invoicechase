@@ -432,6 +432,27 @@ CREATE TABLE IF NOT EXISTS payment_plan_installments (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS payment_plan_installments_plan ON payment_plan_installments(plan_id);
+
+CREATE TABLE IF NOT EXISTS customer_metadata (
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  note TEXT,
+  snoozed_until INTEGER,
+  tags TEXT,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (organization_id, customer_id)
+);
+CREATE INDEX IF NOT EXISTS customer_metadata_org ON customer_metadata(organization_id);
+
+CREATE TABLE IF NOT EXISTS onboarding_state (
+  organization_id INTEGER PRIMARY KEY,
+  completed INTEGER NOT NULL DEFAULT 0,
+  business_name TEXT,
+  industry TEXT,
+  accent_color TEXT,
+  preferred_integration TEXT,
+  updated_at INTEGER NOT NULL
+);
 `;
 
 function hasColumn(
