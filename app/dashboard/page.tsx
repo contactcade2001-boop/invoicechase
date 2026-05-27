@@ -6,6 +6,7 @@ import {
   StripeLogo,
   XeroLogo,
 } from "@/components/BrandLogos";
+import { BehavioralPatternsCard } from "@/components/BehavioralPatternsCard";
 import { ConnectPrompt } from "@/components/ConnectPrompt";
 import { Dashboard } from "@/components/Dashboard";
 import { DashboardForecastSnippet } from "@/components/DashboardForecastSnippet";
@@ -13,6 +14,8 @@ import {
   OnboardingChecklist,
   type OnboardingStep,
 } from "@/components/OnboardingChecklist";
+import { PulseScoreCard } from "@/components/PulseScoreCard";
+import { TodaysPlaysCard } from "@/components/TodaysPlaysCard";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { isJobberConfigured, isXeroConfigured } from "@/lib/server/env";
 import {
@@ -27,6 +30,9 @@ import {
   getSubscriptionByOrgId,
   isActive,
 } from "@/lib/server/db/subscriptions";
+import { getBehavioralPatterns } from "@/lib/server/insights/patterns";
+import { getTodaysPlays } from "@/lib/server/insights/plays";
+import { computePulse } from "@/lib/server/insights/pulse";
 import { getDashboardData } from "@/lib/server/qbo/sync";
 
 export const dynamic = "force-dynamic";
@@ -134,6 +140,20 @@ export default async function DashboardPage({
               stale={data.stale ?? false}
               source={
                 qboConn ? "qbo" : xeroConn ? "xero" : jobberConn ? "jobber" : null
+              }
+              pulseSlot={<PulseScoreCard pulse={computePulse(data.customers)} />}
+              playsSlot={
+                <TodaysPlaysCard
+                  result={await getTodaysPlays(orgId, data.customers)}
+                />
+              }
+              patternsSlot={
+                <BehavioralPatternsCard
+                  result={await getBehavioralPatterns(
+                    orgId,
+                    data.customers,
+                  )}
+                />
               }
             />
             <DashboardForecastSnippet organizationId={orgId} />

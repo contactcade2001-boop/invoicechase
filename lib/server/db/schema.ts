@@ -1,5 +1,10 @@
 import "server-only";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 
 export const organizations = sqliteTable("organizations", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -196,6 +201,19 @@ export const reminderSends = sqliteTable("reminder_sends", {
   sentAt: integer("sent_at").notNull(),
   createdAt: integer("created_at").notNull(),
 });
+
+export const insightsCache = sqliteTable(
+  "insights_cache",
+  {
+    organizationId: integer("organization_id").notNull(),
+    kind: text("kind").notNull(),
+    payload: text("payload").notNull(),
+    generatedAt: integer("generated_at").notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.organizationId, t.kind] }),
+  }),
+);
 
 export const payments = sqliteTable("payments", {
   id: integer("id").primaryKey({ autoIncrement: true }),

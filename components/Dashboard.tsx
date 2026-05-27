@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { AgingBreakdown } from "@/components/AgingBreakdown";
 import { BulkEmailButton } from "@/components/BulkEmailButton";
 import { BulkTextButton } from "@/components/BulkTextButton";
@@ -22,6 +22,10 @@ type Props = {
   refreshedAt: number | null;
   stale: boolean;
   source: "qbo" | "xero" | "jobber" | null;
+  /** Server-rendered slots that need to live inside the dashboard layout. */
+  pulseSlot?: ReactNode;
+  playsSlot?: ReactNode;
+  patternsSlot?: ReactNode;
 };
 
 export function Dashboard({
@@ -30,6 +34,9 @@ export function Dashboard({
   refreshedAt,
   stale,
   source,
+  pulseSlot,
+  playsSlot,
+  patternsSlot,
 }: Props) {
   const [filter, setFilter] = useState<FilterKey>("all");
 
@@ -65,6 +72,15 @@ export function Dashboard({
         overdueCount={counts.overdue}
         source={source}
       />
+
+      {pulseSlot}
+
+      {playsSlot || patternsSlot ? (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {playsSlot}
+          {patternsSlot}
+        </div>
+      ) : null}
 
       <AgingBreakdown customers={customers} />
 
