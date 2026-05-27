@@ -2,7 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/server/auth/session";
+import { encryptToken } from "@/lib/server/crypto";
 import { logAuditEvent } from "@/lib/server/db/auditEvents";
+import {
+  upsertFieldPulseConnection,
+  upsertWorkizConnection,
+} from "@/lib/server/db/fsmConnections";
 import {
   findOrgByPortalSlug,
   setOrgCashflowConfig,
@@ -148,6 +153,63 @@ export async function saveQboRefundAccounts(input: {
     qboRefundItemId: itemId,
   });
   revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function saveFieldPulseConnection(input: {
+  apiKey: string;
+  accountName: string;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const apiKey = input.apiKey.trim();
+  if (apiKey.length < 8) return { ok: false, error: "invalid_api_key" };
+  upsertFieldPulseConnection({
+    organizationId: user.organizationId!,
+    accountName: input.accountName.trim() || null,
+    apiKeyEnc: encryptToken(apiKey),
+  });
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "fsm.connected",
+    targetType: "fieldpulse",
+    targetId: String(user.organizationId),
+  });
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function saveWorkizConnection(input: {
+  apiToken: string;
+  apiSecret: string;
+  accountName: string;
+}): Promise<OrgUpdateResult> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "not_signed_in" };
+  if (user.role !== "owner") return { ok: false, error: "forbidden" };
+  const apiToken = input.apiToken.trim();
+  if (apiToken.length < 8) return { ok: false, error: "invalid_api_token" };
+  const apiSecret = input.apiSecret.trim();
+  upsertWorkizConnection({
+    organizationId: user.organizationId!,
+    accountName: input.accountName.trim() || null,
+    apiTokenEnc: encryptToken(apiToken),
+    apiSecretEnc: apiSecret ? encryptToken(apiSecret) : null,
+  });
+  logAuditEvent({
+    organizationId: user.organizationId!,
+    userId: user.id,
+    actorEmail: user.email,
+    kind: "fsm.connected",
+    targetType: "workiz",
+    targetId: String(user.organizationId),
+  });
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 

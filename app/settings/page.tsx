@@ -11,18 +11,31 @@ import {
   WorkizLogo,
   XeroLogo,
 } from "@/components/BrandLogos";
+import { FieldPulseConnectForm } from "@/components/FieldPulseConnectForm";
 import { PortalBranding } from "@/components/PortalBranding";
 import {
   QboRefundAccounts,
   type QboPickItem,
 } from "@/components/QboRefundAccounts";
+import { WorkizConnectForm } from "@/components/WorkizConnectForm";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getA2pRegistration } from "@/lib/server/db/a2p";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
+import {
+  getFieldPulseConnection,
+  getHousecallProConnection,
+  getServiceTitanConnection,
+  getWorkizConnection,
+} from "@/lib/server/db/fsmConnections";
 import { getJobberConnectionForOrg } from "@/lib/server/db/jobberConnections";
 import { getOrgById } from "@/lib/server/db/organizations";
 import { getXeroConnectionForOrg } from "@/lib/server/db/xeroConnections";
-import { isJobberConfigured, isXeroConfigured } from "@/lib/server/env";
+import {
+  isHousecallProConfigured,
+  isJobberConfigured,
+  isServiceTitanConfigured,
+  isXeroConfigured,
+} from "@/lib/server/env";
 import {
   getSubscriptionByOrgId,
   isActive,
@@ -46,12 +59,22 @@ export default async function SettingsPage() {
   const conn = getConnectionForOrg(orgId);
   const xeroConn = getXeroConnectionForOrg(orgId);
   const jobberConn = getJobberConnectionForOrg(orgId);
+  const hcpConn = getHousecallProConnection(orgId);
+  const stConn = getServiceTitanConnection(orgId);
+  const fpConn = getFieldPulseConnection(orgId);
+  const wzConn = getWorkizConnection(orgId);
   const xeroEnabled = isXeroConfigured();
   const jobberEnabled = isJobberConfigured();
+  const hcpEnabled = isHousecallProConfigured();
+  const stEnabled = isServiceTitanConfigured();
   const businessName =
     conn?.companyName ??
     xeroConn?.tenantName ??
     jobberConn?.accountName ??
+    hcpConn?.accountName ??
+    stConn?.tenantName ??
+    fpConn?.accountName ??
+    wzConn?.accountName ??
     "Your business";
   const isOwner = user.role === "owner";
   const a2p = getA2pRegistration(orgId);
@@ -215,31 +238,156 @@ export default async function SettingsPage() {
 
               <div className="mt-5">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  Coming soon
+                  Field service platforms (Beta)
                 </p>
-                <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                  {[
-                    { name: "Housecall Pro", Logo: HousecallProLogo },
-                    { name: "ServiceTitan", Logo: ServiceTitanLogo },
-                    { name: "FieldPulse", Logo: FieldPulseLogo },
-                    { name: "Workiz", Logo: WorkizLogo },
-                  ].map(({ name, Logo }) => (
-                    <div
-                      key={name}
-                      className="rounded-lg border border-dashed border-slate-300 px-3 py-2 text-xs"
-                    >
-                      <div className="flex items-center gap-1.5">
-                        <Logo size={16} />
-                        <p className="font-semibold text-slate-700">{name}</p>
-                      </div>
-                      <a
-                        href={`mailto:support@invoicechase.com?subject=Request%20${encodeURIComponent(name)}%20integration`}
-                        className="mt-1 inline-block text-[11px] text-slate-500 underline-offset-2 hover:underline"
-                      >
-                        Request priority →
-                      </a>
+                <p className="mt-1 text-xs text-slate-500">
+                  Connections work today. Live sync rolls out per tenant once
+                  vendor API access is approved — until then customer data
+                  shows the QuickBooks/Xero/Jobber feed.
+                </p>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {/* Housecall Pro */}
+                  <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <div className="flex items-center gap-2">
+                      <HousecallProLogo size={20} />
+                      <p className="text-sm font-semibold">Housecall Pro</p>
                     </div>
-                  ))}
+                    {!hcpEnabled ? (
+                      <p className="mt-2 text-xs text-slate-500">
+                        Set <code className="font-mono">HOUSECALLPRO_*</code>{" "}
+                        env vars after partner approval.
+                      </p>
+                    ) : hcpConn ? (
+                      <>
+                        <p className="mt-2 text-xs text-slate-600">Connected</p>
+                        <form
+                          action="/api/housecallpro/disconnect"
+                          method="post"
+                          className="mt-3"
+                        >
+                          <button
+                            type="submit"
+                            className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                          >
+                            Disconnect Housecall Pro
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <a
+                        href="/api/housecallpro/connect"
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-100"
+                      >
+                        <HousecallProLogo size={14} />
+                        Connect Housecall Pro
+                      </a>
+                    )}
+                  </div>
+
+                  {/* ServiceTitan */}
+                  <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <div className="flex items-center gap-2">
+                      <ServiceTitanLogo size={20} />
+                      <p className="text-sm font-semibold">ServiceTitan</p>
+                    </div>
+                    {!stEnabled ? (
+                      <p className="mt-2 text-xs text-slate-500">
+                        Set <code className="font-mono">SERVICETITAN_*</code>{" "}
+                        env vars after partner approval.
+                      </p>
+                    ) : stConn ? (
+                      <>
+                        <p className="mt-2 text-xs text-slate-600">
+                          Tenant{" "}
+                          <span className="font-mono">{stConn.tenantId}</span>
+                        </p>
+                        <form
+                          action="/api/servicetitan/disconnect"
+                          method="post"
+                          className="mt-3"
+                        >
+                          <button
+                            type="submit"
+                            className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                          >
+                            Disconnect ServiceTitan
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <a
+                        href="/api/servicetitan/connect"
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 ring-1 ring-inset ring-slate-300 hover:bg-slate-100"
+                      >
+                        <ServiceTitanLogo size={14} />
+                        Connect ServiceTitan
+                      </a>
+                    )}
+                  </div>
+
+                  {/* FieldPulse (API key) */}
+                  <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <div className="flex items-center gap-2">
+                      <FieldPulseLogo size={20} />
+                      <p className="text-sm font-semibold">FieldPulse</p>
+                    </div>
+                    {fpConn ? (
+                      <>
+                        <p className="mt-2 text-xs text-slate-600">
+                          Connected as{" "}
+                          <span className="font-mono">
+                            {fpConn.accountName ?? `org #${orgId}`}
+                          </span>
+                        </p>
+                        <form
+                          action="/api/fieldpulse/disconnect"
+                          method="post"
+                          className="mt-3"
+                        >
+                          <button
+                            type="submit"
+                            className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                          >
+                            Disconnect FieldPulse
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <FieldPulseConnectForm initialAccountName={null} />
+                    )}
+                  </div>
+
+                  {/* Workiz (API token + secret) */}
+                  <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
+                    <div className="flex items-center gap-2">
+                      <WorkizLogo size={20} />
+                      <p className="text-sm font-semibold">Workiz</p>
+                    </div>
+                    {wzConn ? (
+                      <>
+                        <p className="mt-2 text-xs text-slate-600">
+                          Connected as{" "}
+                          <span className="font-mono">
+                            {wzConn.accountName ?? `org #${orgId}`}
+                          </span>
+                        </p>
+                        <form
+                          action="/api/workiz/disconnect"
+                          method="post"
+                          className="mt-3"
+                        >
+                          <button
+                            type="submit"
+                            className="text-xs font-semibold text-red-700 underline-offset-2 hover:underline"
+                          >
+                            Disconnect Workiz
+                          </button>
+                        </form>
+                      </>
+                    ) : (
+                      <WorkizConnectForm initialAccountName={null} />
+                    )}
+                  </div>
                 </div>
               </div>
             </section>

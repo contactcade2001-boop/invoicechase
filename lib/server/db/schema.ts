@@ -255,6 +255,51 @@ export const jobberConnections = sqliteTable("jobber_connections", {
   updatedAt: integer("updated_at").notNull(),
 });
 
+export const housecallProConnections = sqliteTable("housecallpro_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull().unique(),
+  accountId: text("account_id"),
+  accountName: text("account_name"),
+  accessTokenEnc: text("access_token_enc").notNull(),
+  refreshTokenEnc: text("refresh_token_enc"),
+  accessTokenExpiresAt: integer("access_token_expires_at").notNull(),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const serviceTitanConnections = sqliteTable("servicetitan_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull().unique(),
+  tenantId: text("tenant_id").notNull(),
+  tenantName: text("tenant_name"),
+  accessTokenEnc: text("access_token_enc").notNull(),
+  refreshTokenEnc: text("refresh_token_enc"),
+  accessTokenExpiresAt: integer("access_token_expires_at").notNull(),
+  refreshTokenExpiresAt: integer("refresh_token_expires_at"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const fieldPulseConnections = sqliteTable("fieldpulse_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull().unique(),
+  accountName: text("account_name"),
+  apiKeyEnc: text("api_key_enc").notNull(),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const workizConnections = sqliteTable("workiz_connections", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull().unique(),
+  accountName: text("account_name"),
+  apiTokenEnc: text("api_token_enc").notNull(),
+  apiSecretEnc: text("api_secret_enc"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
 export const qboDashboardCache = sqliteTable("qbo_dashboard_cache", {
   organizationId: integer("organization_id").primaryKey(),
   payload: text("payload").notNull(),
@@ -375,6 +420,13 @@ export type PaymentRow = typeof payments.$inferSelect;
 export type QboConnectionRow = typeof qboConnections.$inferSelect;
 export type XeroConnectionRow = typeof xeroConnections.$inferSelect;
 export type JobberConnectionRow = typeof jobberConnections.$inferSelect;
+export type HousecallProConnectionRow =
+  typeof housecallProConnections.$inferSelect;
+export type ServiceTitanConnectionRow =
+  typeof serviceTitanConnections.$inferSelect;
+export type FieldPulseConnectionRow =
+  typeof fieldPulseConnections.$inferSelect;
+export type WorkizConnectionRow = typeof workizConnections.$inferSelect;
 export type QboDashboardCacheRow = typeof qboDashboardCache.$inferSelect;
 export type PartnerRow = typeof partners.$inferSelect;
 export type PartnerReferralRow = typeof partnerReferrals.$inferSelect;

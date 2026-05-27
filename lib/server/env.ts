@@ -60,6 +60,49 @@ export function isJobberConfigured(): boolean {
   );
 }
 
+export function getHousecallProConfig() {
+  return {
+    clientId: required("HOUSECALLPRO_CLIENT_ID"),
+    clientSecret: required("HOUSECALLPRO_CLIENT_SECRET"),
+    redirectUri: required("HOUSECALLPRO_REDIRECT_URI"),
+  };
+}
+
+export function isHousecallProConfigured(): boolean {
+  return !!(
+    process.env.HOUSECALLPRO_CLIENT_ID &&
+    process.env.HOUSECALLPRO_CLIENT_SECRET &&
+    process.env.HOUSECALLPRO_REDIRECT_URI
+  );
+}
+
+export function getServiceTitanConfig() {
+  return {
+    clientId: required("SERVICETITAN_CLIENT_ID"),
+    clientSecret: required("SERVICETITAN_CLIENT_SECRET"),
+    redirectUri: required("SERVICETITAN_REDIRECT_URI"),
+    appKey: process.env.SERVICETITAN_APP_KEY ?? "",
+  };
+}
+
+export function isServiceTitanConfigured(): boolean {
+  return !!(
+    process.env.SERVICETITAN_CLIENT_ID &&
+    process.env.SERVICETITAN_CLIENT_SECRET &&
+    process.env.SERVICETITAN_REDIRECT_URI
+  );
+}
+
+// FieldPulse + Workiz use API-key auth (no env-level OAuth secrets),
+// so they're always available — the per-org credential is what gates use.
+export function isFieldPulseAvailable(): boolean {
+  return true;
+}
+
+export function isWorkizAvailable(): boolean {
+  return true;
+}
+
 export function getStripeConfig() {
   return {
     secretKey: required("STRIPE_SECRET_KEY"),

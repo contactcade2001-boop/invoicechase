@@ -262,6 +262,51 @@ CREATE TABLE IF NOT EXISTS jobber_connections (
 );
 CREATE INDEX IF NOT EXISTS jobber_connections_org_id ON jobber_connections(organization_id);
 
+CREATE TABLE IF NOT EXISTS housecallpro_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  account_id TEXT,
+  account_name TEXT,
+  access_token_enc TEXT NOT NULL,
+  refresh_token_enc TEXT,
+  access_token_expires_at INTEGER NOT NULL,
+  refresh_token_expires_at INTEGER,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS servicetitan_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  tenant_id TEXT NOT NULL,
+  tenant_name TEXT,
+  access_token_enc TEXT NOT NULL,
+  refresh_token_enc TEXT,
+  access_token_expires_at INTEGER NOT NULL,
+  refresh_token_expires_at INTEGER,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS fieldpulse_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  account_name TEXT,
+  api_key_enc TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS workiz_connections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  account_name TEXT,
+  api_token_enc TEXT NOT NULL,
+  api_secret_enc TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS reminder_sends (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id INTEGER NOT NULL,

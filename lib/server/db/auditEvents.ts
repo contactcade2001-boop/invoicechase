@@ -29,6 +29,8 @@ export type AuditKind =
   | "jobber.connected"
   | "jobber.disconnected"
   | "jobber.payment_synced"
+  | "fsm.connected"
+  | "fsm.disconnected"
   | "stripe.connect_started"
   | "sms.text_sent"
   | "sms.bulk_text_sent"
