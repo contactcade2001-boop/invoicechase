@@ -16,8 +16,6 @@ import {
   QboRefundAccounts,
   type QboPickItem,
 } from "@/components/QboRefundAccounts";
-import { EmailReminderTemplateEditor } from "@/components/EmailReminderTemplateEditor";
-import { SmsTemplateEditor } from "@/components/SmsTemplateEditor";
 import { getCurrentUser } from "@/lib/server/auth/session";
 import { getA2pRegistration } from "@/lib/server/db/a2p";
 import { getConnectionForOrg } from "@/lib/server/db/connections";
@@ -85,34 +83,6 @@ export default async function SettingsPage() {
             Customize how Invoice Chase reaches out to your customers.
           </p>
         </div>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">SMS template</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Used for both single-customer texts and the bulk-text button.
-          </p>
-          <div className="mt-5">
-            <SmsTemplateEditor
-              initial={user.smsTemplate ?? ""}
-              businessName={businessName}
-            />
-          </div>
-        </section>
-
-        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <h2 className="text-lg font-semibold text-slate-900">
-            Email reminder template
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Used for the Email button on customer rows and the bulk-email path.
-          </p>
-          <div className="mt-5">
-            <EmailReminderTemplateEditor
-              initial={user.emailReminderTemplate ?? ""}
-              businessName={businessName}
-            />
-          </div>
-        </section>
 
         {isOwner ? (
           <>

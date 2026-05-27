@@ -247,29 +247,42 @@ export default function LandingPage() {
           </p>
         </section>
 
-        {/* Brand strip — instant trust signal for the tools we plug into */}
-        <section className="border-y border-slate-200 bg-slate-50 py-8">
-          <div className="mx-auto max-w-4xl px-4">
-            <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-500">
-              Works with
+        {/* One-click integrations — CTA per app */}
+        <section className="border-y border-slate-200 bg-slate-50 py-14">
+          <div className="mx-auto max-w-5xl px-4">
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-emerald-700">
+              One-click integrations
             </p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <QuickBooksLogo size={22} />
-                QuickBooks Online
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <XeroLogo size={22} />
-                Xero
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <JobberLogo size={22} />
-                Jobber
-              </span>
-              <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <StripeLogo size={22} />
-                Stripe
-              </span>
+            <h2 className="mt-2 text-center text-2xl font-bold tracking-tight">
+              Connect what you already use
+            </h2>
+            <p className="mx-auto mt-2 max-w-2xl text-center text-sm text-slate-600">
+              60-second OAuth. No CSVs, no copy-paste. Pick yours and start
+              collecting today.
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { Logo: QuickBooksLogo, name: "QuickBooks", sub: "Online" },
+                { Logo: XeroLogo, name: "Xero", sub: "Cloud accounting" },
+                { Logo: JobberLogo, name: "Jobber", sub: "Field service" },
+                { Logo: StripeLogo, name: "Stripe", sub: "Get paid" },
+              ].map(({ Logo, name, sub }) => (
+                <Link
+                  key={name}
+                  href="/login"
+                  className="group flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <Logo size={36} />
+                  <p className="mt-3 text-sm font-semibold text-slate-900">
+                    {name}
+                  </p>
+                  <p className="text-xs text-slate-500">{sub}</p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 transition-all group-hover:gap-1.5">
+                    Connect now
+                    <ArrowRight className="h-3 w-3" aria-hidden />
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

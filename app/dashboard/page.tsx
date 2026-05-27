@@ -102,6 +102,9 @@ export default async function DashboardPage({
             customers={data.customers}
             refreshedAt={data.refreshedAt ?? null}
             stale={data.stale ?? false}
+            source={
+              qboConn ? "qbo" : xeroConn ? "xero" : jobberConn ? "jobber" : null
+            }
           />
         ) : (
           <ConnectPrompt

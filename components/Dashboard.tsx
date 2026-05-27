@@ -21,6 +21,7 @@ type Props = {
   customers: Customer[];
   refreshedAt: number | null;
   stale: boolean;
+  source: "qbo" | "xero" | "jobber" | null;
 };
 
 export function Dashboard({
@@ -28,6 +29,7 @@ export function Dashboard({
   customers,
   refreshedAt,
   stale,
+  source,
 }: Props) {
   const [filter, setFilter] = useState<FilterKey>("all");
 
@@ -61,6 +63,7 @@ export function Dashboard({
         totalOwed={totalOwed}
         dso={dso}
         overdueCount={counts.overdue}
+        source={source}
       />
 
       <AgingBreakdown customers={customers} />

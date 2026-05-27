@@ -1,18 +1,42 @@
 import { Building2 } from "lucide-react";
 import { formatCurrencyDetailed } from "@/lib/format";
+import { JobberLogo, QuickBooksLogo, XeroLogo } from "./BrandLogos";
 
 type Props = {
   businessName: string;
   totalOwed: number;
   dso: number;
   overdueCount: number;
+  source?: "qbo" | "xero" | "jobber" | null;
 };
+
+function SourceBadge({ source }: { source: Props["source"] }) {
+  if (!source) return null;
+  if (source === "qbo")
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+        <QuickBooksLogo size={12} /> Synced with QuickBooks
+      </span>
+    );
+  if (source === "xero")
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-sky-800 ring-1 ring-inset ring-sky-200">
+        <XeroLogo size={12} /> Synced with Xero
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+      <JobberLogo size={12} /> Synced with Jobber
+    </span>
+  );
+}
 
 export function DashboardHeader({
   businessName,
   totalOwed,
   dso,
   overdueCount,
+  source = null,
 }: Props) {
   const stats = [
     {
@@ -34,9 +58,12 @@ export function DashboardHeader({
 
   return (
     <header className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:p-7">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-        <Building2 className="h-3.5 w-3.5" aria-hidden />
-        {businessName}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <Building2 className="h-3.5 w-3.5" aria-hidden />
+          {businessName}
+        </div>
+        <SourceBadge source={source} />
       </div>
       <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:divide-x sm:divide-slate-100">
         {stats.map((s, i) => (
