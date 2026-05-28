@@ -1,4 +1,6 @@
 import { Footer } from "@/components/marketing/Footer";
+import { Hero } from "@/components/marketing/Hero";
+import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { Nav } from "@/components/marketing/Nav";
 
 export const metadata = {
@@ -19,8 +21,9 @@ export default function MarketingShell() {
         Skip to content
       </a>
       <Nav />
-      <main id="main" tabIndex={-1} className="min-h-[60vh]">
-        {/* Section content lands here in the next task. */}
+      <main id="main" tabIndex={-1}>
+        <Hero />
+        <HowItWorks />
       </main>
       <Footer />
     </div>

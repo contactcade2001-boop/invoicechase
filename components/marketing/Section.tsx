@@ -9,6 +9,8 @@ type Props = {
   /** Tighter vertical padding for callout / quote / divider sections. */
   size?: "default" | "tight";
   className?: string;
+  /** Anchor target for in-page nav links (#product, #pricing, ...). */
+  id?: string;
 };
 
 /**
@@ -21,6 +23,7 @@ export function Section({
   tone = "default",
   size = "default",
   className = "",
+  id,
 }: Props) {
   const bg =
     tone === "ink"
@@ -31,6 +34,8 @@ export function Section({
   const padding =
     size === "tight" ? "py-10 sm:py-16" : "py-16 sm:py-28";
   return (
-    <Tag className={`${bg} ${padding} ${className}`}>{children}</Tag>
+    <Tag id={id} className={`${bg} ${padding} ${className}`}>
+      {children}
+    </Tag>
   );
 }
