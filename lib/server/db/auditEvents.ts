@@ -47,7 +47,8 @@ export type AuditKind =
   | "org_referral.credited"
   | "payment_plan.created"
   | "payment_plan.installment_paid"
-  | "pay.link_generated";
+  | "pay.link_generated"
+  | "report.weekly_sent";
 
 export type LogAuditEventInput = {
   organizationId: number;

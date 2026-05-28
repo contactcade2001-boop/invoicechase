@@ -320,6 +320,19 @@ CREATE INDEX IF NOT EXISTS reminder_sends_org_customer_tone
   ON reminder_sends(organization_id, customer_id, tone);
 CREATE INDEX IF NOT EXISTS reminder_sends_sent_at ON reminder_sends(sent_at);
 
+CREATE TABLE IF NOT EXISTS weekly_report_sends (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  week_key TEXT NOT NULL,
+  sms_sent_at INTEGER,
+  email_sent_at INTEGER,
+  skipped_reason TEXT,
+  total_collected_cents INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS weekly_report_sends_unique
+  ON weekly_report_sends(organization_id, week_key);
+
 CREATE TABLE IF NOT EXISTS paid_invoices (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id INTEGER NOT NULL,
@@ -756,6 +769,10 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     ["thank_you_on_payment_enabled", "INTEGER NOT NULL DEFAULT 1"],
     ["review_request_enabled", "INTEGER NOT NULL DEFAULT 0"],
     ["review_request_url", "TEXT"],
+    ["weekly_report_enabled", "INTEGER NOT NULL DEFAULT 1"],
+    ["weekly_report_dow", "INTEGER NOT NULL DEFAULT 5"],
+    ["weekly_report_hour", "INTEGER NOT NULL DEFAULT 9"],
+    ["timezone", "TEXT NOT NULL DEFAULT 'America/New_York'"],
   ]) {
     if (
       hasColumn(sqlite, "organizations", "id") &&

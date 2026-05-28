@@ -91,6 +91,15 @@ export const organizations = sqliteTable("organizations", {
   reviewRequestEnabled: integer("review_request_enabled").notNull().default(0),
   /** Public review URL (Google Maps / Yelp). */
   reviewRequestUrl: text("review_request_url"),
+  /** Weekly retention report toggle (SMS + email). Default on. */
+  weeklyReportEnabled: integer("weekly_report_enabled").notNull().default(1),
+  /** Day-of-week to deliver weekly report (0=Sun..6=Sat). Default Fri. */
+  weeklyReportDow: integer("weekly_report_dow").notNull().default(5),
+  /** Local hour-of-day to deliver weekly report (0-23). Default 9am. */
+  weeklyReportHour: integer("weekly_report_hour").notNull().default(9),
+  /** IANA timezone string, e.g. "America/New_York". Drives weekly report
+   *  + future per-org scheduling. */
+  timezone: text("timezone").notNull().default("America/New_York"),
   createdAt: integer("created_at").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -423,6 +432,26 @@ export const paidInvoices = sqliteTable("paid_invoices", {
   attributedReminderId: integer("attributed_reminder_id"),
   /** Was an AI autopilot reply sent in the conversation before payment? */
   attributedAiReplyAt: integer("attributed_ai_reply_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+/**
+ * One row per (organization, week) so we never double-send the weekly
+ * retention report. weekKey is "YYYY-Www" computed in the owner's local
+ * timezone. Stores delivery timestamps separately so we can retry SMS
+ * even if email already succeeded (and vice versa).
+ */
+export const weeklyReportSends = sqliteTable("weekly_report_sends", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  weekKey: text("week_key").notNull(),
+  smsSentAt: integer("sms_sent_at"),
+  emailSentAt: integer("email_sent_at"),
+  /** "no-collections" | "owner-disabled" | "no-contact" | etc. when we
+   *  intentionally didn't send the standard report. */
+  skippedReason: text("skipped_reason"),
+  /** Total cents reported in the message, for ops auditing. */
+  totalCollectedCents: integer("total_collected_cents").notNull().default(0),
   createdAt: integer("created_at").notNull(),
 });
 

@@ -20,6 +20,10 @@ on:
     # 3rd of each month at 12:00 UTC for partner commission rollup
     # (covers the prior full calendar month).
     - cron: "0 12 3 * *"
+    # Every hour at :05 — fires the weekly-report endpoint. The endpoint
+    # itself checks each org's local timezone + scheduled hour and only
+    # sends to those whose window matches right now.
+    - cron: "5 * * * *"
   workflow_dispatch: {}
 
 jobs:
@@ -66,6 +70,19 @@ jobs:
           curl -fsS \
             -H "Authorization: Bearer $CRON_SECRET" \
             "$APP_BASE_URL/api/cron/weekly-digest"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  weekly-report:
+    if: github.event.schedule == '5 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Weekly retention report (per-org timezone-aware)
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/weekly-report"
         env:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
