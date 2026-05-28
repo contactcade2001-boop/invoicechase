@@ -25,6 +25,10 @@ import {
   LiveCounter,
 } from "@/components/AnimatedCounter";
 import { BrandMark } from "@/components/BrandMark";
+import { HeroMesh } from "@/components/HeroMesh";
+import { LogoMarquee } from "@/components/LogoMarquee";
+import { ScrollReveal } from "@/components/ScrollReveal";
+import { Spotlight } from "@/components/Spotlight";
 import {
   FieldPulseLogo,
   HousecallProLogo,
@@ -279,7 +283,8 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="bg-hero-mesh relative overflow-hidden">
+        <section className="relative overflow-hidden">
+          <HeroMesh />
           <div className="mx-auto max-w-6xl px-5 pb-20 pt-20 sm:pt-28 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-orange-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-orange-800 shadow-sm backdrop-blur">
@@ -357,25 +362,14 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Trust strip — clean static logo grid ──────────────────── */}
-        <section className="border-y border-stone-200 bg-white py-14">
+        {/* ── Trust strip — animated horizontal logo marquee ──────────── */}
+        <section className="border-y border-stone-200 bg-white py-12">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
               Connects with the tools your business already runs on
             </p>
-            <div className="mt-8 grid grid-cols-2 items-center gap-x-8 gap-y-6 sm:grid-cols-4 lg:grid-cols-8">
-              {INTEGRATIONS.map((it) => (
-                <div
-                  key={it.name}
-                  className="flex flex-col items-center justify-center gap-2 opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
-                  title={it.name}
-                >
-                  <it.Logo size={28} />
-                  <span className="text-[11px] font-semibold text-stone-600">
-                    {it.name.split(" ")[0]}
-                  </span>
-                </div>
-              ))}
+            <div className="mt-7">
+              <LogoMarquee />
             </div>
           </div>
         </section>
@@ -554,7 +548,7 @@ export default function LandingPage() {
         {/* ── Features grid ──────────────────────────────────────────── */}
         <section id="features" className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
-            <div className="mx-auto max-w-3xl text-center">
+            <ScrollReveal className="mx-auto max-w-3xl text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Everything in the box
               </p>
@@ -565,7 +559,7 @@ export default function LandingPage() {
                 Nothing here is an add-on, an extra seat fee, or a higher tier.
                 Every feature for $49/month + 1.9% on collected payments.
               </p>
-            </div>
+            </ScrollReveal>
             <div className="stagger-children mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f) => {
                 const a = ACCENT_CLASSES[f.accent];
@@ -761,7 +755,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── Final CTA ──────────────────────────────────────────────── */}
-        <section className="bg-dark-mesh relative overflow-hidden">
+        <Spotlight className="bg-dark-mesh overflow-hidden">
           <div className="mx-auto max-w-4xl px-5 py-24 text-center lg:px-6">
             <h2 className="font-display text-4xl font-bold text-white sm:text-5xl">
               Stop chasing. Start collecting.
@@ -789,7 +783,7 @@ export default function LandingPage() {
               </Link>
             </div>
           </div>
-        </section>
+        </Spotlight>
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}

@@ -197,3 +197,77 @@
     transition: none;
   }
 }
+
+/* ───────── Stripe-style animations ────────────────────────────────── */
+
+/* Animated multi-color mesh — drifts behind the hero. Three blobs blended
+   with multiply, each on its own slow loop and timing. */
+@keyframes meshA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(8%, -4%, 0) scale(1.06); }
+  66% { transform: translate3d(-6%, 6%, 0) scale(0.96); }
+}
+@keyframes meshB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-8%, 4%, 0) scale(1.1); }
+}
+@keyframes meshC {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  40% { transform: translate3d(6%, 8%, 0) scale(1.04); }
+  80% { transform: translate3d(-4%, -6%, 0) scale(0.94); }
+}
+.mesh-a { animation: meshA 18s ease-in-out infinite; }
+.mesh-b { animation: meshB 24s ease-in-out infinite; }
+.mesh-c { animation: meshC 30s ease-in-out infinite; }
+
+/* Horizontal infinite-loop logo strip. Content is duplicated; the track
+   translates -50% over the duration. */
+@keyframes scrollX {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-scroll-x {
+  animation: scrollX 32s linear infinite;
+}
+.scroll-x-pause:hover .animate-scroll-x {
+  animation-play-state: paused;
+}
+.scroll-x-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%, black 8%, black 92%, transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%, black 8%, black 92%, transparent 100%
+  );
+}
+
+/* Reveal-on-scroll: start hidden, slide+fade up when class is added. */
+.reveal-init {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Spotlight follows cursor — set --x and --y via JS (percentages). */
+.spotlight {
+  background: radial-gradient(
+    600px circle at var(--x, 50%) var(--y, 50%),
+    rgba(249, 115, 22, 0.18),
+    transparent 60%
+  );
+  transition: background 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh-a, .mesh-b, .mesh-c,
+  .animate-scroll-x { animation: none !important; }
+  .reveal-init { opacity: 1; transform: none; }
+}
