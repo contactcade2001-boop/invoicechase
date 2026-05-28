@@ -65,10 +65,10 @@ export function InboxThread({
   }
 
   return (
-    <div className="flex h-[calc(100vh-9rem)] flex-col rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-      <header className="flex items-center justify-between gap-3 border-b border-stone-800 px-5 py-3">
+    <div className="flex h-[calc(100vh-9rem)] flex-col rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+      <header className="flex items-center justify-between gap-3 border-b border-stone-200 px-5 py-3">
         <div className="min-w-0">
-          <h2 className="truncate text-base font-semibold text-stone-100">
+          <h2 className="truncate text-base font-semibold text-stone-900">
             {conversation.customerName ?? conversation.customerPhone}
           </h2>
           <p className="text-xs text-stone-500">
@@ -129,7 +129,7 @@ export function InboxThread({
                 <div
                   className={`mt-1 whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm ${
                     inbound
-                      ? "bg-slate-100 text-stone-100"
+                      ? "bg-slate-100 text-stone-900"
                       : isAutopilot
                         ? "bg-emerald-50 text-emerald-900 ring-1 ring-inset ring-emerald-200"
                         : "bg-slate-900 text-white"
@@ -144,7 +144,7 @@ export function InboxThread({
         <div ref={bottomRef} />
       </div>
 
-      <div className="border-t border-stone-800 px-5 py-3">
+      <div className="border-t border-stone-200 px-5 py-3">
         {error ? (
           <div className="mb-2 rounded-md bg-red-50 px-3 py-1.5 text-xs text-red-700 ring-1 ring-inset ring-red-200">
             {error}
@@ -157,7 +157,7 @@ export function InboxThread({
             rows={2}
             maxLength={1600}
             placeholder="Type a reply…"
-            className="flex-1 resize-none rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="flex-1 resize-none rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <button
             type="button"

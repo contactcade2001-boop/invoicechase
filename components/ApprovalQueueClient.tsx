@@ -39,7 +39,7 @@ export function ApprovalQueueClient({ items }: { items: Item[] }) {
         return (
           <article
             key={i.id}
-            className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800"
+            className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="flex items-start gap-3">
@@ -53,7 +53,7 @@ export function ApprovalQueueClient({ items }: { items: Item[] }) {
                   <Icon className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="font-semibold text-stone-100">
+                  <p className="font-semibold text-stone-900">
                     {i.customerName ?? "Customer"}
                   </p>
                   <p className="text-[11px] uppercase tracking-wider text-stone-500">
@@ -75,14 +75,14 @@ export function ApprovalQueueClient({ items }: { items: Item[] }) {
                   type="button"
                   onClick={() => act(i.id, "decline")}
                   disabled={pending}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-stone-900/70 px-3 py-1.5 text-xs font-medium text-stone-300 shadow-sm ring-1 ring-stone-700 transition hover:bg-stone-950 hover:ring-stone-600 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow-sm ring-1 ring-stone-300 transition hover:bg-white hover:ring-stone-400 disabled:opacity-50"
                 >
                   <X className="h-3 w-3" />
                   Decline
                 </button>
               </div>
             </div>
-            <pre className="mt-4 whitespace-pre-wrap rounded-md bg-stone-950 px-4 py-3 font-sans text-sm leading-6 text-stone-300 ring-1 ring-inset ring-stone-800">
+            <pre className="mt-4 whitespace-pre-wrap rounded-md bg-white px-4 py-3 font-sans text-sm leading-6 text-stone-700 ring-1 ring-inset ring-stone-200">
               {i.draftBody}
             </pre>
             {i.reason ? (

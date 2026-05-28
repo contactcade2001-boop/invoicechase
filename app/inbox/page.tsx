@@ -68,7 +68,7 @@ export default async function InboxPage({
         <div className="flex items-end justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Inbox</h1>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               Replies from customers, plus what autopilot sent on your behalf.
             </p>
           </div>
@@ -82,7 +82,7 @@ export default async function InboxPage({
             {hasPrev ? (
               <Link
                 href={`/inbox?page=${page - 1}`}
-                className="text-stone-400 hover:text-stone-100"
+                className="text-stone-600 hover:text-stone-900"
               >
                 ← Newer
               </Link>
@@ -95,7 +95,7 @@ export default async function InboxPage({
             {hasNext ? (
               <Link
                 href={`/inbox?page=${page + 1}`}
-                className="text-stone-400 hover:text-stone-100"
+                className="text-stone-600 hover:text-stone-900"
               >
                 Older →
               </Link>

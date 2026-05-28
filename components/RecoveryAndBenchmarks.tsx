@@ -50,13 +50,13 @@ export function RecoveryAndBenchmarks({
   return (
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* Recovery MoM */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
           <BarChart3 className="h-3 w-3 text-orange-600" aria-hidden /> Recovery
           this month
         </p>
         <div className="mt-3 flex items-baseline gap-3">
-          <p className="font-display text-3xl font-bold tabular-nums text-stone-100">
+          <p className="font-display text-3xl font-bold tabular-nums text-stone-900">
             {formatCurrency(recovery.thisMonthCents)}
           </p>
           {delta != null ? (
@@ -85,14 +85,14 @@ export function RecoveryAndBenchmarks({
       </section>
 
       {/* Benchmark */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
           <Target className="h-3 w-3 text-orange-600" aria-hidden /> How you
           compare
         </p>
         <div className="mt-3 flex items-baseline justify-between gap-3">
           <div>
-            <p className="font-display text-3xl font-bold tabular-nums text-stone-100">
+            <p className="font-display text-3xl font-bold tabular-nums text-stone-900">
               {yourDso}
               <span className="ml-1 text-base font-normal text-stone-500">
                 days
@@ -106,17 +106,17 @@ export function RecoveryAndBenchmarks({
             {style.label}
           </span>
         </div>
-        <p className="mt-3 text-sm text-stone-300">{verdict.copy}</p>
+        <p className="mt-3 text-sm text-stone-700">{verdict.copy}</p>
         <dl className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-stone-500">
           <div className="flex items-baseline justify-between gap-2">
             <dt>Top 10% {benchmark.industry.toLowerCase()}</dt>
-            <dd className="font-semibold tabular-nums text-stone-300">
+            <dd className="font-semibold tabular-nums text-stone-700">
               {benchmark.dsoTopDecile}d
             </dd>
           </div>
           <div className="flex items-baseline justify-between gap-2">
             <dt>Median {benchmark.industry.toLowerCase()}</dt>
-            <dd className="font-semibold tabular-nums text-stone-300">
+            <dd className="font-semibold tabular-nums text-stone-700">
               {benchmark.dsoMedian}d
             </dd>
           </div>

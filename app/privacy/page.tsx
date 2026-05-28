@@ -152,17 +152,17 @@ const sections: { title: string; body: React.ReactNode }[] = [
 
 export default function PrivacyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-900/70 text-stone-100">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+    <div className="flex min-h-screen flex-col bg-white text-stone-900">
+      <header className="border-b border-stone-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <Link href="/terms" className="text-stone-400 hover:text-stone-100">
+            <Link href="/terms" className="text-stone-600 hover:text-stone-900">
               Terms
             </Link>
-            <Link href="/login" className="text-stone-400 hover:text-stone-100">
+            <Link href="/login" className="text-stone-600 hover:text-stone-900">
               Sign in
             </Link>
           </div>
@@ -175,10 +175,10 @@ export default function PrivacyPage() {
         <p className="mt-2 text-sm text-stone-500">
           Last updated: May 6, 2026
         </p>
-        <div className="mt-10 space-y-8 text-sm leading-6 text-stone-300">
+        <div className="mt-10 space-y-8 text-sm leading-6 text-stone-700">
           {sections.map((section) => (
             <section key={section.title}>
-              <h2 className="text-lg font-semibold text-stone-100">
+              <h2 className="text-lg font-semibold text-stone-900">
                 {section.title}
               </h2>
               <div className="mt-2 space-y-3">{section.body}</div>
@@ -186,14 +186,14 @@ export default function PrivacyPage() {
           ))}
         </div>
       </main>
-      <footer className="border-t border-stone-800 bg-stone-900/70 py-8">
+      <footer className="border-t border-stone-200 bg-white py-8">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 text-sm text-stone-500">
-          <span className="font-semibold text-stone-300">Invoice Chase</span>
+          <span className="font-semibold text-stone-700">Invoice Chase</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-stone-100">
+            <Link href="/privacy" className="hover:text-stone-900">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-stone-100">
+            <Link href="/terms" className="hover:text-stone-900">
               Terms
             </Link>
           </div>

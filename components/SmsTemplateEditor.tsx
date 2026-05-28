@@ -66,7 +66,7 @@ export function SmsTemplateEditor({
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-sm font-semibold text-stone-100">Pick a tone</p>
+        <p className="text-sm font-semibold text-stone-900">Pick a tone</p>
         <p className="mt-0.5 text-xs text-stone-500">
           One click sets your active template. Tweak anything if you want — most
           owners don&apos;t need to.
@@ -82,11 +82,11 @@ export function SmsTemplateEditor({
                 className={`rounded-xl border p-3 text-left transition ${
                   isActive
                     ? "border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-200"
-                    : "border-stone-800 bg-stone-900/70 hover:border-slate-300 hover:bg-stone-950"
+                    : "border-stone-200 bg-white hover:border-slate-300 hover:bg-white"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-stone-100">
+                  <span className="text-sm font-semibold text-stone-900">
                     {preset.name}
                   </span>
                   {isActive ? (
@@ -115,22 +115,22 @@ export function SmsTemplateEditor({
       <details
         open={showAdvanced}
         onToggle={(e) => setShowAdvanced((e.target as HTMLDetailsElement).open)}
-        className="rounded-xl border border-stone-800 bg-stone-900/70"
+        className="rounded-xl border border-stone-200 bg-white"
       >
-        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500 hover:text-stone-300">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500 hover:text-stone-700">
           Customize the wording
           <span className="ml-2 text-[10px] font-normal normal-case text-stone-500">
             (optional)
           </span>
         </summary>
-        <div className="space-y-3 border-t border-stone-800 p-4">
+        <div className="space-y-3 border-t border-stone-200 p-4">
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             rows={3}
             maxLength={320}
             placeholder={DEFAULT_SMS_TEMPLATE}
-            className="block w-full resize-none rounded-md border-0 px-3 py-2 font-mono text-sm text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="block w-full resize-none rounded-md border-0 px-3 py-2 font-mono text-sm text-stone-900 shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <div className="flex items-center justify-between text-xs text-stone-500">
             <span>{value.length} / 320 characters</span>
@@ -142,7 +142,7 @@ export function SmsTemplateEditor({
                 type="button"
                 onClick={() => setValue((v) => v + t.token)}
                 title={t.description}
-                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-stone-300 hover:bg-slate-200"
+                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-stone-700 hover:bg-slate-200"
               >
                 {t.token}
               </button>

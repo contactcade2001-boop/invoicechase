@@ -17,14 +17,14 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-stone-900/70 px-4 text-center text-stone-100">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-center text-stone-900">
       <p className="text-xs font-semibold uppercase tracking-wider text-red-700">
         Something broke
       </p>
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
         That didn&apos;t work
       </h1>
-      <p className="mt-3 max-w-md text-sm leading-6 text-stone-400">
+      <p className="mt-3 max-w-md text-sm leading-6 text-stone-600">
         We&apos;ve been notified. You can retry the action or head back to
         the dashboard.
       </p>
@@ -43,7 +43,7 @@ export default function GlobalError({
         </button>
         <Link
           href="/dashboard"
-          className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 hover:bg-stone-950"
+          className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 hover:bg-white"
         >
           Dashboard
         </Link>

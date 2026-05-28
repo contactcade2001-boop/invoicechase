@@ -22,13 +22,13 @@ export async function DashboardForecastSnippet({
   );
 
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <LineChart className="h-3 w-3" aria-hidden /> Forecast preview
           </p>
-          <p className="mt-1.5 text-2xl font-semibold tabular-nums text-stone-100">
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums text-stone-900">
             {formatCurrencyDetailed(total4)}
             <span className="ml-1.5 text-sm font-normal text-stone-500">
               expected next 4 weeks
@@ -66,7 +66,7 @@ export async function DashboardForecastSnippet({
               <p className="mt-2 text-[10px] font-mono text-stone-500">
                 {i === 0 ? "This wk" : label}
               </p>
-              <p className="text-xs font-semibold tabular-nums text-stone-300">
+              <p className="text-xs font-semibold tabular-nums text-stone-700">
                 {formatCurrencyDetailed(value)}
               </p>
             </div>

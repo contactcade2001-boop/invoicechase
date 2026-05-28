@@ -146,8 +146,8 @@ const SECTIONS: {
 
 export default function HelpPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-900/70 text-stone-100">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+    <div className="flex min-h-screen flex-col bg-white text-stone-900">
+      <header className="border-b border-stone-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
@@ -155,13 +155,13 @@ export default function HelpPage() {
           <div className="flex items-center gap-4 text-sm">
             <Link
               href="/changelog"
-              className="text-stone-400 hover:text-stone-100"
+              className="text-stone-600 hover:text-stone-900"
             >
               Changelog
             </Link>
             <Link
               href="/login"
-              className="text-stone-400 hover:text-stone-100"
+              className="text-stone-600 hover:text-stone-900"
             >
               Sign in
             </Link>
@@ -170,7 +170,7 @@ export default function HelpPage() {
       </header>
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:py-16">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Help</h1>
-        <p className="mt-3 text-sm text-stone-400">
+        <p className="mt-3 text-sm text-stone-600">
           Quick answers to the questions we hear most. Still stuck? Email{" "}
           <span className="font-mono">support@invoicechase.com</span>.
         </p>
@@ -178,17 +178,17 @@ export default function HelpPage() {
           {SECTIONS.map((section) => (
             <section key={section.title}>
               <h2
-                className="text-lg font-semibold text-stone-100"
+                className="text-lg font-semibold text-stone-900"
                 dangerouslySetInnerHTML={{ __html: section.title }}
               />
               <dl className="mt-4 space-y-3">
                 {section.items.map((item) => (
                   <div
                     key={item.q}
-                    className="rounded-xl bg-stone-950 p-5 ring-1 ring-stone-800"
+                    className="rounded-xl bg-white p-5 ring-1 ring-stone-200"
                   >
                     <dt className="font-semibold">{item.q}</dt>
-                    <dd className="mt-2 text-sm leading-6 text-stone-400">
+                    <dd className="mt-2 text-sm leading-6 text-stone-600">
                       {item.a}
                     </dd>
                   </div>
@@ -198,14 +198,14 @@ export default function HelpPage() {
           ))}
         </div>
       </main>
-      <footer className="border-t border-stone-800 bg-stone-900/70 py-8">
+      <footer className="border-t border-stone-200 bg-white py-8">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 text-sm text-stone-500">
-          <span className="font-semibold text-stone-300">Invoice Chase</span>
+          <span className="font-semibold text-stone-700">Invoice Chase</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-stone-100">
+            <Link href="/privacy" className="hover:text-stone-900">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-stone-100">
+            <Link href="/terms" className="hover:text-stone-900">
               Terms
             </Link>
           </div>

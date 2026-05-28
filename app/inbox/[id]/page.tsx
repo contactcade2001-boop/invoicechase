@@ -47,7 +47,7 @@ export default async function InboxThreadPage({
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-4 px-4 py-6 sm:py-8">
         <Link
           href="/inbox"
-          className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-stone-100"
+          className="inline-flex items-center gap-1 text-sm text-stone-600 hover:text-stone-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Inbox

@@ -88,7 +88,7 @@ export function RelationshipControlsForm({ config }: { config: CashflowConfig })
             onChange={(e) => setReviewUrl(e.target.value)}
             onBlur={() => save({ reviewRequestUrl: reviewUrl })}
             placeholder="https://g.page/r/your-business/review"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
       </Section>
@@ -128,7 +128,7 @@ export function RelationshipControlsForm({ config }: { config: CashflowConfig })
                   : null,
               })
             }
-            className="mt-1 block w-48 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-48 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         {pauseEnd ? (
@@ -138,7 +138,7 @@ export function RelationshipControlsForm({ config }: { config: CashflowConfig })
               setPauseEnd("");
               save({ seasonalPauseUntil: null });
             }}
-            className="text-xs font-medium text-stone-500 hover:text-stone-100"
+            className="text-xs font-medium text-stone-500 hover:text-stone-900"
           >
             Resume immediately
           </button>
@@ -160,16 +160,16 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start gap-4">
         <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-700 ring-1 ring-inset ring-orange-200">
           <Icon className="h-4 w-4" />
         </span>
         <div className="min-w-0 flex-1">
-          <h2 className="font-display text-base font-semibold text-stone-100">
+          <h2 className="font-display text-base font-semibold text-stone-900">
             {title}
           </h2>
-          <p className="mt-1 text-sm leading-6 text-stone-400">{body}</p>
+          <p className="mt-1 text-sm leading-6 text-stone-600">{body}</p>
         </div>
       </div>
       <div className="mt-5 space-y-3 pl-13">{children}</div>
@@ -199,13 +199,13 @@ function Toggle({
         aria-pressed={checked}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-stone-900/70 shadow transition ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
             checked ? "translate-x-4" : "translate-x-0.5"
           }`}
         />
       </button>
       <div>
-        <p className="text-sm font-semibold text-stone-100">{label}</p>
+        <p className="text-sm font-semibold text-stone-900">{label}</p>
         {hint ? <p className="text-xs text-stone-500">{hint}</p> : null}
       </div>
     </div>

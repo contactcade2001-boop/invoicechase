@@ -93,7 +93,7 @@ export function CustomerMetadataPanel({
     : 0;
 
   return (
-    <section className="space-y-5 rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 dark:bg-orange-600 dark:ring-stone-800">
+    <section className="space-y-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 dark:bg-orange-600 dark:ring-stone-200">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
           Customer
@@ -103,13 +103,13 @@ export function CustomerMetadataPanel({
             {saved}
           </span>
         ) : pending ? (
-          <span className="text-[11px] text-stone-400">Saving…</span>
+          <span className="text-[11px] text-stone-600">Saving…</span>
         ) : null}
       </div>
 
       {/* Tone */}
       <div>
-        <p className="text-xs font-semibold text-stone-300 dark:text-stone-300">
+        <p className="text-xs font-semibold text-stone-700 dark:text-stone-700">
           AI tone for this customer
         </p>
         <div className="mt-2 grid grid-cols-3 gap-1.5">
@@ -127,7 +127,7 @@ export function CustomerMetadataPanel({
                 className={`rounded-md px-2.5 py-1 text-xs font-semibold capitalize transition ${
                   active
                     ? "bg-orange-600 text-white shadow-sm"
-                    : "bg-stone-800 text-stone-400 hover:bg-stone-200"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
                 }`}
               >
                 {t}
@@ -142,7 +142,7 @@ export function CustomerMetadataPanel({
 
       {/* Tags */}
       <div>
-        <p className="flex items-center gap-1.5 text-xs font-semibold text-stone-300 dark:text-stone-300">
+        <p className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 dark:text-stone-700">
           <Tag className="h-3 w-3" /> Tags
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
@@ -173,7 +173,7 @@ export function CustomerMetadataPanel({
               }
             }}
             placeholder="+ add tag"
-            className="w-24 rounded-full border-0 bg-stone-800 px-2.5 py-0.5 text-[11px] text-stone-300 placeholder:text-stone-400 focus:bg-stone-900/70 focus:outline-none focus:ring-1 focus:ring-stone-700"
+            className="w-24 rounded-full border-0 bg-stone-100 px-2.5 py-0.5 text-[11px] text-stone-700 placeholder:text-stone-600 focus:bg-white focus:outline-none focus:ring-1 focus:ring-stone-300"
           />
         </div>
         <div className="mt-2 flex flex-wrap gap-1">
@@ -182,7 +182,7 @@ export function CustomerMetadataPanel({
               key={s}
               type="button"
               onClick={() => addTag(s)}
-              className="inline-flex items-center gap-1 rounded-full bg-stone-950 px-2 py-0.5 text-[10px] text-stone-500 ring-1 ring-stone-800 transition hover:bg-orange-700 hover:text-stone-300"
+              className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] text-stone-500 ring-1 ring-stone-200 transition hover:bg-orange-700 hover:text-stone-700"
             >
               <Plus className="h-2 w-2" />
               {s}
@@ -193,7 +193,7 @@ export function CustomerMetadataPanel({
 
       {/* Snooze */}
       <div>
-        <p className="flex items-center gap-1.5 text-xs font-semibold text-stone-300 dark:text-stone-300">
+        <p className="flex items-center gap-1.5 text-xs font-semibold text-stone-700 dark:text-stone-700">
           <BellOff className="h-3 w-3" /> Autopilot snooze
         </p>
         {snoozedActive ? (
@@ -205,7 +205,7 @@ export function CustomerMetadataPanel({
             <button
               type="button"
               onClick={() => save({ snoozeDays: null })}
-              className="inline-flex items-center gap-1 rounded-md bg-stone-900/70 px-2 py-1 text-[11px] font-semibold text-amber-800 ring-1 ring-amber-300 transition hover:bg-amber-100"
+              className="inline-flex items-center gap-1 rounded-md bg-white px-2 py-1 text-[11px] font-semibold text-amber-800 ring-1 ring-amber-300 transition hover:bg-amber-100"
             >
               <AlarmClockOff className="h-3 w-3" /> Resume
             </button>
@@ -217,7 +217,7 @@ export function CustomerMetadataPanel({
                 key={d}
                 type="button"
                 onClick={() => save({ snoozeDays: d })}
-                className="inline-flex items-center gap-1.5 rounded-md bg-stone-800 px-2.5 py-1 text-[11px] font-semibold text-stone-300 transition hover:bg-stone-200"
+                className="inline-flex items-center gap-1.5 rounded-md bg-stone-100 px-2.5 py-1 text-[11px] font-semibold text-stone-700 transition hover:bg-stone-200"
               >
                 <Bell className="h-3 w-3" />
                 Pause {d}d
@@ -229,7 +229,7 @@ export function CustomerMetadataPanel({
 
       {/* Notes */}
       <div>
-        <p className="text-xs font-semibold text-stone-300 dark:text-stone-300">
+        <p className="text-xs font-semibold text-stone-700 dark:text-stone-700">
           Private notes
         </p>
         <textarea
@@ -237,7 +237,7 @@ export function CustomerMetadataPanel({
           onChange={(e) => setNote(e.target.value)}
           rows={3}
           placeholder="Notes only you can see — preferred contact times, payment history, anything."
-          className="mt-2 block w-full rounded-md border-0 bg-stone-950 px-3 py-2 text-sm text-stone-100 ring-1 ring-inset ring-stone-800 placeholder:text-stone-400 focus:bg-stone-900/70 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+          className="mt-2 block w-full rounded-md border-0 bg-white px-3 py-2 text-sm text-stone-900 ring-1 ring-inset ring-stone-200 placeholder:text-stone-600 focus:bg-white focus:ring-2 focus:ring-inset focus:ring-stone-900"
         />
         <div className="mt-2 flex justify-end">
           <button

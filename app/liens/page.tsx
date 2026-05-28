@@ -20,10 +20,10 @@ export default async function LiensPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
             Recovery tool
           </p>
-          <h1 className="font-display mt-2 text-3xl font-bold text-stone-100">
+          <h1 className="font-display mt-2 text-3xl font-bold text-stone-900">
             Mechanics lien tracker.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-stone-400">
+          <p className="mt-3 text-sm leading-6 text-stone-600">
             Track lien filing deadlines for every unpaid job. Field service
             businesses have a legal right to file mechanics liens — most miss
             the deadline. Per-state windows applied automatically.

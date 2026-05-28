@@ -43,7 +43,7 @@ function urgencyClass(deadlineMs: number) {
   if (d < 0) return "border-red-300 bg-red-50 text-red-700";
   if (d <= 14) return "border-orange-300 bg-orange-50 text-orange-700";
   if (d <= 45) return "border-amber-300 bg-amber-50 text-amber-700";
-  return "border-stone-800 bg-stone-900/70 text-stone-300";
+  return "border-stone-200 bg-white text-stone-700";
 }
 
 export function LienTracker({ initialLiens, stateCodes }: Props) {
@@ -139,8 +139,8 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
       </div>
 
       {liens.length > 0 ? (
-        <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-          <div className="border-b border-stone-800 bg-stone-900/40 px-5 py-3">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+          <div className="border-b border-stone-200 bg-stone-50 px-5 py-3">
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
               Tracking {liens.length} job
               {liens.length === 1 ? "" : "s"}
@@ -153,7 +153,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
             return (
               <div
                 key={l.id}
-                className={`flex flex-wrap items-center gap-4 border-b border-stone-800/60 px-5 py-4 last:border-b-0 ${
+                className={`flex flex-wrap items-center gap-4 border-b border-stone-100 px-5 py-4 last:border-b-0 ${
                   d <= 14 ? "bg-orange-50/30" : ""
                 }`}
               >
@@ -163,7 +163,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                   <Icon className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-stone-100">
+                  <p className="font-semibold text-stone-900">
                     {l.customerName}{" "}
                     <span className="text-xs font-normal text-stone-500">
                       · {l.state}
@@ -178,7 +178,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-display text-lg font-bold tabular-nums text-stone-100">
+                  <p className="font-display text-lg font-bold tabular-nums text-stone-900">
                     {formatCurrency(l.invoiceAmountCents)}
                   </p>
                   <p
@@ -221,7 +221,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                     type="button"
                     onClick={() => resolve(l.id, "ignored")}
                     disabled={pending}
-                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-100 disabled:opacity-50"
+                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-900 disabled:opacity-50"
                   >
                     Dismiss
                   </button>
@@ -233,8 +233,8 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
       ) : null}
 
       {showForm ? (
-        <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
-          <p className="font-display text-base font-semibold text-stone-100">
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+          <p className="font-display text-base font-semibold text-stone-900">
             Track a new job
           </p>
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -244,7 +244,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Acme Construction"
-                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               />
             </Field>
             <Field label="QuickBooks customer ID (optional)">
@@ -253,7 +253,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
                 placeholder="auto-generated if blank"
-                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               />
             </Field>
             <Field label="Job address" className="sm:col-span-2">
@@ -262,14 +262,14 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                 value={jobAddress}
                 onChange={(e) => setJobAddress(e.target.value)}
                 placeholder="123 Main St, Austin TX 78701"
-                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               />
             </Field>
             <Field label="State">
               <select
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-                className="block w-full rounded-md border-0 bg-stone-900/70 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 bg-white px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               >
                 {stateCodes.map((s) => (
                   <option key={s} value={s}>
@@ -285,7 +285,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                 step={100}
                 min={0}
                 onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               />
             </Field>
             <Field label="Last day of work / materials">
@@ -293,7 +293,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
                 type="date"
                 value={lastFurnish}
                 onChange={(e) => setLastFurnish(e.target.value)}
-                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+                className="block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
               />
             </Field>
           </div>
@@ -314,7 +314,7 @@ export function LienTracker({ initialLiens, stateCodes }: Props) {
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="text-xs font-medium text-stone-500 hover:text-stone-100"
+                className="text-xs font-medium text-stone-500 hover:text-stone-900"
               >
                 Cancel
               </button>

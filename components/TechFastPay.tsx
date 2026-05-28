@@ -81,21 +81,21 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1 text-sm text-stone-400 hover:text-stone-100"
+          className="inline-flex items-center gap-1 text-sm text-stone-600 hover:text-stone-900"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
           Back
         </button>
 
-        <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
           <h2 className="text-2xl font-bold tracking-tight">
             {selected.name}
           </h2>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             {selected.phone || "No phone on file"}
           </p>
 
-          <div className="mt-5 rounded-xl bg-stone-950 p-4 ring-1 ring-stone-800">
+          <div className="mt-5 rounded-xl bg-white p-4 ring-1 ring-stone-200">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Amount due
             </p>
@@ -148,11 +148,11 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
             </div>
           ) : null}
           {status.kind === "linked" ? (
-            <div className="mt-4 rounded-md bg-stone-950 px-3 py-2 text-sm ring-1 ring-inset ring-stone-800">
-              <p className="font-semibold text-stone-100">
+            <div className="mt-4 rounded-md bg-white px-3 py-2 text-sm ring-1 ring-inset ring-stone-200">
+              <p className="font-semibold text-stone-900">
                 Link copied to clipboard
               </p>
-              <p className="mt-1 break-all text-xs text-stone-400">
+              <p className="mt-1 break-all text-xs text-stone-600">
                 {status.url}
               </p>
             </div>
@@ -181,29 +181,29 @@ export function TechFastPay({ customers }: { customers: Customer[] }) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search customer…"
           autoFocus
-          className="w-full rounded-lg border-0 bg-stone-900/70 py-3.5 pl-11 pr-4 text-base shadow-sm ring-1 ring-inset ring-stone-700 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+          className="w-full rounded-lg border-0 bg-white py-3.5 pl-11 pr-4 text-base shadow-sm ring-1 ring-inset ring-stone-300 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900"
         />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-stone-900/70 p-8 text-center shadow-sm ring-1 ring-stone-800">
-          <p className="text-sm text-stone-400">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-stone-200">
+          <p className="text-sm text-stone-600">
             {query
               ? "No customers match that search."
               : "No customers with outstanding balances."}
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+        <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
           {filtered.map((c) => (
             <button
               key={c.id}
               type="button"
               onClick={() => setSelected(c)}
-              className="flex w-full items-center justify-between gap-4 border-b border-stone-800/60 px-4 py-4 text-left last:border-b-0 transition hover:bg-stone-950 active:bg-slate-100"
+              className="flex w-full items-center justify-between gap-4 border-b border-stone-100 px-4 py-4 text-left last:border-b-0 transition hover:bg-white active:bg-slate-100"
             >
               <div className="min-w-0 flex-1">
-                <div className="truncate text-base font-medium text-stone-100">
+                <div className="truncate text-base font-medium text-stone-900">
                   {c.name}
                 </div>
                 <div

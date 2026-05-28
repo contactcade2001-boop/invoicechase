@@ -35,26 +35,26 @@ const BAND_STYLE: Record<
 export function ChurnRiskCard({ result }: { result: ChurnRiskResult }) {
   if (result.topAtRisk.length === 0) {
     return (
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
           <Users className="h-3 w-3" aria-hidden /> Customers at risk
         </p>
-        <p className="mt-3 text-sm text-stone-400">
+        <p className="mt-3 text-sm text-stone-600">
           Every customer is in good shape. Keep doing what you&apos;re doing.
         </p>
       </section>
     );
   }
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <TrendingDown className="h-3 w-3 text-red-600" aria-hidden />{" "}
             Customers at risk
           </p>
-          <p className="mt-1 text-sm text-stone-300">
-            <strong className="text-stone-100">
+          <p className="mt-1 text-sm text-stone-700">
+            <strong className="text-stone-900">
               {formatCurrencyDetailed(result.totalAtRiskCents)}
             </strong>{" "}
             in annual revenue + replacement cost if these{" "}
@@ -71,7 +71,7 @@ export function ChurnRiskCard({ result }: { result: ChurnRiskResult }) {
           return (
             <li
               key={c.id}
-              className="group flex items-start gap-3 rounded-xl border border-stone-800 bg-stone-950/40 p-3 transition hover:bg-stone-950 hover:shadow-sm"
+              className="group flex items-start gap-3 rounded-xl border border-stone-200 bg-white/40 p-3 transition hover:bg-white hover:shadow-sm"
             >
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                 {i + 1}
@@ -80,7 +80,7 @@ export function ChurnRiskCard({ result }: { result: ChurnRiskResult }) {
                 <div className="flex flex-wrap items-baseline gap-2">
                   <Link
                     href={`/dashboard/customer/${c.id}`}
-                    className="font-semibold text-stone-100 transition hover:underline group-hover:underline-offset-4"
+                    className="font-semibold text-stone-900 transition hover:underline group-hover:underline-offset-4"
                   >
                     {c.name}
                   </Link>
@@ -94,19 +94,19 @@ export function ChurnRiskCard({ result }: { result: ChurnRiskResult }) {
                     −{formatCurrencyDetailed(c.revenueAtRiskCents)}
                   </span>
                 </div>
-                <p className="mt-1 text-xs leading-5 text-stone-400">
+                <p className="mt-1 text-xs leading-5 text-stone-600">
                   {c.reason}
                 </p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-stone-500">
                   <span>
                     Annual:{" "}
-                    <span className="font-semibold tabular-nums text-stone-300">
+                    <span className="font-semibold tabular-nums text-stone-700">
                       {formatCurrencyDetailed(c.annualRevenueCents)}
                     </span>
                   </span>
                   <span>
                     Replace cost:{" "}
-                    <span className="font-semibold tabular-nums text-stone-300">
+                    <span className="font-semibold tabular-nums text-stone-700">
                       {formatCurrencyDetailed(c.replacementCostCents)}
                     </span>
                   </span>

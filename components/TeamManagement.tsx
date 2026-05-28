@@ -88,9 +88,9 @@ export function TeamManagement({
   return (
     <div className="space-y-8">
       {/* Invite */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <h2 className="text-lg font-semibold">Invite teammate</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           They&apos;ll get an email with a sign-in link. The role determines
           what they can see and do.
         </p>
@@ -100,12 +100,12 @@ export function TeamManagement({
             value={inviteEmail}
             onChange={(e) => setInviteEmail(e.target.value)}
             placeholder="teammate@business.com"
-            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <select
             value={inviteRole}
             onChange={(e) => setInviteRole(e.target.value as UserRole)}
-            className="rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             <option value="technician">Technician</option>
             <option value="manager">Manager</option>
@@ -137,11 +137,11 @@ export function TeamManagement({
       </section>
 
       {/* Members */}
-      <section className="rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-        <div className="border-b border-stone-800 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
+      <section className="rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+        <div className="border-b border-stone-200 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
           Members
         </div>
-        <div className="divide-y divide-stone-800">
+        <div className="divide-y divide-stone-100">
           {members.map((m) => {
             const isSelf = m.id === currentUserId;
             return (
@@ -150,7 +150,7 @@ export function TeamManagement({
                 className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <div className="text-sm font-medium text-stone-100">
+                  <div className="text-sm font-medium text-stone-900">
                     {m.email}
                     {isSelf ? (
                       <span className="ml-2 text-xs font-normal text-stone-500">
@@ -164,7 +164,7 @@ export function TeamManagement({
                     value={m.role}
                     onChange={(e) => handleRoleChange(m.id, e.target.value)}
                     disabled={pending || isSelf}
-                    className="rounded-md border-0 px-3 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-stone-500"
+                    className="rounded-md border-0 px-3 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-stone-500"
                   >
                     {ROLES.map((r) => (
                       <option key={r} value={r}>
@@ -192,17 +192,17 @@ export function TeamManagement({
 
       {/* Pending invites */}
       {invites.length > 0 ? (
-        <section className="rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-          <div className="border-b border-stone-800 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
+        <section className="rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+          <div className="border-b border-stone-200 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500">
             Pending invites
           </div>
-          <div className="divide-y divide-stone-800">
+          <div className="divide-y divide-stone-100">
             {invites.map((inv) => (
               <div
                 key={inv.id}
                 className="flex items-center justify-between px-6 py-3"
               >
-                <div className="text-sm text-stone-300">
+                <div className="text-sm text-stone-700">
                   {inv.email}{" "}
                   <span className="text-stone-500">— {inv.role}</span>
                 </div>
@@ -210,7 +210,7 @@ export function TeamManagement({
                   type="button"
                   onClick={() => handleRevoke(inv.id, inv.email)}
                   disabled={pending}
-                  className="text-xs text-stone-500 underline-offset-2 hover:text-stone-100 hover:underline"
+                  className="text-xs text-stone-500 underline-offset-2 hover:text-stone-900 hover:underline"
                 >
                   Revoke
                 </button>

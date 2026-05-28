@@ -57,22 +57,22 @@ const TAG_STYLE: Record<NonNullable<Entry["tag"]>, string> = {
   Launch: "bg-emerald-100 text-emerald-800 ring-emerald-200",
   New: "bg-sky-100 text-sky-800 ring-sky-200",
   Improvement: "bg-amber-100 text-amber-800 ring-amber-200",
-  Fix: "bg-slate-100 text-stone-300 ring-stone-800",
+  Fix: "bg-slate-100 text-stone-700 ring-stone-200",
 };
 
 export default function ChangelogPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-900/70 text-stone-100">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+    <div className="flex min-h-screen flex-col bg-white text-stone-900">
+      <header className="border-b border-stone-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <Link href="/help" className="text-stone-400 hover:text-stone-100">
+            <Link href="/help" className="text-stone-600 hover:text-stone-900">
               Help
             </Link>
-            <Link href="/login" className="text-stone-400 hover:text-stone-100">
+            <Link href="/login" className="text-stone-600 hover:text-stone-900">
               Sign in
             </Link>
           </div>
@@ -82,7 +82,7 @@ export default function ChangelogPage() {
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Changelog
         </h1>
-        <p className="mt-3 text-sm text-stone-400">
+        <p className="mt-3 text-sm text-stone-600">
           What we&apos;ve shipped recently. Want a feature? Email{" "}
           <span className="font-mono">feedback@invoicechase.com</span>.
         </p>
@@ -90,10 +90,10 @@ export default function ChangelogPage() {
           {ENTRIES.map((entry) => (
             <li
               key={entry.date}
-              className="border-l-2 border-stone-800 pl-6"
+              className="border-l-2 border-stone-200 pl-6"
             >
               <div className="flex items-center gap-3">
-                <p className="text-sm font-semibold text-stone-100">
+                <p className="text-sm font-semibold text-stone-900">
                   {entry.date}
                 </p>
                 {entry.tag ? (
@@ -104,7 +104,7 @@ export default function ChangelogPage() {
                   </span>
                 ) : null}
               </div>
-              <ul className="mt-4 space-y-2 text-sm leading-6 text-stone-300">
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-stone-700">
                 {entry.items.map((item) => (
                   <li key={item} className="flex gap-2">
                     <span className="text-stone-500">•</span>
@@ -116,14 +116,14 @@ export default function ChangelogPage() {
           ))}
         </ol>
       </main>
-      <footer className="border-t border-stone-800 bg-stone-900/70 py-8">
+      <footer className="border-t border-stone-200 bg-white py-8">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-4 text-sm text-stone-500">
-          <span className="font-semibold text-stone-300">Invoice Chase</span>
+          <span className="font-semibold text-stone-700">Invoice Chase</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-stone-100">
+            <Link href="/privacy" className="hover:text-stone-900">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-stone-100">
+            <Link href="/terms" className="hover:text-stone-900">
               Terms
             </Link>
           </div>

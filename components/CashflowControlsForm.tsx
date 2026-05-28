@@ -227,7 +227,7 @@ export function CashflowControlsForm({ config }: { config: CashflowConfig }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-300">
           Coming soon — partner integrations
         </p>
-        <ul className="mt-3 grid grid-cols-1 gap-2 text-sm text-stone-200 sm:grid-cols-2">
+        <ul className="mt-3 grid grid-cols-1 gap-2 text-sm text-stone-800 sm:grid-cols-2">
           <li>• Working capital advance (factor your AR)</li>
           <li>• Send to collections (1-click handoff)</li>
           <li>• Service-plan recurring billing</li>
@@ -255,14 +255,14 @@ function Section({
   comingSoon?: string;
 }) {
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start gap-4">
         <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-700 ring-1 ring-inset ring-orange-200">
           <Icon className="h-4 w-4" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-2">
-            <h2 className="font-display text-base font-semibold text-stone-100">
+            <h2 className="font-display text-base font-semibold text-stone-900">
               {title}
             </h2>
             {lift ? (
@@ -276,7 +276,7 @@ function Section({
               </span>
             ) : null}
           </div>
-          <p className="mt-1 text-sm leading-6 text-stone-400">{body}</p>
+          <p className="mt-1 text-sm leading-6 text-stone-600">{body}</p>
         </div>
       </div>
       <div className="mt-5 space-y-3 pl-13">{children}</div>
@@ -309,7 +309,7 @@ function NumberField({
       <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500">
         {label}
       </span>
-      <div className="mt-1 flex items-center rounded-md bg-stone-900/70 shadow-sm ring-1 ring-inset ring-stone-700 focus-within:ring-2 focus-within:ring-stone-900">
+      <div className="mt-1 flex items-center rounded-md bg-white shadow-sm ring-1 ring-inset ring-stone-300 focus-within:ring-2 focus-within:ring-stone-900">
         {prefix ? (
           <span className="pl-2.5 text-sm font-semibold text-stone-500">
             {prefix}
@@ -323,7 +323,7 @@ function NumberField({
           value={local}
           onChange={(e) => setLocal(parseFloat(e.target.value) || 0)}
           onBlur={() => onCommit(local)}
-          className="flex-1 border-0 bg-transparent px-2.5 py-2 text-sm tabular-nums text-stone-100 focus:outline-none"
+          className="flex-1 border-0 bg-transparent px-2.5 py-2 text-sm tabular-nums text-stone-900 focus:outline-none"
         />
         {suffix ? (
           <span className="pr-2.5 text-xs font-semibold text-stone-500">
@@ -345,9 +345,9 @@ function Preview({
   hint?: string;
 }) {
   return (
-    <div className="rounded-md bg-stone-950 px-3 py-2 text-xs ring-1 ring-inset ring-stone-800">
+    <div className="rounded-md bg-white px-3 py-2 text-xs ring-1 ring-inset ring-stone-200">
       <p className="text-stone-500">{label}</p>
-      <p className="mt-0.5 text-sm font-semibold tabular-nums text-stone-100">
+      <p className="mt-0.5 text-sm font-semibold tabular-nums text-stone-900">
         {value}
       </p>
       {hint ? <p className="mt-1 text-[11px] text-stone-500">{hint}</p> : null}
@@ -377,13 +377,13 @@ function Toggle({
         aria-pressed={checked}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-stone-900/70 shadow transition ${
+          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition ${
             checked ? "translate-x-4" : "translate-x-0.5"
           }`}
         />
       </button>
       <div>
-        <p className="text-sm font-semibold text-stone-100">{label}</p>
+        <p className="text-sm font-semibold text-stone-900">{label}</p>
         {hint ? <p className="text-xs text-stone-500">{hint}</p> : null}
       </div>
     </div>

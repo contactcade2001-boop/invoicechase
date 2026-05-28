@@ -32,7 +32,7 @@ export default async function PortalLoginPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+      <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-14 max-w-3xl items-center px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
@@ -43,23 +43,23 @@ export default async function PortalLoginPage({
         </div>
       </header>
       <main className="flex flex-1 items-center justify-center px-4 py-16">
-        <div className="w-full max-w-md rounded-2xl bg-stone-900/70 p-8 shadow-sm ring-1 ring-stone-800">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-stone-200">
           {sent ? (
             <div className="text-center">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200">
                 <Mail className="h-6 w-6 text-emerald-700" aria-hidden />
               </div>
               <h1 className="mt-4 text-2xl font-bold">Check your email</h1>
-              <p className="mt-2 text-sm text-stone-400">
+              <p className="mt-2 text-sm text-stone-600">
                 We sent a sign-in link to{" "}
-                <span className="font-semibold text-stone-100">
+                <span className="font-semibold text-stone-900">
                   {sp.email ?? "your inbox"}
                 </span>
                 . Click it to view your payment history.
               </p>
               <Link
                 href="/portal"
-                className="mt-6 inline-block text-sm font-semibold text-stone-300 underline-offset-2 hover:underline"
+                className="mt-6 inline-block text-sm font-semibold text-stone-700 underline-offset-2 hover:underline"
               >
                 ← Back
               </Link>
@@ -67,7 +67,7 @@ export default async function PortalLoginPage({
           ) : (
             <>
               <h1 className="text-2xl font-bold">View your payments</h1>
-              <p className="mt-1 text-sm text-stone-400">
+              <p className="mt-1 text-sm text-stone-600">
                 Sign in with the email address you used to pay. We&apos;ll
                 send you a one-time link.
               </p>
@@ -82,7 +82,7 @@ export default async function PortalLoginPage({
                 className="mt-6 space-y-3"
               >
                 <label className="block">
-                  <span className="text-sm font-medium text-stone-300">
+                  <span className="text-sm font-medium text-stone-700">
                     Email
                   </span>
                   <input
@@ -92,7 +92,7 @@ export default async function PortalLoginPage({
                     autoFocus
                     autoComplete="email"
                     placeholder="you@example.com"
-                    className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-stone-900 shadow-sm ring-1 ring-inset ring-stone-300 placeholder:text-stone-500 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:text-sm"
                   />
                 </label>
                 <button

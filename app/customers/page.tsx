@@ -73,7 +73,7 @@ export default async function CustomersPage({
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Customers</h1>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               The full directory — search by business name, contact, phone, or
               location. Click any row to see invoices and message history.
             </p>
@@ -87,7 +87,7 @@ export default async function CustomersPage({
         </div>
 
         {!data.connected ? (
-          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
             <AlertCircle
               className="mx-auto h-8 w-8 text-stone-500"
               aria-hidden
@@ -114,13 +114,13 @@ export default async function CustomersPage({
                   name="q"
                   defaultValue={sp.q ?? ""}
                   placeholder="Search by name, phone, email, or address"
-                  className="block w-full rounded-md border-0 py-2 pl-9 pr-3 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+                  className="block w-full rounded-md border-0 py-2 pl-9 pr-3 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
                 />
               </label>
               <select
                 name="sort"
                 defaultValue={sortKey}
-                className="rounded-md border-0 py-2 pl-3 pr-8 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+                className="rounded-md border-0 py-2 pl-3 pr-8 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
               >
                 {SORTS.map((s) => (
                   <option key={s.key} value={s.key}>
@@ -137,7 +137,7 @@ export default async function CustomersPage({
             </form>
 
             {customers.length === 0 ? (
-              <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+              <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
                 <Inbox
                   className="mx-auto h-8 w-8 text-stone-500"
                   aria-hidden
@@ -150,10 +150,10 @@ export default async function CustomersPage({
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+              <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-stone-800 bg-stone-900/40 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+                    <tr className="border-b border-stone-200 bg-stone-50 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                       <th className="px-5 py-3 text-left">Customer</th>
                       <th className="px-5 py-3 text-left">Contact</th>
                       <th className="px-5 py-3 text-left">Location</th>
@@ -165,17 +165,17 @@ export default async function CustomersPage({
                     {customers.map((c) => (
                       <tr
                         key={c.id}
-                        className="border-b border-stone-800/60 last:border-b-0 transition hover:bg-stone-950/50"
+                        className="border-b border-stone-100 last:border-b-0 transition hover:bg-white/50"
                       >
                         <td className="px-5 py-4">
                           <Link
                             href={`/dashboard/customer/${c.id}`}
-                            className="font-medium text-stone-100 hover:underline"
+                            className="font-medium text-stone-900 hover:underline"
                           >
                             {c.name}
                           </Link>
                         </td>
-                        <td className="px-5 py-4 text-xs text-stone-400">
+                        <td className="px-5 py-4 text-xs text-stone-600">
                           <div className="space-y-0.5">
                             {c.phone ? (
                               <div className="flex items-center gap-1.5">
@@ -205,7 +205,7 @@ export default async function CustomersPage({
                             ) : null}
                           </div>
                         </td>
-                        <td className="px-5 py-4 text-xs text-stone-400">
+                        <td className="px-5 py-4 text-xs text-stone-600">
                           {c.address ? (
                             <div className="flex items-start gap-1.5">
                               <MapPin
@@ -224,7 +224,7 @@ export default async function CustomersPage({
                               className={`font-semibold ${
                                 c.daysLate > 0
                                   ? "text-red-700"
-                                  : "text-stone-100"
+                                  : "text-stone-900"
                               }`}
                             >
                               {formatCurrency(c.amountOwed)}

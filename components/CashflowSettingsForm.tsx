@@ -40,7 +40,7 @@ export function CashflowSettingsForm({
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-stone-300">
+          <span className="text-sm font-medium text-stone-700">
             Recurring monthly outflows ($)
           </span>
           <span className="block text-xs text-stone-500">
@@ -53,11 +53,11 @@ export function CashflowSettingsForm({
             step="0.01"
             value={outflow}
             onChange={(e) => setOutflow(Number(e.target.value))}
-            className="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-stone-300">
+          <span className="text-sm font-medium text-stone-700">
             Expected new revenue ($/month)
           </span>
           <span className="block text-xs text-stone-500">
@@ -70,7 +70,7 @@ export function CashflowSettingsForm({
             step="0.01"
             value={newRev}
             onChange={(e) => setNewRev(Number(e.target.value))}
-            className="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-2 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
       </div>

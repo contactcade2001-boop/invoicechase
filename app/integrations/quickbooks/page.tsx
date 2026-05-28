@@ -87,17 +87,17 @@ const faq = [
 
 export default function MarketplaceListingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-stone-900/70 text-stone-100">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+    <div className="flex min-h-screen flex-col bg-white text-stone-900">
+      <header className="border-b border-stone-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <Link href="/privacy" className="text-stone-400 hover:text-stone-100">
+            <Link href="/privacy" className="text-stone-600 hover:text-stone-900">
               Privacy
             </Link>
-            <Link href="/terms" className="text-stone-400 hover:text-stone-100">
+            <Link href="/terms" className="text-stone-600 hover:text-stone-900">
               Terms
             </Link>
             <Link
@@ -112,7 +112,7 @@ export default function MarketplaceListingPage() {
       </header>
 
       <main className="flex-1">
-        <section className="border-b border-stone-800 bg-gradient-to-b from-emerald-50/40 to-white">
+        <section className="border-b border-stone-200 bg-gradient-to-b from-emerald-50/40 to-white">
           <div className="mx-auto grid max-w-5xl gap-10 px-4 py-16 md:grid-cols-[2fr,3fr] md:py-24">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
@@ -121,7 +121,7 @@ export default function MarketplaceListingPage() {
               <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">
                 Invoice Chase for QuickBooks Online
               </h1>
-              <p className="mt-4 text-lg leading-7 text-stone-400">
+              <p className="mt-4 text-lg leading-7 text-stone-600">
                 Stop chasing invoices. Connect QuickBooks in 60 seconds, see
                 everyone who owes you, and collect with one-click SMS reminders
                 and Stripe payment links.
@@ -136,7 +136,7 @@ export default function MarketplaceListingPage() {
                 </Link>
                 <Link
                   href="#security"
-                  className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 hover:bg-stone-950"
+                  className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 hover:bg-white"
                 >
                   Security &amp; data
                 </Link>
@@ -145,7 +145,7 @@ export default function MarketplaceListingPage() {
                 $49/month + 1.9% per collected payment. Cancel any time.
               </p>
             </div>
-            <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 sm:p-8">
+            <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 What it does
               </p>
@@ -157,10 +157,10 @@ export default function MarketplaceListingPage() {
                       aria-hidden
                     />
                     <div>
-                      <p className="text-sm font-semibold text-stone-100">
+                      <p className="text-sm font-semibold text-stone-900">
                         {f.title}
                       </p>
-                      <p className="mt-1 text-sm leading-5 text-stone-400">
+                      <p className="mt-1 text-sm leading-5 text-stone-600">
                         {f.body}
                       </p>
                     </div>
@@ -171,10 +171,10 @@ export default function MarketplaceListingPage() {
           </div>
         </section>
 
-        <section className="border-b border-stone-800 py-16">
+        <section className="border-b border-stone-200 py-16">
           <div className="mx-auto max-w-5xl px-4">
             <h2 className="text-2xl font-bold tracking-tight">Screenshots</h2>
-            <p className="mt-2 text-sm text-stone-400">
+            <p className="mt-2 text-sm text-stone-600">
               Final screenshots will be uploaded with the App Store submission;
               the placeholders below describe each view.
             </p>
@@ -182,14 +182,14 @@ export default function MarketplaceListingPage() {
               {screenshots.map((s, i) => (
                 <div
                   key={s.title}
-                  className="overflow-hidden rounded-2xl bg-stone-900/70 ring-1 ring-stone-800"
+                  className="overflow-hidden rounded-2xl bg-white ring-1 ring-stone-200"
                 >
                   <div className="flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-slate-100 to-slate-50 text-xs font-medium text-stone-500">
                     Screenshot {i + 1}
                   </div>
-                  <div className="border-t border-stone-800 p-4">
+                  <div className="border-t border-stone-200 p-4">
                     <p className="text-sm font-semibold">{s.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-stone-400">
+                    <p className="mt-1 text-xs leading-5 text-stone-600">
                       {s.body}
                     </p>
                   </div>
@@ -201,7 +201,7 @@ export default function MarketplaceListingPage() {
 
         <section
           id="security"
-          className="border-b border-stone-800 bg-stone-950 py-16"
+          className="border-b border-stone-200 bg-white py-16"
         >
           <div className="mx-auto max-w-3xl px-4">
             <div className="flex items-center gap-2 text-emerald-700">
@@ -213,7 +213,7 @@ export default function MarketplaceListingPage() {
             <h2 className="mt-2 text-2xl font-bold tracking-tight">
               Built for Intuit&apos;s security review
             </h2>
-            <p className="mt-3 text-sm leading-6 text-stone-400">
+            <p className="mt-3 text-sm leading-6 text-stone-600">
               Invoice Chase reads only what&apos;s needed to show you what
               you&apos;re owed and writes back only payments and refund
               receipts you&apos;ve initiated. Tokens are encrypted; you can
@@ -223,7 +223,7 @@ export default function MarketplaceListingPage() {
               {compliance.map((line) => (
                 <li
                   key={line}
-                  className="flex items-start gap-2 text-sm leading-6 text-stone-300"
+                  className="flex items-start gap-2 text-sm leading-6 text-stone-700"
                 >
                   <Check
                     className="mt-1 h-4 w-4 shrink-0 text-emerald-600"
@@ -233,18 +233,18 @@ export default function MarketplaceListingPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm leading-6 text-stone-400">
+            <p className="mt-6 text-sm leading-6 text-stone-600">
               See our{" "}
               <Link
                 href="/privacy"
-                className="font-semibold text-stone-100 underline-offset-2 hover:underline"
+                className="font-semibold text-stone-900 underline-offset-2 hover:underline"
               >
                 Privacy Policy
               </Link>{" "}
               and{" "}
               <Link
                 href="/terms"
-                className="font-semibold text-stone-100 underline-offset-2 hover:underline"
+                className="font-semibold text-stone-900 underline-offset-2 hover:underline"
               >
                 Terms of Service
               </Link>{" "}
@@ -260,10 +260,10 @@ export default function MarketplaceListingPage() {
               {faq.map((item) => (
                 <div
                   key={item.q}
-                  className="rounded-xl bg-stone-900/70 p-5 ring-1 ring-stone-800"
+                  className="rounded-xl bg-white p-5 ring-1 ring-stone-200"
                 >
-                  <dt className="font-semibold text-stone-100">{item.q}</dt>
-                  <dd className="mt-2 text-sm leading-6 text-stone-400">
+                  <dt className="font-semibold text-stone-900">{item.q}</dt>
+                  <dd className="mt-2 text-sm leading-6 text-stone-600">
                     {item.a}
                   </dd>
                 </div>
@@ -282,7 +282,7 @@ export default function MarketplaceListingPage() {
             </p>
             <Link
               href="/login"
-              className="mt-6 inline-flex items-center gap-2 rounded-md bg-stone-900/70 px-5 py-3 text-sm font-semibold text-stone-100 shadow-sm transition hover:bg-slate-100"
+              className="mt-6 inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-slate-100"
             >
               Get app
               <ArrowRight className="h-4 w-4" aria-hidden />
@@ -291,17 +291,17 @@ export default function MarketplaceListingPage() {
         </section>
       </main>
 
-      <footer className="border-t border-stone-800 bg-stone-900/70 py-8">
+      <footer className="border-t border-stone-200 bg-white py-8">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 text-sm text-stone-500">
-          <span className="font-semibold text-stone-300">Invoice Chase</span>
+          <span className="font-semibold text-stone-700">Invoice Chase</span>
           <div className="flex flex-wrap items-center gap-4">
-            <Link href="/privacy" className="hover:text-stone-300">
+            <Link href="/privacy" className="hover:text-stone-700">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-stone-300">
+            <Link href="/terms" className="hover:text-stone-700">
               Terms
             </Link>
-            <Link href="/partners" className="hover:text-stone-300">
+            <Link href="/partners" className="hover:text-stone-700">
               Partners
             </Link>
           </div>

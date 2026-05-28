@@ -19,10 +19,10 @@ export default async function AcceptInvitePage({
 
   if (!result.ok) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-stone-950 px-4 py-12">
-        <div className="w-full max-w-md rounded-2xl bg-stone-900/70 p-8 text-center shadow-sm ring-1 ring-stone-800">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12">
+        <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-stone-200">
           <h1 className="text-2xl font-bold">Invite invalid</h1>
-          <p className="mt-2 text-sm text-stone-400">
+          <p className="mt-2 text-sm text-stone-600">
             {result.error === "expired"
               ? "This invite has expired. Ask the owner to send a new one."
               : "This invite is invalid or has already been used."}

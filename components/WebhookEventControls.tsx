@@ -50,14 +50,14 @@ export function WebhookEventControls({
   }
 
   return (
-    <div className="rounded-2xl bg-stone-900/70 p-4 shadow-sm ring-1 ring-stone-800">
+    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-stone-200">
       <div className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-col gap-1 text-xs font-medium text-stone-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
           Source
           <select
             value={filters.source}
             onChange={(e) => apply({ source: e.target.value })}
-            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             {SOURCES.map((s) => (
               <option key={s || "any"} value={s}>
@@ -66,12 +66,12 @@ export function WebhookEventControls({
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-xs font-medium text-stone-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
           Status
           <select
             value={filters.status}
             onChange={(e) => apply({ status: e.target.value })}
-            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             {STATUSES.map((s) => (
               <option key={s || "any"} value={s}>
@@ -80,12 +80,12 @@ export function WebhookEventControls({
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-xs font-medium text-stone-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
           Time
           <select
             value={filters.since}
             onChange={(e) => apply({ since: e.target.value })}
-            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             {SINCE_PRESETS.map((p) => (
               <option key={p.value || "all"} value={p.value}>
@@ -94,7 +94,7 @@ export function WebhookEventControls({
             ))}
           </select>
         </label>
-        <label className="flex flex-1 flex-col gap-1 text-xs font-medium text-stone-400">
+        <label className="flex flex-1 flex-col gap-1 text-xs font-medium text-stone-600">
           Type contains
           <input
             type="search"
@@ -104,7 +104,7 @@ export function WebhookEventControls({
               if (e.key === "Enter") apply({ type: filters.type });
             }}
             placeholder="checkout.session"
-            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="rounded-md border-0 px-2 py-1.5 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
         </label>
         <div className="flex items-center gap-3">
@@ -117,11 +117,11 @@ export function WebhookEventControls({
           </button>
           <a
             href={exportHref}
-            className="inline-flex items-center gap-1.5 rounded-md bg-stone-900/70 px-3 py-1.5 text-xs font-semibold text-stone-300 shadow-sm ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950"
+            className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-sm ring-1 ring-inset ring-stone-300 transition hover:bg-white"
           >
             <Download className="h-3 w-3" aria-hidden /> CSV
           </a>
-          <label className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-400">
+          <label className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-600">
             <input
               type="checkbox"
               checked={autoRefresh}

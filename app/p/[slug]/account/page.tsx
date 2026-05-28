@@ -14,14 +14,14 @@ const STATUS_STYLES: Record<string, string> = {
   succeeded: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   pending: "bg-amber-50 text-amber-700 ring-amber-200",
   failed: "bg-red-50 text-red-700 ring-red-200",
-  refunded: "bg-slate-100 text-stone-300 ring-stone-800",
+  refunded: "bg-slate-100 text-stone-700 ring-stone-200",
   partially_refunded: "bg-amber-50 text-amber-700 ring-amber-200",
   disputed: "bg-red-50 text-red-700 ring-red-200",
 };
 
 function StatusBadge({ status }: { status: string }) {
   const cls =
-    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
+    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-700 ring-stone-200";
   const label = status === "partially_refunded" ? "partial refund" : status;
   return (
     <span
@@ -60,7 +60,7 @@ export default async function BrandedPortalAccountPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+      <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link
             href={`/p/${slug}`}
@@ -74,11 +74,11 @@ export default async function BrandedPortalAccountPage({
             {org.name}
           </Link>
           <div className="flex items-center gap-3 text-sm">
-            <span className="hidden text-stone-400 sm:inline">{email}</span>
+            <span className="hidden text-stone-600 sm:inline">{email}</span>
             <form action="/api/portal/logout" method="post">
               <button
                 type="submit"
-                className="text-stone-500 underline-offset-2 hover:text-stone-100 hover:underline"
+                className="text-stone-500 underline-offset-2 hover:text-stone-900 hover:underline"
               >
                 Sign out
               </button>
@@ -88,7 +88,7 @@ export default async function BrandedPortalAccountPage({
       </header>
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8 sm:py-10">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Outstanding
             </p>
@@ -105,7 +105,7 @@ export default async function BrandedPortalAccountPage({
               </p>
             ) : null}
           </div>
-          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Lifetime paid (net of refunds)
             </p>
@@ -116,7 +116,7 @@ export default async function BrandedPortalAccountPage({
         </div>
 
         {outstanding && outstanding.invoices.length > 0 ? (
-          <section className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <section className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <h2 className="text-lg font-semibold tracking-tight">
               Open invoices
             </h2>
@@ -124,9 +124,9 @@ export default async function BrandedPortalAccountPage({
               {outstanding.invoices.map((inv) => (
                 <li
                   key={inv.qboInvoiceId}
-                  className="flex items-center justify-between border-t border-stone-800/60 pt-2 first:border-t-0 first:pt-0"
+                  className="flex items-center justify-between border-t border-stone-100 pt-2 first:border-t-0 first:pt-0"
                 >
-                  <span className="text-stone-400">
+                  <span className="text-stone-600">
                     {inv.docNumber ? `#${inv.docNumber}` : "Invoice"}
                     {inv.dueDate ? (
                       <span className="text-stone-500">
@@ -135,7 +135,7 @@ export default async function BrandedPortalAccountPage({
                       </span>
                     ) : null}
                   </span>
-                  <span className="tabular-nums text-stone-300">
+                  <span className="tabular-nums text-stone-700">
                     {formatCurrencyDetailed(inv.balanceCents)}
                   </span>
                 </li>
@@ -159,7 +159,7 @@ export default async function BrandedPortalAccountPage({
             Past payments
           </h2>
           {payments.length === 0 ? (
-            <div className="mt-3 rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <div className="mt-3 rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
               <Inbox className="mx-auto h-8 w-8 text-stone-500" aria-hidden />
               <h3 className="mt-3 text-sm font-semibold">No payments yet</h3>
               <p className="mt-1 text-sm text-stone-500">
@@ -167,10 +167,10 @@ export default async function BrandedPortalAccountPage({
               </p>
             </div>
           ) : (
-            <div className="mt-3 overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+            <div className="mt-3 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
+                  <tr className="border-b border-stone-200 bg-white text-xs font-semibold uppercase tracking-wide text-stone-500">
                     <th className="px-4 py-3 text-left">Date</th>
                     <th className="px-4 py-3 text-right">Amount</th>
                     <th className="px-4 py-3 text-right">Refunded</th>
@@ -181,9 +181,9 @@ export default async function BrandedPortalAccountPage({
                   {payments.map((p) => (
                     <tr
                       key={p.id}
-                      className="border-b border-stone-800/60 last:border-b-0"
+                      className="border-b border-stone-100 last:border-b-0"
                     >
-                      <td className="px-4 py-3 text-stone-300">
+                      <td className="px-4 py-3 text-stone-700">
                         {formatRelativeTime(p.paidAt ?? p.createdAt)}
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums">

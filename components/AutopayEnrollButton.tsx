@@ -202,7 +202,7 @@ export function AutopayEnrollButton({
                 type="button"
                 onClick={() => update("resume")}
                 disabled={busy}
-                className="inline-flex items-center gap-1 rounded-md bg-stone-900/70 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-300 transition hover:bg-emerald-50 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-md bg-white px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-300 transition hover:bg-emerald-50 disabled:opacity-50"
               >
                 <Play className="h-3 w-3" /> Resume
               </button>
@@ -211,7 +211,7 @@ export function AutopayEnrollButton({
                 type="button"
                 onClick={() => update("pause")}
                 disabled={busy}
-                className="inline-flex items-center gap-1 rounded-md bg-stone-900/70 px-2.5 py-1 text-[11px] font-semibold text-stone-300 ring-1 ring-stone-700 transition hover:bg-stone-950 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-md bg-white px-2.5 py-1 text-[11px] font-semibold text-stone-700 ring-1 ring-stone-300 transition hover:bg-white disabled:opacity-50"
               >
                 <Pause className="h-3 w-3" /> Pause
               </button>
@@ -253,11 +253,11 @@ export function AutopayEnrollButton({
   }
 
   return (
-    <div className="rounded-xl border border-stone-800 bg-stone-900/70 p-4">
-      <p className="font-display text-sm font-semibold text-stone-100">
+    <div className="rounded-xl border border-stone-200 bg-white p-4">
+      <p className="font-display text-sm font-semibold text-stone-900">
         Save a payment method
       </p>
-      <p className="mt-1 text-xs text-stone-400">
+      <p className="mt-1 text-xs text-stone-600">
         The customer&apos;s card or bank will be charged automatically when an
         invoice is issued. You can pause anytime.
       </p>
@@ -288,7 +288,7 @@ export function AutopayEnrollButton({
             elementsRef.current = null;
             stripeRef.current = null;
           }}
-          className="rounded-md px-3 py-2 text-xs font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-100"
+          className="rounded-md px-3 py-2 text-xs font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-900"
         >
           Cancel
         </button>

@@ -154,7 +154,7 @@ export async function AppHeader({
   const secondaryVisible = secondary.filter((t) => t.visibleTo.includes(role));
 
   return (
-    <header className="sticky top-0 z-20 border-b border-stone-800/80 bg-stone-900/70/85 backdrop-blur-md dark:border-stone-800 dark:bg-stone-950/80">
+    <header className="sticky top-0 z-20 border-b border-stone-200/80 bg-white/85 backdrop-blur-md dark:border-stone-200 dark:bg-white/85">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-6 px-5 lg:px-6">
         <Link
           href="/"
@@ -162,7 +162,7 @@ export async function AppHeader({
           aria-label="Invoice Chase home"
         >
           <BrandMark size={20} />
-          <span className="font-display text-[15px] font-bold tracking-tight text-stone-100 dark:text-stone-100">
+          <span className="font-display text-[15px] font-bold tracking-tight text-stone-900 dark:text-stone-900">
             Invoice Chase<span className="text-orange-600">.</span>
           </span>
         </Link>
@@ -175,8 +175,8 @@ export async function AppHeader({
                 href={t.href}
                 className={`relative inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 font-medium transition ${
                   active
-                    ? "text-stone-100 dark:text-stone-100"
-                    : "text-stone-500 hover:bg-stone-800/70 hover:text-stone-100 dark:text-stone-400 dark:hover:bg-orange-700 dark:hover:text-stone-100"
+                    ? "text-stone-900 dark:text-stone-900"
+                    : "text-stone-500 hover:bg-stone-100/70 hover:text-stone-900 dark:text-stone-600 dark:hover:bg-orange-700 dark:hover:text-stone-900"
                 }`}
               >
                 {t.label}

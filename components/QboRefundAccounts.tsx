@@ -44,7 +44,7 @@ export function QboRefundAccounts({
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
-          <span className="text-sm font-medium text-stone-300">
+          <span className="text-sm font-medium text-stone-700">
             Deposit-to account
           </span>
           <p className="text-xs text-stone-500">
@@ -53,7 +53,7 @@ export function QboRefundAccounts({
           <select
             value={depositTo}
             onChange={(e) => setDepositTo(e.target.value)}
-            className="mt-1 w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             <option value="">Select an account…</option>
             {accounts.map((a) => (
@@ -64,7 +64,7 @@ export function QboRefundAccounts({
           </select>
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-stone-300">
+          <span className="text-sm font-medium text-stone-700">
             Refund line item
           </span>
           <p className="text-xs text-stone-500">
@@ -74,7 +74,7 @@ export function QboRefundAccounts({
           <select
             value={refundItem}
             onChange={(e) => setRefundItem(e.target.value)}
-            className="mt-1 w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="mt-1 w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           >
             <option value="">Select an item…</option>
             {items.map((i) => (

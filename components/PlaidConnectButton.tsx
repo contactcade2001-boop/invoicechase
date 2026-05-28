@@ -129,7 +129,7 @@ export function PlaidConnectButton({
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-3">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-stone-900/70 ring-1 ring-emerald-200">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white ring-1 ring-emerald-200">
               <Building2 className="h-4 w-4 text-emerald-700" />
             </span>
             <div>
@@ -138,7 +138,7 @@ export function PlaidConnectButton({
                 {institutionName ?? "Bank connected"}
               </p>
               {fmtBalance ? (
-                <p className="font-display mt-0.5 text-2xl font-bold tabular-nums text-stone-100">
+                <p className="font-display mt-0.5 text-2xl font-bold tabular-nums text-stone-900">
                   {fmtBalance}
                 </p>
               ) : null}
@@ -155,7 +155,7 @@ export function PlaidConnectButton({
               type="button"
               onClick={refresh}
               disabled={busy}
-              className="group inline-flex items-center gap-1.5 rounded-md bg-stone-900/70 px-3 py-1.5 text-xs font-semibold text-stone-300 ring-1 ring-stone-700 transition hover:ring-stone-600 disabled:opacity-50"
+              className="group inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 ring-1 ring-stone-300 transition hover:ring-stone-400 disabled:opacity-50"
             >
               <RefreshCcw
                 className={`h-3 w-3 transition group-hover:rotate-180 ${busy ? "animate-spin" : ""}`}
@@ -166,7 +166,7 @@ export function PlaidConnectButton({
               type="button"
               onClick={disconnect}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-stone-500 transition hover:bg-stone-900/70 hover:text-stone-100 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-stone-500 transition hover:bg-white hover:text-stone-900 disabled:opacity-50"
             >
               Disconnect
             </button>

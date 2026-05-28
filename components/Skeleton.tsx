@@ -33,7 +33,7 @@ export function Skeleton({ className = "h-4 w-full", style, lines }: Props) {
 
 export function SkeletonRow() {
   return (
-    <div className="flex items-center gap-3 border-b border-stone-800/60 px-5 py-4 last:border-b-0">
+    <div className="flex items-center gap-3 border-b border-stone-100 px-5 py-4 last:border-b-0">
       <div className="flex-1">
         <Skeleton className="h-4 w-1/3" />
         <Skeleton className="mt-2 h-3 w-1/5" />
@@ -47,7 +47,7 @@ export function SkeletonRow() {
 export function SkeletonCard({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 ${className}`}
+      className={`rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 ${className}`}
     >
       <Skeleton className="h-3 w-24" />
       <Skeleton className="mt-3 h-8 w-1/2" />

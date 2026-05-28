@@ -16,7 +16,7 @@ const CONFIDENCE_STYLE: Record<
   },
   low: {
     label: "Speculative",
-    classes: "bg-slate-100 text-stone-400 ring-stone-800",
+    classes: "bg-slate-100 text-stone-600 ring-stone-200",
   },
 };
 
@@ -34,7 +34,7 @@ export function BehavioralPatternsCard({
 }) {
   if (result.patterns.length === 0) return null;
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
@@ -60,7 +60,7 @@ export function BehavioralPatternsCard({
           return (
             <li
               key={`${p.customerId ?? "org"}-${i}`}
-              className="rounded-xl border border-stone-800 bg-stone-950/40 p-3"
+              className="rounded-xl border border-stone-200 bg-white/40 p-3"
             >
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
@@ -71,7 +71,7 @@ export function BehavioralPatternsCard({
                     {p.customerName && p.customerId ? (
                       <Link
                         href={`/dashboard/customer/${p.customerId}`}
-                        className="text-xs font-semibold text-stone-100 underline-offset-2 hover:underline"
+                        className="text-xs font-semibold text-stone-900 underline-offset-2 hover:underline"
                       >
                         {p.customerName}
                       </Link>
@@ -86,7 +86,7 @@ export function BehavioralPatternsCard({
                       {conf.label}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm leading-6 text-stone-300">
+                  <p className="mt-1 text-sm leading-6 text-stone-700">
                     {p.observation}
                   </p>
                 </div>

@@ -18,14 +18,14 @@ export function ConnectPrompt({
 }) {
   return (
     <div className="mx-auto flex min-h-[60vh] w-full max-w-xl flex-col items-center justify-center text-center">
-      <div className="rounded-2xl bg-stone-900/70 p-8 shadow-sm ring-1 ring-stone-800 sm:p-10">
+      <div className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-stone-200 sm:p-10">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200">
           <Link2 className="h-6 w-6 text-emerald-700" aria-hidden />
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-stone-100">
+        <h1 className="mt-4 text-2xl font-bold text-stone-900">
           Connect your accounting to see who owes you
         </h1>
-        <p className="mt-2 text-sm text-stone-400">
+        <p className="mt-2 text-sm text-stone-600">
           We&apos;ll pull your customers and unpaid invoices, show you the
           totals at a glance, and let you collect with one click.
         </p>
@@ -51,7 +51,7 @@ export function ConnectPrompt({
           {showXero ? (
             <a
               href="/api/xero/connect"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-stone-900/70 px-5 py-3 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
             >
               <XeroLogo size={18} />
               Connect Xero
@@ -60,7 +60,7 @@ export function ConnectPrompt({
           {showJobber ? (
             <a
               href="/api/jobber/connect"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-stone-900/70 px-5 py-3 text-sm font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-slate-700 focus:ring-offset-2"
             >
               <JobberLogo size={18} />
               Connect Jobber

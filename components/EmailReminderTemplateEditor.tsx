@@ -68,7 +68,7 @@ export function EmailReminderTemplateEditor({
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-sm font-semibold text-stone-100">Pick a tone</p>
+        <p className="text-sm font-semibold text-stone-900">Pick a tone</p>
         <p className="mt-0.5 text-xs text-stone-500">
           One click sets your active email. Subject line is auto-built — you
           only need to confirm the body tone you want.
@@ -84,11 +84,11 @@ export function EmailReminderTemplateEditor({
                 className={`rounded-xl border p-3 text-left transition ${
                   isActive
                     ? "border-emerald-500 bg-emerald-50/50 ring-2 ring-emerald-200"
-                    : "border-stone-800 bg-stone-900/70 hover:border-slate-300 hover:bg-stone-950"
+                    : "border-stone-200 bg-white hover:border-slate-300 hover:bg-white"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-stone-100">
+                  <span className="text-sm font-semibold text-stone-900">
                     {preset.name}
                   </span>
                   {isActive ? (
@@ -104,17 +104,17 @@ export function EmailReminderTemplateEditor({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-stone-800 bg-stone-900/70">
-        <div className="border-b border-stone-800 bg-stone-950 px-4 py-2">
+      <div className="overflow-hidden rounded-xl border border-stone-200 bg-white">
+        <div className="border-b border-stone-200 bg-white px-4 py-2">
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <Sparkles className="h-3 w-3" aria-hidden /> Live preview
           </p>
         </div>
         <div className="px-4 py-3 text-sm">
           <p className="text-xs text-stone-500">Subject</p>
-          <p className="mt-1 font-semibold text-stone-100">{preview.subject}</p>
-          <hr className="my-3 border-stone-800/60" />
-          <p className="whitespace-pre-wrap text-sm leading-6 text-stone-300">
+          <p className="mt-1 font-semibold text-stone-900">{preview.subject}</p>
+          <hr className="my-3 border-stone-100" />
+          <p className="whitespace-pre-wrap text-sm leading-6 text-stone-700">
             {preview.text}
           </p>
         </div>
@@ -123,21 +123,21 @@ export function EmailReminderTemplateEditor({
       <details
         open={showAdvanced}
         onToggle={(e) => setShowAdvanced((e.target as HTMLDetailsElement).open)}
-        className="rounded-xl border border-stone-800 bg-stone-900/70"
+        className="rounded-xl border border-stone-200 bg-white"
       >
-        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500 hover:text-stone-300">
+        <summary className="cursor-pointer list-none px-4 py-3 text-xs font-semibold uppercase tracking-wide text-stone-500 hover:text-stone-700">
           Customize the wording
           <span className="ml-2 text-[10px] font-normal normal-case text-stone-500">
             (optional)
           </span>
         </summary>
-        <div className="space-y-3 border-t border-stone-800 p-4">
+        <div className="space-y-3 border-t border-stone-200 p-4">
           <textarea
             value={value}
             onChange={(e) => setValue(e.target.value)}
             rows={10}
             maxLength={4000}
-            className="block w-full resize-y rounded-md border-0 px-3 py-2 font-mono text-sm text-stone-100 shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="block w-full resize-y rounded-md border-0 px-3 py-2 font-mono text-sm text-stone-900 shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <div className="flex items-center justify-between text-xs text-stone-500">
             <span>{value.length} / 4000 characters</span>
@@ -149,7 +149,7 @@ export function EmailReminderTemplateEditor({
                 type="button"
                 onClick={() => setValue((v) => v + t.token)}
                 title={t.description}
-                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-stone-300 hover:bg-slate-200"
+                className="rounded-full bg-slate-100 px-2.5 py-1 font-mono text-xs text-stone-700 hover:bg-slate-200"
               >
                 {t.token}
               </button>

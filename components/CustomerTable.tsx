@@ -112,9 +112,9 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
 
   if (customers.length === 0) {
     return (
-      <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
-        <Inbox className="mx-auto h-8 w-8 text-stone-400" aria-hidden />
-        <h3 className="mt-3 text-sm font-semibold text-stone-100">
+      <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
+        <Inbox className="mx-auto h-8 w-8 text-stone-600" aria-hidden />
+        <h3 className="mt-3 text-sm font-semibold text-stone-900">
           No customers match this filter
         </h3>
         <p className="mt-1 text-sm text-stone-500">
@@ -127,10 +127,10 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
   const selCount = selected.size;
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+    <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
       {selCount > 0 ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-800 bg-gradient-to-r from-orange-50 to-amber-50 px-5 py-3">
-          <p className="text-sm font-semibold text-stone-100">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-200 bg-gradient-to-r from-orange-50 to-amber-50 px-5 py-3">
+          <p className="text-sm font-semibold text-stone-900">
             {selCount} selected
           </p>
           <div className="flex flex-wrap items-center gap-2">
@@ -147,7 +147,7 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
               type="button"
               onClick={bulkEmail}
               disabled={pending}
-              className="inline-flex items-center gap-1.5 rounded-md bg-stone-900/70 px-3 py-1.5 text-xs font-semibold text-stone-300 shadow-sm ring-1 ring-stone-700 transition hover:bg-stone-950 hover:ring-stone-600 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-sm ring-1 ring-stone-300 transition hover:bg-white hover:ring-stone-400 disabled:opacity-50"
             >
               <Mail className="h-3 w-3" />
               Email selected
@@ -156,7 +156,7 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
               type="button"
               onClick={bulkTag}
               disabled={pending}
-              className="inline-flex items-center gap-1.5 rounded-md bg-stone-900/70 px-3 py-1.5 text-xs font-semibold text-stone-300 shadow-sm ring-1 ring-stone-700 transition hover:bg-stone-950 hover:ring-stone-600 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-sm ring-1 ring-stone-300 transition hover:bg-white hover:ring-stone-400 disabled:opacity-50"
             >
               <Tag className="h-3 w-3" />
               Tag selected
@@ -164,7 +164,7 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
             <button
               type="button"
               onClick={() => setSelected(new Set())}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-100"
+              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-900"
               aria-label="Clear selection"
             >
               <X className="h-3 w-3" />
@@ -180,7 +180,7 @@ export function CustomerTable({ customers }: { customers: Customer[] }) {
         </div>
       ) : null}
 
-      <div className="hidden grid-cols-[28px_minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] items-center gap-4 border-b border-stone-800 bg-stone-900/40 px-6 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500 md:grid">
+      <div className="hidden grid-cols-[28px_minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] items-center gap-4 border-b border-stone-200 bg-stone-50 px-6 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500 md:grid">
         <input
           type="checkbox"
           checked={allSelected}
@@ -219,7 +219,7 @@ function SelectableRow({
 }) {
   return (
     <div
-      className={`flex border-b border-stone-800/60 last:border-b-0 ${
+      className={`flex border-b border-stone-100 last:border-b-0 ${
         checked ? "bg-orange-50/40" : ""
       }`}
     >

@@ -63,7 +63,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className="relative min-h-screen font-sans text-stone-100 antialiased">
+      <body className="relative min-h-screen font-sans text-stone-900 antialiased">
         <AppBackground />
         <PageMount>{children}</PageMount>
       </body>

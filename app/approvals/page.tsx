@@ -20,18 +20,18 @@ export default async function ApprovalsPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
             Owner approvals
           </p>
-          <h1 className="font-display mt-2 text-3xl font-bold text-stone-100">
+          <h1 className="font-display mt-2 text-3xl font-bold text-stone-900">
             Review AI-drafted messages.
           </h1>
-          <p className="mt-3 text-sm leading-6 text-stone-400">
+          <p className="mt-3 text-sm leading-6 text-stone-600">
             When &ldquo;Owner approval required&rdquo; is on, Claude drafts the
             message here instead of sending. Approve to send, decline to skip.
           </p>
         </header>
         {items.length === 0 ? (
-          <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
             <Sparkles className="mx-auto h-8 w-8 text-orange-500" aria-hidden />
-            <h3 className="font-display mt-3 text-base font-semibold text-stone-100">
+            <h3 className="font-display mt-3 text-base font-semibold text-stone-900">
               Inbox zero
             </h3>
             <p className="mt-1 text-sm text-stone-500">

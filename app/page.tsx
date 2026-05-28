@@ -135,9 +135,9 @@ const ACCENT_CLASSES: Record<
   },
   amber: { bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-200" },
   stone: {
-    bg: "bg-stone-800",
-    text: "text-stone-300",
-    ring: "ring-stone-800",
+    bg: "bg-stone-100",
+    text: "text-stone-700",
+    ring: "ring-stone-200",
   },
 };
 
@@ -235,13 +235,13 @@ const INTEGRATIONS: {
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col text-stone-100">
+    <div className="flex min-h-screen flex-col text-stone-900">
       {/* ── Sticky nav ─────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 border-b border-stone-800/80 bg-stone-900/70/85 backdrop-blur-md">
+      <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-white/85 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-6">
           <Link href="/" className="flex items-center gap-2">
             <BrandMark size={20} />
-            <span className="font-display text-base font-bold tracking-tight text-stone-100">
+            <span className="font-display text-base font-bold tracking-tight text-stone-900">
               Invoice Chase<span className="text-orange-600">.</span>
             </span>
           </Link>
@@ -250,7 +250,7 @@ export default function LandingPage() {
               <a
                 key={l.href}
                 href={l.href}
-                className="text-stone-400 transition hover:text-stone-100"
+                className="text-stone-600 transition hover:text-stone-900"
               >
                 {l.label}
               </a>
@@ -259,7 +259,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/login"
-              className="hidden text-sm font-medium text-stone-400 transition hover:text-stone-100 sm:inline"
+              className="hidden text-sm font-medium text-stone-600 transition hover:text-stone-900 sm:inline"
             >
               Sign in
             </Link>
@@ -282,21 +282,21 @@ export default function LandingPage() {
         <section className="bg-hero-mesh relative overflow-hidden">
           <div className="mx-auto max-w-6xl px-5 pb-20 pt-20 sm:pt-28 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-orange-200/70 bg-stone-900/70/70 px-3 py-1 text-xs font-semibold text-orange-800 shadow-sm backdrop-blur">
+              <div className="inline-flex items-center gap-2 rounded-full border border-orange-200/70 bg-white/70 px-3 py-1 text-xs font-semibold text-orange-800 shadow-sm backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-pulse-glow absolute inline-flex h-full w-full rounded-full bg-orange-500" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-orange-600" />
                 </span>
                 AI collections for service-based SMBs
               </div>
-              <h1 className="font-display mt-6 text-5xl font-bold text-stone-100 sm:text-6xl lg:text-7xl">
+              <h1 className="font-display mt-6 text-5xl font-bold text-stone-900 sm:text-6xl lg:text-7xl">
                 Get paid 15 days faster.
                 <br />
                 <span className="bg-gradient-to-r from-orange-500 via-orange-600 to-amber-600 bg-clip-text text-transparent">
                   Without sending a reminder.
                 </span>
               </h1>
-              <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-stone-400">
+              <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-stone-600">
                 Connect QuickBooks. Claude AI handles every overdue invoice —
                 texts, emails, replies, payment plans — all in your voice.
                 You sleep. The money still lands.
@@ -314,7 +314,7 @@ export default function LandingPage() {
                 </Link>
                 <Link
                   href="/demo"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-stone-900/70 px-7 py-3.5 text-base font-semibold text-stone-100 ring-1 ring-inset ring-stone-700 transition hover:ring-stone-600 hover:shadow-md"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-stone-900 ring-1 ring-inset ring-stone-300 transition hover:ring-stone-400 hover:shadow-md"
                 >
                   See live demo
                   <ArrowRight
@@ -342,8 +342,8 @@ export default function LandingPage() {
             {/* Product mockup card */}
             <div className="relative mx-auto mt-16 max-w-5xl">
               <div className="absolute -inset-x-8 -inset-y-4 -z-10 rounded-[2.5rem] bg-gradient-to-tr from-orange-200/40 via-amber-200/30 to-rose-200/30 blur-2xl" />
-              <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-2xl shadow-stone-900/10 ring-1 ring-stone-800/80">
-                <div className="flex items-center gap-1.5 border-b border-stone-800 bg-stone-950/80 px-4 py-3">
+              <div className="overflow-hidden rounded-2xl bg-white shadow-2xl shadow-stone-900/10 ring-1 ring-stone-200/80">
+                <div className="flex items-center gap-1.5 border-b border-stone-200 bg-white/85 px-4 py-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
                   <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
@@ -358,7 +358,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── Trust strip — clean static logo grid ──────────────────── */}
-        <section className="border-y border-stone-800 bg-stone-900/70 py-14">
+        <section className="border-y border-stone-200 bg-white py-14">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
               Connects with the tools your business already runs on
@@ -371,7 +371,7 @@ export default function LandingPage() {
                   title={it.name}
                 >
                   <it.Logo size={28} />
-                  <span className="text-[11px] font-semibold text-stone-400">
+                  <span className="text-[11px] font-semibold text-stone-600">
                     {it.name.split(" ")[0]}
                   </span>
                 </div>
@@ -398,7 +398,7 @@ export default function LandingPage() {
                   className="bg-gradient-to-r from-orange-300 via-orange-100 to-amber-200 bg-clip-text text-transparent tabular-nums"
                 />
               </p>
-              <p className="mt-4 text-base text-stone-400">
+              <p className="mt-4 text-base text-stone-600">
                 Total collected by SMBs running Invoice Chase right now.
               </p>
             </div>
@@ -406,15 +406,15 @@ export default function LandingPage() {
         </section>
 
         {/* ── Metrics ────────────────────────────────────────────────── */}
-        <section className="bg-stone-900/70 py-20">
+        <section className="bg-white py-20">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 The cashflow math
               </p>
-              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-900 sm:text-5xl">
                 Built to move every dollar you&apos;re owed —{" "}
-                <span className="text-stone-400">faster.</span>
+                <span className="text-stone-600">faster.</span>
               </h2>
             </div>
             <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl bg-stone-200 sm:grid-cols-2 lg:grid-cols-4">
@@ -444,13 +444,13 @@ export default function LandingPage() {
         </section>
 
         {/* ── Testimonials ───────────────────────────────────────────── */}
-        <section className="bg-stone-950 py-24">
+        <section className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 What owners say
               </p>
-              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mx-auto mt-3 max-w-3xl text-4xl font-bold text-stone-900 sm:text-5xl">
                 The boring software that <em className="not-italic text-orange-600">finally</em>{" "}
                 paid for itself.
               </h2>
@@ -459,7 +459,7 @@ export default function LandingPage() {
               {TESTIMONIALS.map((t) => (
                 <figure
                   key={t.author}
-                  className="flex flex-col rounded-2xl bg-stone-900/70 p-7 shadow-sm ring-1 ring-stone-800 transition hover:shadow-lg"
+                  className="flex flex-col rounded-2xl bg-white p-7 shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg"
                 >
                   <div className="flex gap-0.5 text-orange-500">
                     {Array.from({ length: 5 }).map((_, i) => (
@@ -473,17 +473,17 @@ export default function LandingPage() {
                       </svg>
                     ))}
                   </div>
-                  <blockquote className="font-display mt-5 flex-1 text-lg leading-7 text-stone-200">
+                  <blockquote className="font-display mt-5 flex-1 text-lg leading-7 text-stone-800">
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>
-                  <figcaption className="mt-6 flex items-center gap-3 border-t border-stone-800/60 pt-5">
+                  <figcaption className="mt-6 flex items-center gap-3 border-t border-stone-100 pt-5">
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.avatarGrad} text-sm font-bold text-white`}
                     >
                       {t.initials}
                     </span>
                     <div>
-                      <p className="text-sm font-semibold text-stone-100">
+                      <p className="text-sm font-semibold text-stone-900">
                         {t.author}
                       </p>
                       <p className="text-xs text-stone-500">{t.role}</p>
@@ -496,18 +496,18 @@ export default function LandingPage() {
         </section>
 
         {/* ── Product / How it works ─────────────────────────────────── */}
-        <section id="product" className="bg-stone-950 py-24">
+        <section id="product" className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 How it works
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Set it up once. Watch the deposits land.
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-400">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-600">
                 The average service-based SMB carries{" "}
-                <strong className="text-stone-100">$30k–$300k</strong> of
+                <strong className="text-stone-900">$30k–$300k</strong> of
                 unpaid invoices at any time. We compress that timeline so the
                 cash you&apos;re owed actually shows up in your bank.
               </p>
@@ -532,17 +532,17 @@ export default function LandingPage() {
               ].map((s) => (
                 <div
                   key={s.step}
-                  className="group relative overflow-hidden rounded-2xl bg-stone-900/70 p-7 shadow-sm ring-1 ring-stone-800 transition hover:shadow-lg hover:ring-stone-700"
+                  className="group relative overflow-hidden rounded-2xl bg-white p-7 shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg hover:ring-stone-300"
                 >
                   <div className="flex items-center gap-3">
                     <span className="font-display flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-700 text-base font-bold text-white shadow-sm">
                       {s.step}
                     </span>
-                    <h3 className="font-display text-xl font-semibold text-stone-100">
+                    <h3 className="font-display text-xl font-semibold text-stone-900">
                       {s.title}
                     </h3>
                   </div>
-                  <p className="mt-4 text-[15px] leading-7 text-stone-400">
+                  <p className="mt-4 text-[15px] leading-7 text-stone-600">
                     {s.body}
                   </p>
                 </div>
@@ -552,16 +552,16 @@ export default function LandingPage() {
         </section>
 
         {/* ── Features grid ──────────────────────────────────────────── */}
-        <section id="features" className="bg-stone-900/70 py-24">
+        <section id="features" className="bg-white py-24">
           <div className="mx-auto max-w-6xl px-5 lg:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Everything in the box
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 A complete AR platform. One price.
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-400">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-stone-600">
                 Nothing here is an add-on, an extra seat fee, or a higher tier.
                 Every feature for $49/month + 1.9% on collected payments.
               </p>
@@ -572,17 +572,17 @@ export default function LandingPage() {
                 return (
                   <div
                     key={f.title}
-                    className="card-hover group flex flex-col rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 hover:ring-stone-700"
+                    className="card-hover group flex flex-col rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 hover:ring-stone-300"
                   >
                     <span
                       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${a.bg} ring-1 ring-inset ${a.ring} transition group-hover:scale-110`}
                     >
                       <f.icon className={`h-4 w-4 ${a.text}`} aria-hidden />
                     </span>
-                    <h3 className="font-display mt-5 text-base font-semibold text-stone-100">
+                    <h3 className="font-display mt-5 text-base font-semibold text-stone-900">
                       {f.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-6 text-stone-400">
+                    <p className="mt-2 text-sm leading-6 text-stone-600">
                       {f.body}
                     </p>
                   </div>
@@ -595,25 +595,25 @@ export default function LandingPage() {
         {/* ── Reputation ─────────────────────────────────────────────── */}
         <section
           id="reputation"
-          className="border-y border-stone-800 bg-stone-950 py-24"
+          className="border-y border-stone-200 bg-white py-24"
         >
           <div className="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-2 lg:items-start lg:gap-16 lg:px-6">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Reputation scoring
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Know who&apos;s going to pay you.
                 <br />
-                <span className="text-stone-400">Before they don&apos;t.</span>
+                <span className="text-stone-600">Before they don&apos;t.</span>
               </h2>
-              <p className="mt-6 text-lg leading-8 text-stone-400">
+              <p className="mt-6 text-lg leading-8 text-stone-600">
                 Every customer gets a 300–850 score — exactly like a personal
                 credit score, but private to you. Computed from their payment
                 history: on-time rate, average days late, 60+ day incidents,
                 and current open balance.
               </p>
-              <ul className="mt-8 space-y-4 text-[15px] leading-7 text-stone-300">
+              <ul className="mt-8 space-y-4 text-[15px] leading-7 text-stone-700">
                 {[
                   "Bulk-text the riskiest customers first — sorted automatically.",
                   "Auto-collect deposits from low-rep customers before you do the work.",
@@ -626,26 +626,26 @@ export default function LandingPage() {
                 ))}
               </ul>
             </div>
-            <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-xl shadow-stone-900/5 ring-1 ring-stone-800">
-              <div className="border-b border-stone-800 bg-stone-900/40 px-6 py-4">
+            <div className="overflow-hidden rounded-2xl bg-white shadow-xl shadow-stone-900/5 ring-1 ring-stone-200">
+              <div className="border-b border-stone-200 bg-stone-50 px-6 py-4">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">
                   Reputation tiers
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-stone-100">
+                <p className="mt-0.5 text-sm font-semibold text-stone-900">
                   How we map score → action
                 </p>
               </div>
-              <div className="divide-y divide-stone-800">
+              <div className="divide-y divide-stone-100">
                 {reputationTiers.map((t) => (
                   <div
                     key={t.range}
-                    className="flex items-center gap-4 px-6 py-4 transition hover:bg-stone-900/40"
+                    className="flex items-center gap-4 px-6 py-4 transition hover:bg-stone-50"
                   >
                     <span className="font-mono text-xs tabular-nums text-stone-500">
                       {t.range}
                     </span>
                     <span className={`h-1.5 w-12 rounded-full ${t.color}`} />
-                    <span className="text-sm font-semibold text-stone-100">
+                    <span className="text-sm font-semibold text-stone-900">
                       {t.label}
                     </span>
                   </div>
@@ -656,34 +656,34 @@ export default function LandingPage() {
         </section>
 
         {/* ── Pricing ─────────────────────────────────────────────────── */}
-        <section id="pricing" className="bg-stone-900/70 py-24">
+        <section id="pricing" className="bg-white py-24">
           <div className="mx-auto max-w-3xl px-5 lg:px-6">
             <div className="text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Pricing
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 One plan. Everything included.
               </h2>
-              <p className="mt-4 text-lg text-stone-400">
+              <p className="mt-4 text-lg text-stone-600">
                 Cancel anytime. No contracts, no exit fees.
               </p>
             </div>
             <div className="relative mt-12">
               <div className="absolute -inset-0.5 rounded-[1.6rem] bg-gradient-to-br from-orange-400 via-orange-600 to-amber-600 opacity-60 blur-md" />
-              <div className="relative overflow-hidden rounded-3xl bg-stone-900/70 p-8 shadow-2xl shadow-orange-900/10 ring-1 ring-stone-800 sm:p-10">
+              <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl shadow-orange-900/10 ring-1 ring-stone-200 sm:p-10">
                 <div className="flex flex-wrap items-baseline justify-between gap-4">
                   <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                       Invoice Chase
                     </p>
                     <div className="mt-1 flex items-baseline gap-1.5">
-                      <span className="font-display text-6xl font-bold tracking-tight text-stone-100">
+                      <span className="font-display text-6xl font-bold tracking-tight text-stone-900">
                         $49
                       </span>
                       <span className="text-lg text-stone-500">/month</span>
                     </div>
-                    <p className="mt-2 text-sm text-stone-400">
+                    <p className="mt-2 text-sm text-stone-600">
                       Plus 1.9% on each payment we collect for you.
                     </p>
                   </div>
@@ -702,7 +702,7 @@ export default function LandingPage() {
                   {pricingFeatures.map((f) => (
                     <li
                       key={f}
-                      className="flex items-start gap-2.5 text-sm text-stone-300"
+                      className="flex items-start gap-2.5 text-sm text-stone-700"
                     >
                       <Check
                         className="mt-0.5 h-4 w-4 shrink-0 text-orange-600"
@@ -712,7 +712,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-stone-800/60 pt-6 text-[11px] text-stone-500">
+                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-stone-100 pt-6 text-[11px] text-stone-500">
                   <span className="inline-flex items-center gap-1.5">
                     <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
                     SOC 2 posture
@@ -732,13 +732,13 @@ export default function LandingPage() {
         </section>
 
         {/* ── FAQ ────────────────────────────────────────────────────── */}
-        <section className="bg-stone-950 py-24">
+        <section className="bg-white py-24">
           <div className="mx-auto max-w-3xl px-5 lg:px-6">
             <div className="text-center">
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700">
                 Frequently asked
               </p>
-              <h2 className="font-display mt-3 text-4xl font-bold text-stone-100 sm:text-5xl">
+              <h2 className="font-display mt-3 text-4xl font-bold text-stone-900 sm:text-5xl">
                 Questions, answered.
               </h2>
             </div>
@@ -746,12 +746,12 @@ export default function LandingPage() {
               {faq.map((item) => (
                 <div
                   key={item.q}
-                  className="group rounded-2xl bg-stone-900/70 p-6 ring-1 ring-stone-800 transition hover:shadow-sm"
+                  className="group rounded-2xl bg-white p-6 ring-1 ring-stone-200 transition hover:shadow-sm"
                 >
-                  <dt className="font-display text-base font-semibold text-stone-100">
+                  <dt className="font-display text-base font-semibold text-stone-900">
                     {item.q}
                   </dt>
-                  <dd className="mt-2 text-[15px] leading-7 text-stone-400">
+                  <dd className="mt-2 text-[15px] leading-7 text-stone-600">
                     {item.a}
                   </dd>
                 </div>
@@ -766,7 +766,7 @@ export default function LandingPage() {
             <h2 className="font-display text-4xl font-bold text-white sm:text-5xl">
               Stop chasing. Start collecting.
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-lg text-stone-300">
+            <p className="mx-auto mt-5 max-w-xl text-lg text-stone-700">
               Connect QuickBooks in 60 seconds and let Claude handle the
               follow-up. Sleep through the 11pm reply storm.
             </p>
@@ -783,7 +783,7 @@ export default function LandingPage() {
               </Link>
               <Link
                 href="/demo"
-                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold text-white/90 ring-1 ring-inset ring-white/20 transition hover:bg-stone-900/70/5 hover:text-white"
+                className="inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold text-white/90 ring-1 ring-inset ring-white/20 transition hover:bg-white/5 hover:text-white"
               >
                 See live demo
               </Link>
@@ -793,17 +793,17 @@ export default function LandingPage() {
       </main>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
-      <footer className="border-t border-stone-800 bg-stone-900/70">
+      <footer className="border-t border-stone-200 bg-white">
         <div className="mx-auto max-w-6xl px-5 py-14 lg:px-6">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             <div className="col-span-2 sm:col-span-1">
               <Link href="/" className="flex items-center gap-2">
                 <BrandMark size={20} />
-                <span className="font-display text-base font-bold tracking-tight text-stone-100">
+                <span className="font-display text-base font-bold tracking-tight text-stone-900">
                   Invoice Chase<span className="text-orange-600">.</span>
                 </span>
               </Link>
-              <p className="mt-4 max-w-xs text-sm leading-6 text-stone-400">
+              <p className="mt-4 max-w-xs text-sm leading-6 text-stone-600">
                 AI-powered AR for service-based SMBs. Built on Claude, Stripe,
                 and your existing accounting tools.
               </p>
@@ -835,7 +835,7 @@ export default function LandingPage() {
               ]}
             />
           </div>
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-stone-800 pt-6 text-xs text-stone-500">
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200 pt-6 text-xs text-stone-500">
             <span>&copy; {new Date().getFullYear()} Invoice Chase, Inc.</span>
             <div className="flex items-center gap-4">
               <span className="inline-flex items-center gap-1.5">
@@ -872,7 +872,7 @@ function FooterCol({
           <li key={l.href}>
             <Link
               href={l.href}
-              className="text-stone-400 transition hover:text-stone-100"
+              className="text-stone-600 transition hover:text-stone-900"
             >
               {l.label}
             </Link>
@@ -893,16 +893,16 @@ function MetricCard({
   label: string;
 }) {
   return (
-    <div className="bg-stone-900/70 px-7 py-9 transition hover:bg-stone-900/40">
-      <p className="font-display text-5xl font-bold tracking-tight text-stone-100 sm:text-6xl">
+    <div className="bg-white px-7 py-9 transition hover:bg-stone-50">
+      <p className="font-display text-5xl font-bold tracking-tight text-stone-900 sm:text-6xl">
         {value}
         {unit ? (
-          <span className="ml-1.5 text-2xl font-semibold text-stone-400 sm:text-3xl">
+          <span className="ml-1.5 text-2xl font-semibold text-stone-600 sm:text-3xl">
             {unit}
           </span>
         ) : null}
       </p>
-      <p className="mt-3 text-sm leading-6 text-stone-400">{label}</p>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{label}</p>
     </div>
   );
 }
@@ -919,8 +919,8 @@ function AnimatedMetric({
   label: string;
 }) {
   return (
-    <div className="bg-stone-900/70 px-7 py-9 transition hover:bg-stone-900/40">
-      <p className="font-display text-5xl font-bold tracking-tight text-stone-100 sm:text-6xl">
+    <div className="bg-white px-7 py-9 transition hover:bg-stone-50">
+      <p className="font-display text-5xl font-bold tracking-tight text-stone-900 sm:text-6xl">
         {prefix ?? ""}
         <AnimatedCounter
           to={animated.to}
@@ -928,12 +928,12 @@ function AnimatedMetric({
           className="tabular-nums"
         />
         {unit ? (
-          <span className="ml-1.5 text-2xl font-semibold text-stone-400 sm:text-3xl">
+          <span className="ml-1.5 text-2xl font-semibold text-stone-600 sm:text-3xl">
             {unit}
           </span>
         ) : null}
       </p>
-      <p className="mt-3 text-sm leading-6 text-stone-400">{label}</p>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{label}</p>
     </div>
   );
 }
@@ -942,11 +942,11 @@ function AnimatedMetric({
 
 function ProductMockup() {
   return (
-    <div className="grid grid-cols-1 gap-0 bg-stone-900/30 lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="hidden border-r border-stone-800 bg-stone-900/70 p-5 lg:block">
+    <div className="grid grid-cols-1 gap-0 bg-stone-50 lg:grid-cols-[260px_minmax(0,1fr)]">
+      <aside className="hidden border-r border-stone-200 bg-white p-5 lg:block">
         <div className="flex items-center gap-2">
           <BrandMark size={18} />
-          <span className="text-sm font-semibold text-stone-100">
+          <span className="text-sm font-semibold text-stone-900">
             Honest Plumbing
           </span>
         </div>
@@ -964,7 +964,7 @@ function ProductMockup() {
               className={`flex items-center justify-between rounded-md px-3 py-1.5 ${
                 t.active
                   ? "bg-orange-600 font-semibold text-white"
-                  : "text-stone-400"
+                  : "text-stone-600"
               }`}
             >
               <span>{t.label}</span>
@@ -986,7 +986,7 @@ function ProductMockup() {
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="rounded-xl border border-stone-800 bg-stone-900/70 p-4">
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
             <div className="flex items-center gap-3">
               <div className="relative h-14 w-14">
                 <svg className="h-14 w-14 -rotate-90" viewBox="0 0 100 100">
@@ -1011,7 +1011,7 @@ function ProductMockup() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-base font-bold tabular-nums text-stone-100">
+                  <span className="text-base font-bold tabular-nums text-stone-900">
                     72
                   </span>
                 </div>
@@ -1027,7 +1027,7 @@ function ProductMockup() {
               </div>
             </div>
           </div>
-          <div className="rounded-xl border border-stone-800 bg-stone-900/70 p-4">
+          <div className="rounded-xl border border-stone-200 bg-white p-4">
             <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
               <Sparkles className="h-2.5 w-2.5 text-orange-600" /> Today&apos;s
               plays
@@ -1039,7 +1039,7 @@ function ProductMockup() {
           </div>
         </div>
 
-        <div className="mt-4 overflow-hidden rounded-xl border border-stone-800 bg-stone-900/70">
+        <div className="mt-4 overflow-hidden rounded-xl border border-stone-200 bg-white">
           {[
             { name: "Riverside Diner", days: 47, amt: "$4,200", rep: 612 },
             { name: "Wells Brothers HVAC", days: 21, amt: "$1,850", rep: 480 },
@@ -1047,13 +1047,13 @@ function ProductMockup() {
           ].map((r, i) => (
             <div
               key={r.name}
-              className={`flex items-center gap-3 px-4 py-3 text-sm ${i > 0 ? "border-t border-stone-800/60" : ""}`}
+              className={`flex items-center gap-3 px-4 py-3 text-sm ${i > 0 ? "border-t border-stone-100" : ""}`}
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium text-stone-100">{r.name}</p>
+                <p className="truncate font-medium text-stone-900">{r.name}</p>
                 <p className="text-[11px] text-stone-500">{r.days}d overdue</p>
               </div>
-              <span className="text-xs font-semibold tabular-nums text-stone-300">
+              <span className="text-xs font-semibold tabular-nums text-stone-700">
                 {r.amt}
               </span>
               <RepBadge score={r.rep} />
@@ -1078,11 +1078,11 @@ function MockStat({
   unit?: string;
 }) {
   return (
-    <div className="rounded-xl border border-stone-800 bg-stone-900/70 p-4">
+    <div className="rounded-xl border border-stone-200 bg-white p-4">
       <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">
         {label}
       </p>
-      <p className="font-display mt-1 text-2xl font-bold tabular-nums text-stone-100">
+      <p className="font-display mt-1 text-2xl font-bold tabular-nums text-stone-900">
         {value}
         {unit ? (
           <span className="ml-1 text-xs font-normal text-stone-500">
@@ -1110,7 +1110,7 @@ function MockPlay({
       <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-orange-600 text-[9px] font-bold text-white">
         {rank}
       </span>
-      <span className="truncate font-medium text-stone-100">{name}</span>
+      <span className="truncate font-medium text-stone-900">{name}</span>
       <span className="text-[10px] font-semibold uppercase tracking-wide text-orange-700">
         {action}
       </span>

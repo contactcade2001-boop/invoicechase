@@ -61,7 +61,7 @@ export function ReputationMeter({ score }: { score: number }) {
       <span className={`h-1.5 w-1.5 rounded-full ${tier.dot}`} aria-hidden />
       {tier.label}
       <span className="tabular-nums text-stone-500">·</span>
-      <span className="tabular-nums text-stone-400">{clamped}</span>
+      <span className="tabular-nums text-stone-600">{clamped}</span>
     </span>
   );
 }

@@ -31,7 +31,7 @@ function PageShell({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+      <header className="border-b border-stone-200 bg-white">
         <div className="mx-auto flex h-14 max-w-3xl items-center px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
@@ -60,20 +60,20 @@ function MessageCard({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl bg-stone-900/70 p-8 text-center shadow-sm ring-1 ring-stone-800">
+    <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-stone-200">
       {icon ? (
         <div
           className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ring-1 ${
             tone === "success"
               ? "bg-emerald-50 ring-emerald-200"
-              : "bg-slate-100 ring-stone-800"
+              : "bg-slate-100 ring-stone-200"
           }`}
         >
           {icon}
         </div>
       ) : null}
       <h1 className="mt-4 text-2xl font-bold">{title}</h1>
-      <p className="mt-2 text-sm text-stone-400">{body}</p>
+      <p className="mt-2 text-sm text-stone-600">{body}</p>
     </div>
   );
 }
@@ -101,7 +101,7 @@ export default async function PayPage({
       : "/portal";
     return (
       <PageShell>
-        <div className="rounded-2xl bg-stone-900/70 p-8 text-center shadow-sm ring-1 ring-stone-800">
+        <div className="rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-stone-200">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1 ring-emerald-200">
             <CheckCircle2
               className="h-6 w-6 text-emerald-700"
@@ -109,12 +109,12 @@ export default async function PayPage({
             />
           </div>
           <h1 className="mt-4 text-2xl font-bold">Payment received</h1>
-          <p className="mt-2 text-sm text-stone-400">
+          <p className="mt-2 text-sm text-stone-600">
             Thanks. Your payment has been processed.
           </p>
           <Link
             href={portalHref}
-            className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-stone-300 underline-offset-2 hover:underline"
+            className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-stone-700 underline-offset-2 hover:underline"
           >
             View your payment history →
           </Link>
@@ -199,16 +199,16 @@ export default async function PayPage({
 
   return (
     <PageShell>
-      <div className="rounded-2xl bg-stone-900/70 p-8 shadow-sm ring-1 ring-stone-800">
+      <div className="rounded-2xl bg-white p-8 shadow-sm ring-1 ring-stone-200">
         <p className="text-sm font-semibold uppercase tracking-wide text-stone-500">
           {companyName}
         </p>
         <h1 className="mt-2 text-2xl font-bold">
           {isDeposit ? "Pay your deposit" : "Pay your invoice"}
         </h1>
-        <p className="mt-1 text-sm text-stone-400">{customer.name}</p>
+        <p className="mt-1 text-sm text-stone-600">{customer.name}</p>
 
-        <div className="mt-6 rounded-xl bg-stone-950 p-5 ring-1 ring-stone-800">
+        <div className="mt-6 rounded-xl bg-white p-5 ring-1 ring-stone-200">
           <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
             {isDeposit ? "Deposit due" : "Amount due"}
           </p>

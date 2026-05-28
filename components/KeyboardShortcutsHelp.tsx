@@ -38,16 +38,16 @@ export function KeyboardShortcutsHelp() {
   if (!open) return null;
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-stone-950/60 px-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-white/40 px-4 backdrop-blur-sm"
       onClick={() => setOpen(false)}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md overflow-hidden rounded-2xl bg-stone-900/70 shadow-2xl ring-1 ring-stone-800"
+        className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-stone-200"
       >
-        <div className="flex items-center justify-between border-b border-stone-800/60 px-5 py-3">
+        <div className="flex items-center justify-between border-b border-stone-100 px-5 py-3">
           <div>
-            <p className="font-display text-sm font-semibold text-stone-100">
+            <p className="font-display text-sm font-semibold text-stone-900">
               Keyboard shortcuts
             </p>
             <p className="text-xs text-stone-500">Power-user moves only</p>
@@ -56,23 +56,23 @@ export function KeyboardShortcutsHelp() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close"
-            className="rounded-md p-1.5 text-stone-400 hover:bg-orange-700 hover:text-stone-300"
+            className="rounded-md p-1.5 text-stone-600 hover:bg-orange-700 hover:text-stone-700"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>
         </div>
-        <ul className="divide-y divide-stone-800">
+        <ul className="divide-y divide-stone-100">
           {SHORTCUTS.map((s) => (
             <li
               key={s.label}
               className="flex items-center justify-between px-5 py-3 text-sm"
             >
-              <span className="text-stone-300">{s.label}</span>
+              <span className="text-stone-700">{s.label}</span>
               <span className="flex items-center gap-1">
                 {s.keys.map((k, i) => (
                   <kbd
                     key={i}
-                    className="rounded border border-stone-800 bg-stone-950 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-stone-300"
+                    className="rounded border border-stone-200 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-stone-700"
                   >
                     {k}
                   </kbd>

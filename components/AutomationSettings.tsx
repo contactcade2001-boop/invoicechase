@@ -135,14 +135,14 @@ export function AutomationSettings({
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <Bot className="h-5 w-5 text-stone-300" aria-hidden />
+              <Bot className="h-5 w-5 text-stone-700" aria-hidden />
               Autopilot
             </h2>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               When customers reply to a Fast-Pay text, Claude drafts and sends
               the response automatically. Replies stay polite, brief, and
               never agree to discounts or extensions on your behalf.
@@ -168,13 +168,13 @@ export function AutomationSettings({
         ) : null}
       </section>
 
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">
               Automated reminder sequences
             </h2>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               Once enabled, we run a daily check: customers 1–6 days overdue
               get a polite nudge, 7–13 days get a firmer message, and 14+
               days get a final notice. Each tone fires at most once every 6
@@ -196,11 +196,11 @@ export function AutomationSettings({
         ) : null}
       </section>
 
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Deposit collection</h2>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               Auto-text a deposit request to high-risk customers when a new
               invoice is created in QuickBooks.
             </p>
@@ -214,10 +214,10 @@ export function AutomationSettings({
         {deposit ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="text-sm font-medium text-stone-300">
+              <span className="text-sm font-medium text-stone-700">
                 Deposit percent
               </span>
-              <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-stone-700 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
+              <div className="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-stone-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-slate-900">
                 <input
                   type="number"
                   min={0}
@@ -227,13 +227,13 @@ export function AutomationSettings({
                   onChange={(e) => setPercent(e.target.value)}
                   className="block w-full rounded-l-md border-0 bg-transparent px-3 py-2 text-sm focus:outline-none"
                 />
-                <span className="inline-flex items-center rounded-r-md bg-stone-950 px-3 text-sm text-stone-500">
+                <span className="inline-flex items-center rounded-r-md bg-white px-3 text-sm text-stone-500">
                   %
                 </span>
               </div>
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-stone-300">
+              <span className="text-sm font-medium text-stone-700">
                 Trigger when reputation below
               </span>
               <input
@@ -243,7 +243,7 @@ export function AutomationSettings({
                 step={10}
                 value={threshold}
                 onChange={(e) => setThreshold(e.target.value)}
-                className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+                className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
               />
               <span className="mt-1 block text-xs text-stone-500">
                 300–850 (lower = stricter)
@@ -266,9 +266,9 @@ export function AutomationSettings({
         ) : null}
       </section>
 
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <h2 className="text-lg font-semibold">Weekly digest</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Every Monday at 9 AM, we&apos;ll text you a summary of outstanding
           AR — total owed, count overdue, biggest debtor.
         </p>
@@ -278,7 +278,7 @@ export function AutomationSettings({
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="+15125551234"
-            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <button
             type="button"
@@ -297,11 +297,11 @@ export function AutomationSettings({
         </p>
       </section>
 
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold">Custom branded receipts</h2>
-            <p className="mt-1 text-sm text-stone-400">
+            <p className="mt-1 text-sm text-stone-600">
               When on, Invoice Chase sends the customer a receipt email under
               your business name (via Resend). Stripe&apos;s default receipt
               is suppressed so you don&apos;t double-send.
@@ -323,9 +323,9 @@ export function AutomationSettings({
         ) : null}
       </section>
 
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <h2 className="text-lg font-semibold">Your Twilio number</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Use a dedicated Twilio number for your business. We&apos;ll send
           customer texts from this number and route inbound replies (with
           autopilot) back to your account. Leave blank to use the platform
@@ -342,7 +342,7 @@ export function AutomationSettings({
             value={twilioPhone}
             onChange={(e) => setTwilioPhoneState(e.target.value)}
             placeholder="+14155551234"
-            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="flex-1 rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <button
             type="button"
@@ -353,11 +353,11 @@ export function AutomationSettings({
             Save number
           </button>
         </div>
-        <div className="mt-5 rounded-xl bg-stone-950 p-4 ring-1 ring-inset ring-stone-800">
+        <div className="mt-5 rounded-xl bg-white p-4 ring-1 ring-inset ring-stone-200">
           <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
             Or have us provision one for you
           </p>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             We&apos;ll search Twilio for an SMS-capable number, buy it on the
             platform&apos;s account, and wire its inbound webhook
             automatically. Costs about $1.15/month — billed through your
@@ -373,7 +373,7 @@ export function AutomationSettings({
                 setAreaCode(e.target.value.replace(/\D/g, ""))
               }
               placeholder="Area code (e.g. 415)"
-              className="rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:w-48"
+              className="rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-slate-900 sm:w-48"
             />
             <button
               type="button"
@@ -422,7 +422,7 @@ function Toggle({
       }`}
     >
       <span
-        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-stone-900/70 shadow ring-0 transition ${
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition ${
           checked ? "translate-x-5" : "translate-x-0"
         }`}
       />

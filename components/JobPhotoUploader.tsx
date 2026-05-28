@@ -58,7 +58,7 @@ export function JobPhotoUploader({ customerId, initialPhotos }: Props) {
   }
 
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
           Job photos
@@ -91,7 +91,7 @@ export function JobPhotoUploader({ customerId, initialPhotos }: Props) {
       </p>
       {err ? <p className="mt-2 text-xs text-red-700">{err}</p> : null}
       {photos.length === 0 ? (
-        <p className="mt-4 rounded-md bg-stone-950 px-4 py-3 text-center text-xs text-stone-500 ring-1 ring-inset ring-stone-800">
+        <p className="mt-4 rounded-md bg-white px-4 py-3 text-center text-xs text-stone-500 ring-1 ring-inset ring-stone-200">
           No photos yet. Add some when the next job wraps.
         </p>
       ) : (
@@ -102,7 +102,7 @@ export function JobPhotoUploader({ customerId, initialPhotos }: Props) {
               href={`/api/job-photos/${p.id}`}
               target="_blank"
               rel="noopener"
-              className="group relative aspect-square overflow-hidden rounded-lg bg-stone-800 ring-1 ring-stone-800"
+              className="group relative aspect-square overflow-hidden rounded-lg bg-stone-100 ring-1 ring-stone-200"
             >
               <img
                 src={`/api/job-photos/${p.id}`}

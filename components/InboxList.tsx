@@ -15,7 +15,7 @@ export type InboxListEntry = {
 export function InboxList({ entries }: { entries: InboxListEntry[] }) {
   if (entries.length === 0) {
     return (
-      <div className="rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+      <div className="rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
         <Inbox className="mx-auto h-8 w-8 text-stone-500" aria-hidden />
         <h2 className="mt-3 text-sm font-semibold">No conversations yet</h2>
         <p className="mt-1 text-sm text-stone-500">
@@ -26,14 +26,14 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+    <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
       {entries.map(({ conversation, lastMessage, unread }) => {
         const paused = conversation.autopilotPaused === 1;
         return (
           <Link
             key={conversation.id}
             href={`/inbox/${conversation.id}`}
-            className={`flex items-start justify-between gap-3 border-b border-stone-800/60 px-4 py-3 transition last:border-b-0 hover:bg-stone-950 ${
+            className={`flex items-start justify-between gap-3 border-b border-stone-100 px-4 py-3 transition last:border-b-0 hover:bg-white ${
               unread ? "bg-emerald-50/30" : ""
             }`}
           >
@@ -42,8 +42,8 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
                 <span
                   className={`truncate text-sm ${
                     unread
-                      ? "font-semibold text-stone-100"
-                      : "font-medium text-stone-300"
+                      ? "font-semibold text-stone-900"
+                      : "font-medium text-stone-700"
                   }`}
                 >
                   {conversation.customerName ?? conversation.customerPhone}
@@ -67,7 +67,7 @@ export function InboxList({ entries }: { entries: InboxListEntry[] }) {
               </div>
               <p
                 className={`mt-0.5 truncate text-sm ${
-                  unread ? "text-stone-300" : "text-stone-500"
+                  unread ? "text-stone-700" : "text-stone-500"
                 }`}
               >
                 {lastMessage

@@ -61,12 +61,12 @@ export function CustomerRow({ customer }: { customer: Customer }) {
     <div
       data-row
       tabIndex={-1}
-      className="grid grid-cols-1 gap-3 border-b border-stone-800/60 px-4 py-4 transition hover:bg-stone-950/40 last:border-b-0 focus:bg-orange-50/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-300 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6"
+      className="grid grid-cols-1 gap-3 border-b border-stone-100 px-4 py-4 transition hover:bg-white/40 last:border-b-0 focus:bg-orange-50/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-orange-300 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6"
     >
       <div className="flex flex-col gap-1.5 md:min-w-0">
         <Link
           href={`/dashboard/customer/${customer.id}`}
-          className="truncate font-medium text-stone-100 underline-offset-2 hover:underline"
+          className="truncate font-medium text-stone-900 underline-offset-2 hover:underline"
         >
           {customer.name}
         </Link>
@@ -75,7 +75,7 @@ export function CustomerRow({ customer }: { customer: Customer }) {
 
       <div className="flex flex-col md:items-end">
         <span className="text-xs text-stone-500 md:hidden">Amount owed</span>
-        <span className="text-lg font-semibold tabular-nums text-stone-100">
+        <span className="text-lg font-semibold tabular-nums text-stone-900">
           {formatCurrency(customer.amountOwed)}
         </span>
       </div>
@@ -84,7 +84,7 @@ export function CustomerRow({ customer }: { customer: Customer }) {
         <span className="text-xs text-stone-500 md:hidden">Status</span>
         <span
           className={`text-sm font-medium tabular-nums ${
-            isOverdue ? "text-red-600" : "text-stone-400"
+            isOverdue ? "text-red-600" : "text-stone-600"
           }`}
         >
           {describeDays(customer.daysLate)}
@@ -98,7 +98,7 @@ export function CustomerRow({ customer }: { customer: Customer }) {
           disabled={textPending || !customer.phone}
           title={!customer.phone ? "No phone on file" : "Text reminder"}
           aria-label="Text reminder"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-400 ring-1 ring-inset ring-stone-800 transition hover:bg-stone-950 hover:text-stone-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-600 ring-1 ring-inset ring-stone-200 transition hover:bg-white hover:text-stone-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <MessageSquare className="h-4 w-4" aria-hidden />
         </button>
@@ -108,7 +108,7 @@ export function CustomerRow({ customer }: { customer: Customer }) {
           disabled={emailPending || !customer.email}
           title={!customer.email ? "No email on file" : "Email reminder"}
           aria-label="Email reminder"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-400 ring-1 ring-inset ring-stone-800 transition hover:bg-stone-950 hover:text-stone-100 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-600 ring-1 ring-inset ring-stone-200 transition hover:bg-white hover:text-stone-900 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Mail className="h-4 w-4" aria-hidden />
         </button>

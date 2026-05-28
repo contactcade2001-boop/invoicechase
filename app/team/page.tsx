@@ -24,7 +24,7 @@ export default async function TeamPage() {
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8 sm:py-10">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Team</h1>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             Invite owners, managers, and technicians. Roles control what each
             teammate can do.
           </p>

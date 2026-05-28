@@ -70,7 +70,7 @@ export function RefreshDashboardButton({
         type="button"
         onClick={handleClick}
         disabled={pending}
-        className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
         aria-label="Refresh dashboard"
       >
         <RefreshCcw

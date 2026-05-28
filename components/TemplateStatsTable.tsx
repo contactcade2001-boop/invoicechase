@@ -28,7 +28,7 @@ const TEMPLATE_LABELS: Record<string, { name: string; channel: "sms" | "email" }
 export function TemplateStatsTable({ rows }: { rows: TemplateStat[] }) {
   const top = rows[0];
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-center gap-2">
         <Crown className="h-3.5 w-3.5 text-orange-600" aria-hidden />
         <h2 className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
@@ -41,29 +41,29 @@ export function TemplateStatsTable({ rows }: { rows: TemplateStat[] }) {
       </p>
 
       {rows.length === 0 ? (
-        <p className="mt-5 rounded-md bg-stone-950 px-4 py-3 text-center text-xs text-stone-500 ring-1 ring-inset ring-stone-800">
+        <p className="mt-5 rounded-md bg-white px-4 py-3 text-center text-xs text-stone-500 ring-1 ring-inset ring-stone-200">
           No template data yet. Send a few reminders and stats will populate.
         </p>
       ) : (
         <>
           {top ? (
-            <div className="mt-5 rounded-xl bg-gradient-to-br from-amber-950/40 via-orange-950/40 to-rose-950/40 p-4 ring-1 ring-amber-700/40">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-400">
+            <div className="mt-5 rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-4 ring-1 ring-amber-200">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-700">
                 Top performer
               </p>
-              <p className="font-display mt-1 text-base font-bold text-stone-100">
+              <p className="font-display mt-1 text-base font-bold text-stone-900">
                 {TEMPLATE_LABELS[top.templateKey]?.name ?? top.templateKey}
               </p>
-              <p className="text-xs text-stone-300">
+              <p className="text-xs text-stone-700">
                 {fmt(top.paidCents)} collected · {top.paid} paid of{" "}
                 {top.sends} sent ({pct(top.paid, top.sends)} pay rate)
               </p>
             </div>
           ) : null}
-          <div className="mt-4 overflow-hidden rounded-xl ring-1 ring-stone-800">
+          <div className="mt-4 overflow-hidden rounded-xl ring-1 ring-stone-200">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-stone-800 bg-stone-900/40 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+                <tr className="border-b border-stone-200 bg-stone-50 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
                   <th className="px-4 py-2.5 text-left">Template</th>
                   <th className="px-4 py-2.5 text-right">Sent</th>
                   <th className="px-4 py-2.5 text-right">Replies</th>
@@ -78,7 +78,7 @@ export function TemplateStatsTable({ rows }: { rows: TemplateStat[] }) {
                   return (
                     <tr
                       key={r.templateKey}
-                      className="border-b border-stone-800/60 last:border-b-0"
+                      className="border-b border-stone-100 last:border-b-0"
                     >
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
@@ -87,21 +87,21 @@ export function TemplateStatsTable({ rows }: { rows: TemplateStat[] }) {
                           ) : (
                             <MessageSquare className="h-3 w-3 text-emerald-600" />
                           )}
-                          <span className="font-medium text-stone-100">
+                          <span className="font-medium text-stone-900">
                             {label?.name ?? r.templateKey}
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-stone-300">
+                      <td className="px-4 py-3 text-right tabular-nums text-stone-700">
                         {r.sends}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-stone-300">
+                      <td className="px-4 py-3 text-right tabular-nums text-stone-700">
                         {r.replies}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-stone-300">
+                      <td className="px-4 py-3 text-right tabular-nums text-stone-700">
                         {r.paid}
                       </td>
-                      <td className="px-4 py-3 text-right tabular-nums text-stone-300">
+                      <td className="px-4 py-3 text-right tabular-nums text-stone-700">
                         {pct(r.paid, r.sends)}
                       </td>
                       <td className="px-4 py-3 text-right font-semibold tabular-nums text-emerald-700">

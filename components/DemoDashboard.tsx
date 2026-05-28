@@ -599,7 +599,7 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
         </p>
         <Link
           href="/login"
-          className="group mt-6 inline-flex items-center gap-2 rounded-md bg-stone-900/70 px-6 py-3 text-base font-semibold text-stone-100 shadow-sm transition hover:bg-slate-100 hover:shadow-md"
+          className="group mt-6 inline-flex items-center gap-2 rounded-md bg-white px-6 py-3 text-base font-semibold text-stone-900 shadow-sm transition hover:bg-slate-100 hover:shadow-md"
         >
           Start free
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
@@ -639,10 +639,10 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
           onClick={() => setPayModal(null)}
         >
           <div
-            className="w-full max-w-md overflow-hidden rounded-2xl bg-stone-900/70 shadow-2xl ring-1 ring-stone-800"
+            className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-stone-200"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-stone-800 bg-stone-950 px-5 py-3">
+            <div className="flex items-center justify-between border-b border-stone-200 bg-white px-5 py-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                 Stripe Checkout preview
               </p>
@@ -650,7 +650,7 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
                 type="button"
                 onClick={() => setPayModal(null)}
                 aria-label="Close"
-                className="text-stone-500 transition hover:text-stone-300"
+                className="text-stone-500 transition hover:text-stone-700"
               >
                 <X className="h-4 w-4" aria-hidden />
               </button>
@@ -662,17 +662,17 @@ export function DemoDashboard({ businessName }: { businessName: string }) {
               <p className="mt-1 text-3xl font-bold tabular-nums">
                 {formatCurrencyDetailed(payModal.amountOwed)}
               </p>
-              <p className="mt-1 text-sm text-stone-400">
+              <p className="mt-1 text-sm text-stone-600">
                 Payment for {payModal.name}
               </p>
-              <div className="mt-5 space-y-2 rounded-xl bg-stone-950 p-4 text-xs ring-1 ring-inset ring-stone-800">
-                <div className="flex items-center justify-between text-stone-400">
+              <div className="mt-5 space-y-2 rounded-xl bg-white p-4 text-xs ring-1 ring-inset ring-stone-200">
+                <div className="flex items-center justify-between text-stone-600">
                   <span>Email</span>
                   <span className="font-mono">
                     {payModal.email ?? "you@example.com"}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-stone-400">
+                <div className="flex items-center justify-between text-stone-600">
                   <span>Card</span>
                   <span className="font-mono text-stone-500">
                     •••• •••• •••• ••••
@@ -726,7 +726,7 @@ function ViewTabs({
   ];
   return (
     <nav
-      className="-mx-1 flex flex-wrap gap-1 border-b border-stone-800 pb-0"
+      className="-mx-1 flex flex-wrap gap-1 border-b border-stone-200 pb-0"
       aria-label="Demo views"
     >
       {tabs.map((t) => {
@@ -738,12 +738,12 @@ function ViewTabs({
             onClick={() => onChange(t.key)}
             className={`group relative inline-flex items-center gap-2 rounded-t-md px-4 py-2.5 text-sm font-medium transition ${
               active
-                ? "text-stone-100"
-                : "text-stone-500 hover:bg-slate-100/60 hover:text-stone-100"
+                ? "text-stone-900"
+                : "text-stone-500 hover:bg-slate-100/60 hover:text-stone-900"
             }`}
           >
             <t.icon
-              className={`h-3.5 w-3.5 transition ${active ? "text-emerald-600" : "text-stone-500 group-hover:text-stone-400"}`}
+              className={`h-3.5 w-3.5 transition ${active ? "text-emerald-600" : "text-stone-500 group-hover:text-stone-600"}`}
               aria-hidden
             />
             {t.label}
@@ -793,7 +793,7 @@ function DashboardView(props: {
   return (
     <>
       {/* Stats header */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800 sm:p-7">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200 sm:p-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <Building2 className="h-3.5 w-3.5" aria-hidden />
@@ -803,7 +803,7 @@ function DashboardView(props: {
             Sample data
           </span>
         </div>
-        <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:divide-x sm:divide-stone-800">
+        <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:divide-x sm:divide-stone-100">
           <Stat label="Total outstanding" value={formatCurrencyDetailed(props.totalOwed)} />
           <Stat
             label="Overdue customers"
@@ -832,9 +832,9 @@ function DashboardView(props: {
       <ChurnRiskCardDemo />
 
       {/* Aging */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-stone-100">
+          <h2 className="text-sm font-semibold text-stone-900">
             Aging breakdown
           </h2>
           <p className="text-xs text-stone-500">
@@ -863,7 +863,7 @@ function DashboardView(props: {
                 <span className={`h-1.5 w-1.5 rounded-full ${b.color}`} aria-hidden />
                 {b.label}
               </dt>
-              <dd className="mt-1 text-sm font-semibold tabular-nums text-stone-100">
+              <dd className="mt-1 text-sm font-semibold tabular-nums text-stone-900">
                 {formatCurrencyDetailed(props.agingTotals[b.key])}
               </dd>
             </div>
@@ -882,7 +882,7 @@ function DashboardView(props: {
         <button
           type="button"
           onClick={props.handlers.refresh}
-          className="group inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-stone-300 ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 hover:ring-slate-400"
+          className="group inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold text-stone-700 ring-1 ring-inset ring-stone-300 transition hover:bg-white hover:ring-slate-400"
         >
           <RefreshCcw
             className="h-3.5 w-3.5 transition group-hover:rotate-180"
@@ -905,13 +905,13 @@ function DashboardView(props: {
                 className={`group inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition ${
                   active
                     ? "bg-slate-900 text-white shadow-sm"
-                    : "bg-stone-900/70 text-stone-300 ring-1 ring-inset ring-stone-800 hover:bg-stone-950 hover:ring-stone-700"
+                    : "bg-white text-stone-700 ring-1 ring-inset ring-stone-200 hover:bg-white hover:ring-stone-300"
                 }`}
               >
                 {tab.label}
                 <span
                   className={`inline-flex min-w-[1.5rem] items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-semibold tabular-nums ${
-                    active ? "bg-stone-900/70/20 text-white" : "bg-slate-100 text-stone-400"
+                    active ? "bg-white/20 text-white" : "bg-slate-100 text-stone-600"
                   }`}
                 >
                   {props.counts[tab.key]}
@@ -925,7 +925,7 @@ function DashboardView(props: {
             type="button"
             onClick={props.handlers.bulkEmail}
             disabled={props.overdueWithEmail === 0}
-            className="group inline-flex items-center justify-center gap-2 rounded-md bg-stone-900/70 px-4 py-2 text-sm font-semibold text-stone-300 shadow-sm ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 hover:ring-slate-400 hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
+            className="group inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-stone-700 shadow-sm ring-1 ring-inset ring-stone-300 transition hover:bg-white hover:ring-slate-400 hover:shadow disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Sparkles className="h-4 w-4 transition group-hover:scale-110" aria-hidden />
             Email with AI ({props.overdueWithEmail})
@@ -943,8 +943,8 @@ function DashboardView(props: {
       </div>
 
       {/* Customers table */}
-      <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-        <div className="hidden grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] items-center gap-4 border-b border-stone-800 bg-stone-900/40 px-6 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500 md:grid">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+        <div className="hidden grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] items-center gap-4 border-b border-stone-200 bg-stone-50 px-6 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500 md:grid">
           <div>Customer</div>
           <div className="text-right">Amount owed</div>
           <div className="text-right">Status</div>
@@ -962,13 +962,13 @@ function DashboardView(props: {
       </div>
 
       {/* Forecast snippet */}
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <LineChart className="h-3 w-3" aria-hidden /> Forecast preview
             </p>
-            <p className="mt-1.5 text-2xl font-semibold tabular-nums text-stone-100">
+            <p className="mt-1.5 text-2xl font-semibold tabular-nums text-stone-900">
               {formatCurrencyDetailed(props.forecast4Total)}
               <span className="ml-1.5 text-sm font-normal text-stone-500">
                 expected next 4 weeks
@@ -1001,7 +1001,7 @@ function DashboardView(props: {
                 <p className="mt-2 text-[10px] font-mono text-stone-500">
                   {w.label}
                 </p>
-                <p className="text-xs font-semibold tabular-nums text-stone-300">
+                <p className="text-xs font-semibold tabular-nums text-stone-700">
                   {formatCurrencyDetailed(w.value)}
                 </p>
               </div>
@@ -1029,7 +1029,7 @@ function Stat({
       <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
         {label}
       </p>
-      <p className="mt-1.5 text-3xl font-semibold tracking-tight tabular-nums text-stone-100">
+      <p className="mt-1.5 text-3xl font-semibold tracking-tight tabular-nums text-stone-900">
         {value}
         {unit ? (
           <span className="ml-1.5 text-base font-normal text-stone-500">
@@ -1053,22 +1053,22 @@ function CustomerRow({
   };
 }) {
   return (
-    <div className="grid grid-cols-1 gap-3 border-b border-stone-800/60 px-4 py-4 transition hover:bg-stone-900/40 last:border-b-0 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6">
+    <div className="grid grid-cols-1 gap-3 border-b border-stone-100 px-4 py-4 transition hover:bg-stone-50 last:border-b-0 md:grid-cols-[minmax(0,2.4fr)_minmax(120px,1fr)_minmax(120px,1fr)_minmax(200px,auto)] md:items-center md:gap-4 md:px-6">
       <div className="flex flex-col gap-1.5 md:min-w-0">
-        <span className="truncate font-medium text-stone-100">
+        <span className="truncate font-medium text-stone-900">
           {customer.name}
         </span>
         <ReputationMeter score={customer.reputationScore} />
       </div>
       <div className="flex flex-col md:items-end">
-        <span className="text-lg font-semibold tabular-nums text-stone-100">
+        <span className="text-lg font-semibold tabular-nums text-stone-900">
           {formatCurrency(customer.amountOwed)}
         </span>
       </div>
       <div className="flex flex-col md:items-end">
         <span
           className={`text-sm font-medium tabular-nums ${
-            customer.daysLate > 0 ? "text-red-600" : "text-stone-400"
+            customer.daysLate > 0 ? "text-red-600" : "text-stone-600"
           }`}
         >
           {describeDays(customer.daysLate)}
@@ -1080,7 +1080,7 @@ function CustomerRow({
           onClick={() => handlers.text(customer)}
           aria-label="Text reminder"
           title="Text reminder"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-400 ring-1 ring-inset ring-stone-800 transition hover:bg-stone-950 hover:text-stone-100 hover:ring-slate-400"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-600 ring-1 ring-inset ring-stone-200 transition hover:bg-white hover:text-stone-900 hover:ring-slate-400"
         >
           <MessageSquare className="h-4 w-4" aria-hidden />
         </button>
@@ -1089,7 +1089,7 @@ function CustomerRow({
           onClick={() => handlers.email(customer)}
           aria-label="Email reminder"
           title="Email reminder"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-400 ring-1 ring-inset ring-stone-800 transition hover:bg-stone-950 hover:text-stone-100 hover:ring-slate-400"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-stone-600 ring-1 ring-inset ring-stone-200 transition hover:bg-white hover:text-stone-900 hover:ring-slate-400"
         >
           <Mail className="h-4 w-4" aria-hidden />
         </button>
@@ -1131,7 +1131,7 @@ function CustomersView({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Customers</h2>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             Full directory of everyone who owes you. Search and filter.
           </p>
         </div>
@@ -1141,15 +1141,15 @@ function CustomersView({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search name, phone, email…"
-            className="block w-72 rounded-md border-0 bg-stone-900/70 py-2 pl-9 pr-3 text-sm shadow-sm ring-1 ring-inset ring-stone-700 transition focus:ring-2 focus:ring-inset focus:ring-slate-900"
+            className="block w-72 rounded-md border-0 bg-white py-2 pl-9 pr-3 text-sm shadow-sm ring-1 ring-inset ring-stone-300 transition focus:ring-2 focus:ring-inset focus:ring-slate-900"
           />
           <Phone className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-stone-500" aria-hidden />
         </div>
       </div>
-      <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-stone-800 bg-stone-900/40 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+            <tr className="border-b border-stone-200 bg-stone-50 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
               <th className="px-5 py-3 text-left">Customer</th>
               <th className="px-5 py-3 text-left">Contact</th>
               <th className="px-5 py-3 text-left">Location</th>
@@ -1161,12 +1161,12 @@ function CustomersView({
             {filtered.map((c) => (
               <tr
                 key={c.id}
-                className="group border-b border-stone-800/60 transition last:border-b-0 hover:bg-stone-900/40"
+                className="group border-b border-stone-100 transition last:border-b-0 hover:bg-stone-50"
               >
-                <td className="px-5 py-4 font-medium text-stone-100 group-hover:underline group-hover:underline-offset-4">
+                <td className="px-5 py-4 font-medium text-stone-900 group-hover:underline group-hover:underline-offset-4">
                   {c.name}
                 </td>
-                <td className="px-5 py-4 text-xs text-stone-400">
+                <td className="px-5 py-4 text-xs text-stone-600">
                   <div className="space-y-0.5">
                     {c.phone ? (
                       <div className="flex items-center gap-1.5">
@@ -1191,7 +1191,7 @@ function CustomersView({
                 <td className="px-5 py-4 text-right tabular-nums">
                   {c.amountOwed > 0 ? (
                     <span
-                      className={`font-semibold ${c.daysLate > 0 ? "text-red-700" : "text-stone-100"}`}
+                      className={`font-semibold ${c.daysLate > 0 ? "text-red-700" : "text-stone-900"}`}
                     >
                       {formatCurrency(c.amountOwed)}
                     </span>
@@ -1231,16 +1231,16 @@ function InboxView({
     <>
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Inbox</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Every customer reply lands here.{" "}
           <strong>Claude AI handles the back-and-forth in your voice</strong> —
           you only step in when needed.
         </p>
       </div>
-      <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
-        <div className="flex items-center justify-between border-b border-stone-800 px-5 py-3">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
+        <div className="flex items-center justify-between border-b border-stone-200 px-5 py-3">
           <div>
-            <p className="text-sm font-semibold text-stone-100">
+            <p className="text-sm font-semibold text-stone-900">
               Riverside Diner
             </p>
             <p className="text-xs text-stone-500">+1 (512) 555-0101</p>
@@ -1249,7 +1249,7 @@ function InboxView({
             <Sparkles className="h-3 w-3" aria-hidden /> Autopilot on
           </span>
         </div>
-        <div className="space-y-3 bg-stone-950/40 p-5">
+        <div className="space-y-3 bg-white/40 p-5">
           {INBOX_MESSAGES.map((m, i) => (
             <div
               key={i}
@@ -1260,7 +1260,7 @@ function InboxView({
                   className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                     m.direction === "out"
                       ? "bg-slate-900 text-white"
-                      : "bg-stone-900/70 text-stone-100 ring-1 ring-stone-800"
+                      : "bg-white text-stone-900 ring-1 ring-stone-200"
                   }`}
                 >
                   {m.body}
@@ -1280,12 +1280,12 @@ function InboxView({
             </div>
           ))}
         </div>
-        <div className="flex items-center gap-2 border-t border-stone-800 bg-stone-900/70 px-5 py-3">
+        <div className="flex items-center gap-2 border-t border-stone-200 bg-white px-5 py-3">
           <input
             type="text"
             placeholder="Reply manually to pause autopilot for this thread…"
             disabled
-            className="flex-1 rounded-md border-0 bg-stone-950 px-3 py-2 text-sm text-stone-500 ring-1 ring-inset ring-stone-800"
+            className="flex-1 rounded-md border-0 bg-white px-3 py-2 text-sm text-stone-500 ring-1 ring-inset ring-stone-200"
           />
           <button
             type="button"
@@ -1326,7 +1326,7 @@ function ForecastView({
         <h2 className="text-2xl font-bold tracking-tight">
           13-week cash flow forecast
         </h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Projected collections + recurring outflows. {businessName} ends the
           quarter{" "}
           <strong
@@ -1347,8 +1347,8 @@ function ForecastView({
           color={net >= 0 ? "emerald" : "red"}
         />
       </div>
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
-        <h3 className="text-sm font-semibold text-stone-100">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+        <h3 className="text-sm font-semibold text-stone-900">
           Weekly net change
         </h3>
         <div className="mt-5 grid grid-cols-13 gap-1">
@@ -1396,11 +1396,11 @@ function FCard({
 }) {
   const colors: Record<typeof color, string> = {
     emerald: "text-emerald-700",
-    slate: "text-stone-300",
+    slate: "text-stone-700",
     red: "text-red-700",
   };
   return (
-    <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800 transition hover:shadow-md">
+    <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200 transition hover:shadow-md">
       <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
         {label}
       </p>
@@ -1417,7 +1417,7 @@ function PulseCard() {
   const score = MOCK_PULSE.score;
   const dashOffset = 282.7 - (score / 100) * 282.7;
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
         <div className="relative h-28 w-28 shrink-0">
           <svg className="h-28 w-28 -rotate-90" viewBox="0 0 100 100">
@@ -1443,7 +1443,7 @@ function PulseCard() {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <p className="text-3xl font-bold tabular-nums text-stone-100">
+            <p className="text-3xl font-bold tabular-nums text-stone-900">
               {score}
             </p>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-700">
@@ -1458,7 +1458,7 @@ function PulseCard() {
               +{MOCK_PULSE.delta} this week
             </span>
           </p>
-          <p className="mt-1 text-sm leading-6 text-stone-300">
+          <p className="mt-1 text-sm leading-6 text-stone-700">
             Your AR is in solid shape. Concentration on your top customer is
             the one yellow flag — diversify renewals.
           </p>
@@ -1499,7 +1499,7 @@ const PLAY_ACTION_META: Record<
 function PlaysCard() {
   const totalExpected = MOCK_PLAYS.reduce((s, p) => s + p.expectedCents, 0);
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
@@ -1508,7 +1508,7 @@ function PlaysCard() {
               <Sparkles className="h-2.5 w-2.5" aria-hidden /> AI
             </span>
           </p>
-          <p className="mt-1 text-sm text-stone-300">
+          <p className="mt-1 text-sm text-stone-700">
             {MOCK_PLAYS.length} actions · {formatCurrencyDetailed(totalExpected)}{" "}
             potential cash unlocked
           </p>
@@ -1521,14 +1521,14 @@ function PlaysCard() {
           return (
             <li
               key={i}
-              className="group flex items-start gap-3 rounded-xl border border-stone-800 bg-stone-950/40 p-3 transition hover:bg-stone-950 hover:shadow-sm"
+              className="group flex items-start gap-3 rounded-xl border border-stone-200 bg-white/40 p-3 transition hover:bg-white hover:shadow-sm"
             >
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="font-semibold text-stone-100 transition group-hover:underline group-hover:underline-offset-4">
+                  <span className="font-semibold text-stone-900 transition group-hover:underline group-hover:underline-offset-4">
                     {p.customerName}
                   </span>
                   <span
@@ -1541,7 +1541,7 @@ function PlaysCard() {
                     ~{formatCurrencyDetailed(p.expectedCents)}
                   </span>
                 </div>
-                <p className="mt-1 text-xs leading-5 text-stone-400">{p.reason}</p>
+                <p className="mt-1 text-xs leading-5 text-stone-600">{p.reason}</p>
               </div>
             </li>
           );
@@ -1565,13 +1565,13 @@ const CONFIDENCE_STYLE: Record<
   },
   low: {
     label: "Speculative",
-    classes: "bg-slate-100 text-stone-400 ring-stone-800",
+    classes: "bg-slate-100 text-stone-600 ring-stone-200",
   },
 };
 
 function PatternsCard() {
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
@@ -1592,7 +1592,7 @@ function PatternsCard() {
           return (
             <li
               key={i}
-              className="rounded-xl border border-stone-800 bg-stone-950/40 p-3 transition hover:bg-stone-950"
+              className="rounded-xl border border-stone-200 bg-white/40 p-3 transition hover:bg-white"
             >
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-700 ring-1 ring-amber-200">
@@ -1601,7 +1601,7 @@ function PatternsCard() {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-baseline gap-2">
                     {p.customerName ? (
-                      <span className="text-xs font-semibold text-stone-100">
+                      <span className="text-xs font-semibold text-stone-900">
                         {p.customerName}
                       </span>
                     ) : (
@@ -1615,7 +1615,7 @@ function PatternsCard() {
                       {conf.label}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm leading-6 text-stone-300">
+                  <p className="mt-1 text-sm leading-6 text-stone-700">
                     {p.observation}
                   </p>
                 </div>
@@ -1659,15 +1659,15 @@ const CHURN_BAND_STYLE: Record<
 function ChurnRiskCardDemo() {
   const total = MOCK_CHURN.reduce((s, c) => s + c.revenueAtRiskCents, 0);
   return (
-    <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+    <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <TrendingDown className="h-3 w-3 text-red-600" aria-hidden />{" "}
             Customers at risk of churning
           </p>
-          <p className="mt-1 text-sm text-stone-300">
-            <strong className="text-stone-100">
+          <p className="mt-1 text-sm text-stone-700">
+            <strong className="text-stone-900">
               {formatCurrencyDetailed(total)}
             </strong>{" "}
             in annual revenue + replacement cost lost if these{" "}
@@ -1684,14 +1684,14 @@ function ChurnRiskCardDemo() {
           return (
             <li
               key={i}
-              className="group flex items-start gap-3 rounded-xl border border-stone-800 bg-stone-950/40 p-3 transition hover:bg-stone-950 hover:shadow-sm"
+              className="group flex items-start gap-3 rounded-xl border border-stone-200 bg-white/40 p-3 transition hover:bg-white hover:shadow-sm"
             >
               <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline gap-2">
-                  <span className="font-semibold text-stone-100 transition group-hover:underline group-hover:underline-offset-4">
+                  <span className="font-semibold text-stone-900 transition group-hover:underline group-hover:underline-offset-4">
                     {c.name}
                   </span>
                   <span
@@ -1704,19 +1704,19 @@ function ChurnRiskCardDemo() {
                     −{formatCurrencyDetailed(c.revenueAtRiskCents)}
                   </span>
                 </div>
-                <p className="mt-1 text-xs leading-5 text-stone-400">
+                <p className="mt-1 text-xs leading-5 text-stone-600">
                   {c.reason}
                 </p>
                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-stone-500">
                   <span>
                     Annual:{" "}
-                    <span className="font-semibold tabular-nums text-stone-300">
+                    <span className="font-semibold tabular-nums text-stone-700">
                       {formatCurrencyDetailed(c.annualRevenueCents)}
                     </span>
                   </span>
                   <span>
                     Replace cost:{" "}
-                    <span className="font-semibold tabular-nums text-stone-300">
+                    <span className="font-semibold tabular-nums text-stone-700">
                       {formatCurrencyDetailed(c.replacementCostCents)}
                     </span>
                   </span>
@@ -1749,7 +1749,7 @@ function CommunicationsView({
         <h2 className="text-2xl font-bold tracking-tight">
           Communication templates
         </h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           One-tap presets your AI can use. Pick a tone — Claude personalizes
           each message per customer.
         </p>
@@ -1766,7 +1766,7 @@ function CommunicationsView({
                 className={`group flex items-start gap-3 rounded-xl border p-4 text-left transition ${
                   isActive
                     ? "border-emerald-600 bg-emerald-50/50 shadow-sm ring-1 ring-emerald-200"
-                    : "border-stone-800 bg-stone-900/70 hover:border-slate-300 hover:shadow-sm"
+                    : "border-stone-200 bg-white hover:border-slate-300 hover:shadow-sm"
                 }`}
               >
                 <span
@@ -1784,7 +1784,7 @@ function CommunicationsView({
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-semibold text-stone-100">
+                    <span className="text-sm font-semibold text-stone-900">
                       {t.tone}
                     </span>
                     <span className="text-[10px] uppercase tracking-wider text-stone-500">
@@ -1799,7 +1799,7 @@ function CommunicationsView({
             );
           })}
         </div>
-        <div className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+        <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               {template.channel === "sms" ? "SMS preview" : "Email preview"}
@@ -1808,18 +1808,18 @@ function CommunicationsView({
               <Sparkles className="h-2.5 w-2.5" aria-hidden /> Personalized by AI
             </span>
           </div>
-          <div className="mt-4 rounded-xl bg-stone-950 p-5 ring-1 ring-inset ring-stone-800">
+          <div className="mt-4 rounded-xl bg-white p-5 ring-1 ring-inset ring-stone-200">
             {template.channel === "email" ? (
-              <div className="mb-3 border-b border-stone-800 pb-3">
+              <div className="mb-3 border-b border-stone-200 pb-3">
                 <p className="text-[10px] uppercase tracking-wider text-stone-500">
                   Subject
                 </p>
-                <p className="text-sm font-semibold text-stone-100">
+                <p className="text-sm font-semibold text-stone-900">
                   Invoice #4218 — quick reminder
                 </p>
               </div>
             ) : null}
-            <p className="whitespace-pre-line text-sm leading-6 text-stone-300">
+            <p className="whitespace-pre-line text-sm leading-6 text-stone-700">
               {template.preview}
             </p>
           </div>
@@ -1855,7 +1855,7 @@ function PaymentsView({
     <>
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Payments</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Every dollar that came in via Pay Now links. Auto-reconciled to
           QuickBooks.
         </p>
@@ -1877,10 +1877,10 @@ function PaymentsView({
           color="emerald"
         />
       </div>
-      <div className="overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-stone-800 bg-stone-900/40 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
+            <tr className="border-b border-stone-200 bg-stone-50 text-[11px] font-semibold uppercase tracking-wider text-stone-500">
               <th className="px-5 py-3 text-left">Customer</th>
               <th className="px-5 py-3 text-left">Triggered by</th>
               <th className="px-5 py-3 text-right">Amount</th>
@@ -1892,9 +1892,9 @@ function PaymentsView({
             {MOCK_PAYMENTS.map((p, i) => (
               <tr
                 key={i}
-                className="group border-b border-stone-800/60 transition last:border-b-0 hover:bg-stone-900/40"
+                className="group border-b border-stone-100 transition last:border-b-0 hover:bg-stone-50"
               >
-                <td className="px-5 py-3.5 font-medium text-stone-100 group-hover:underline group-hover:underline-offset-4">
+                <td className="px-5 py-3.5 font-medium text-stone-900 group-hover:underline group-hover:underline-offset-4">
                   {p.customer}
                 </td>
                 <td className="px-5 py-3.5 text-xs">
@@ -1907,7 +1907,7 @@ function PaymentsView({
                       <Mail className="h-2.5 w-2.5" aria-hidden /> Email
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 font-semibold text-stone-400">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 font-semibold text-stone-600">
                       Manual
                     </span>
                   )}
@@ -1926,14 +1926,14 @@ function PaymentsView({
           </tbody>
         </table>
       </div>
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
         <div className="flex items-center justify-between">
           <div>
             <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <CalendarClock className="h-3 w-3" aria-hidden /> Active payment
               plans
             </p>
-            <p className="mt-1 text-sm text-stone-300">
+            <p className="mt-1 text-sm text-stone-700">
               {MOCK_PLANS.length} customers paying in installments
             </p>
           </div>
@@ -1957,11 +1957,11 @@ function PaymentsView({
             return (
               <div
                 key={i}
-                className="rounded-xl border border-stone-800 bg-stone-950/40 p-4 transition hover:bg-stone-950"
+                className="rounded-xl border border-stone-200 bg-white/40 p-4 transition hover:bg-white"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="font-semibold text-stone-100">{p.customer}</p>
-                  <p className="text-sm tabular-nums text-stone-300">
+                  <p className="font-semibold text-stone-900">{p.customer}</p>
+                  <p className="text-sm tabular-nums text-stone-700">
                     {formatCurrencyDetailed(p.installmentCents)}
                     <span className="text-xs text-stone-500"> / week · {p.totalWeeks} wks</span>
                   </p>
@@ -2001,7 +2001,7 @@ function ReportsView({
     <>
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Reports & exports</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           Aging snapshots, reconciliation CSVs, and IRS-ready year-end exports.
           Built for your accountant.
         </p>
@@ -2080,8 +2080,8 @@ function ReportsView({
           }
         />
       </div>
-      <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
-        <h3 className="text-sm font-semibold text-stone-100">
+      <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+        <h3 className="text-sm font-semibold text-stone-900">
           AR aging snapshot
         </h3>
         <p className="mt-1 text-xs text-stone-500">
@@ -2094,7 +2094,7 @@ function ReportsView({
             const pct = agingGrand > 0 ? (value / agingGrand) * 100 : 0;
             return (
               <div key={b.key} className="flex items-center gap-3">
-                <div className="flex w-24 items-center gap-2 text-xs text-stone-400">
+                <div className="flex w-24 items-center gap-2 text-xs text-stone-600">
                   <span className={`h-2 w-2 rounded-full ${b.color}`} aria-hidden />
                   {b.label}
                 </div>
@@ -2106,7 +2106,7 @@ function ReportsView({
                     />
                   </div>
                 </div>
-                <div className="w-28 text-right text-xs font-semibold tabular-nums text-stone-300">
+                <div className="w-28 text-right text-xs font-semibold tabular-nums text-stone-700">
                   {formatCurrencyDetailed(value)}
                 </div>
               </div>
@@ -2135,13 +2135,13 @@ function ReportTile({
     <button
       type="button"
       onClick={onClick}
-      className="group flex flex-col items-start gap-2 rounded-2xl bg-stone-900/70 p-5 text-left shadow-sm ring-1 ring-stone-800 transition hover:shadow-md hover:ring-stone-700"
+      className="group flex flex-col items-start gap-2 rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-stone-200 transition hover:shadow-md hover:ring-stone-300"
     >
       <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 transition group-hover:scale-110">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
-      <p className="text-sm font-semibold text-stone-100">{title}</p>
-      <p className="text-xs text-stone-400">{body}</p>
+      <p className="text-sm font-semibold text-stone-900">{title}</p>
+      <p className="text-xs text-stone-600">{body}</p>
       <div className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-stone-500">
         <Download className="h-3 w-3" aria-hidden />
         {format}
@@ -2235,7 +2235,7 @@ function SettingsView({
     <>
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Integrations</h2>
-        <p className="mt-1 text-sm text-stone-400">
+        <p className="mt-1 text-sm text-stone-600">
           One-tap OAuth to your accounting + field service tools. Pick one — or
           stack a few.
         </p>
@@ -2251,15 +2251,15 @@ function SettingsView({
               {tiles.map((t) => (
                 <div
                   key={t.key}
-                  className="group rounded-2xl bg-stone-900/70 p-4 shadow-sm ring-1 ring-stone-800 transition hover:shadow-md hover:ring-stone-700"
+                  className="group rounded-2xl bg-white p-4 shadow-sm ring-1 ring-stone-200 transition hover:shadow-md hover:ring-stone-300"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-950 ring-1 ring-stone-800">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white ring-1 ring-stone-200">
                       <t.Logo size={20} />
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-2">
-                        <p className="text-sm font-semibold text-stone-100">
+                        <p className="text-sm font-semibold text-stone-900">
                           {t.name}
                         </p>
                         {t.connected ? (
@@ -2286,7 +2286,7 @@ function SettingsView({
                     }
                     className={`mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition ${
                       t.connected
-                        ? "bg-slate-100 text-stone-300 hover:bg-slate-200"
+                        ? "bg-slate-100 text-stone-700 hover:bg-slate-200"
                         : "bg-slate-900 text-white hover:bg-slate-800"
                     }`}
                   >

@@ -89,7 +89,7 @@ export function SettlementOfferForm({
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             placeholder="Westshore Hotel Group"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block">
@@ -101,7 +101,7 @@ export function SettlementOfferForm({
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
             placeholder="auto"
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block">
@@ -114,7 +114,7 @@ export function SettlementOfferForm({
             min={0}
             step={100}
             onChange={(e) => setBalance(parseFloat(e.target.value) || 0)}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block">
@@ -128,7 +128,7 @@ export function SettlementOfferForm({
             max={80}
             step={5}
             onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
         <label className="block sm:col-span-2">
@@ -142,7 +142,7 @@ export function SettlementOfferForm({
             max={336}
             step={4}
             onChange={(e) => setExpHours(parseFloat(e.target.value) || 48)}
-            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-700 focus:ring-2 focus:ring-inset focus:ring-stone-900"
+            className="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm shadow-sm ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-stone-900"
           />
         </label>
       </div>
@@ -150,7 +150,7 @@ export function SettlementOfferForm({
         <div className="rounded-md bg-emerald-50 px-4 py-3 ring-1 ring-inset ring-emerald-200">
           <p className="text-xs text-emerald-700">
             Customer pays{" "}
-            <strong className="text-stone-100">${offerAmount.toFixed(2)}</strong>, you
+            <strong className="text-stone-900">${offerAmount.toFixed(2)}</strong>, you
             forgive{" "}
             <strong>${(balance - offerAmount).toFixed(2)}</strong>. Better than
             $0 if they were going to write you off.
@@ -169,8 +169,8 @@ export function SettlementOfferForm({
       </button>
 
       {openOffers.length > 0 ? (
-        <div className="mt-6 overflow-hidden rounded-2xl ring-1 ring-stone-800">
-          <p className="border-b border-stone-800 bg-stone-900/40 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
+        <div className="mt-6 overflow-hidden rounded-2xl ring-1 ring-stone-200">
+          <p className="border-b border-stone-200 bg-stone-50 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">
             Open offers
           </p>
           {openOffers.map((o) => {
@@ -179,10 +179,10 @@ export function SettlementOfferForm({
             return (
               <div
                 key={o.id}
-                className="flex flex-wrap items-center gap-3 border-b border-stone-800/60 px-5 py-3 last:border-b-0"
+                className="flex flex-wrap items-center gap-3 border-b border-stone-100 px-5 py-3 last:border-b-0"
               >
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-stone-100">
+                  <p className="font-semibold text-stone-900">
                     {o.customerName ?? "Customer"}{" "}
                     <span className="text-xs font-normal text-stone-500">
                       · {o.status}
@@ -207,7 +207,7 @@ export function SettlementOfferForm({
                     type="button"
                     onClick={() => update(o.id, "declined")}
                     disabled={pending}
-                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-100"
+                    className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[11px] font-medium text-stone-500 transition hover:bg-orange-700 hover:text-stone-900"
                   >
                     <XCircle className="h-3 w-3" />
                     Declined

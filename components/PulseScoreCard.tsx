@@ -31,7 +31,7 @@ function MiniBar({
   return (
     <div>
       <div className="flex items-baseline justify-between">
-        <p className="text-xs font-medium text-stone-400">{label}</p>
+        <p className="text-xs font-medium text-stone-600">{label}</p>
         <p className="text-[11px] tabular-nums text-stone-500">{detail}</p>
       </div>
       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -45,7 +45,7 @@ export function PulseScoreCard({ pulse }: { pulse: PulseResult }) {
   const c = GRADE_COLOR[pulse.grade];
   return (
     <section
-      className={`relative overflow-hidden rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800`}
+      className={`relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200`}
     >
       <div
         className={`pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br ${c.bg}`}
@@ -56,10 +56,10 @@ export function PulseScoreCard({ pulse }: { pulse: PulseResult }) {
           <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-stone-500">
             <Activity className="h-3 w-3" aria-hidden /> AR Pulse
           </p>
-          <p className="mt-3 text-sm text-stone-400">{pulse.headline}</p>
+          <p className="mt-3 text-sm text-stone-600">{pulse.headline}</p>
         </div>
         <div
-          className={`flex flex-col items-center rounded-2xl bg-stone-900/70 px-4 py-3 ring-1 ${c.ring}`}
+          className={`flex flex-col items-center rounded-2xl bg-white px-4 py-3 ring-1 ${c.ring}`}
         >
           <p className={`text-4xl font-bold tabular-nums ${c.text}`}>
             {pulse.score}

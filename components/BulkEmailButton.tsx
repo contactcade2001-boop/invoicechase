@@ -42,7 +42,7 @@ export function BulkEmailButton({ overdue }: { overdue: Customer[] }) {
       onClick={handleClick}
       disabled={disabled}
       title={withEmail === 0 ? "No overdue customers with emails on file" : undefined}
-      className="inline-flex items-center justify-center gap-2 rounded-md bg-stone-900/70 px-4 py-2 text-sm font-semibold text-stone-300 shadow-sm ring-1 ring-inset ring-stone-700 transition hover:bg-stone-950 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-stone-700 shadow-sm ring-1 ring-inset ring-stone-300 transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <Sparkles className="h-4 w-4" aria-hidden />
       {pending

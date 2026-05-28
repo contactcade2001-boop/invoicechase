@@ -31,7 +31,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 function StatusBadge({ status }: { status: string }) {
   const cls =
-    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-300 ring-stone-800";
+    STATUS_STYLES[status] ?? "bg-slate-100 text-stone-700 ring-stone-200";
   return (
     <span
       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${cls}`}
@@ -72,23 +72,23 @@ export default async function PartnerDashboardPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-stone-800 bg-stone-900/70">
+      <header className="border-b border-stone-200 bg-white">
         <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
           <Link href="/" className="text-lg font-bold tracking-tight">
             Invoice Chase
           </Link>
           <div className="flex items-center gap-4 text-sm">
-            <span className="hidden text-stone-400 sm:inline">{user.email}</span>
+            <span className="hidden text-stone-600 sm:inline">{user.email}</span>
             <Link
               href="/partners"
-              className="text-stone-500 hover:text-stone-100"
+              className="text-stone-500 hover:text-stone-900"
             >
               Program info
             </Link>
             <form action="/api/auth/logout" method="post">
               <button
                 type="submit"
-                className="text-stone-500 underline-offset-2 hover:text-stone-100 hover:underline"
+                className="text-stone-500 underline-offset-2 hover:text-stone-900 hover:underline"
               >
                 Sign out
               </button>
@@ -110,7 +110,7 @@ export default async function PartnerDashboardPage() {
         </section>
 
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <Users className="h-3.5 w-3.5" aria-hidden /> Referrals
             </div>
@@ -122,7 +122,7 @@ export default async function PartnerDashboardPage() {
               {activeReferrals === 1 ? "" : "s"}
             </p>
           </div>
-          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <Banknote className="h-3.5 w-3.5" aria-hidden /> Pending payout
             </div>
@@ -133,7 +133,7 @@ export default async function PartnerDashboardPage() {
               At {(partner.commissionPercentBps / 100).toFixed(0)}% commission
             </p>
           </div>
-          <div className="rounded-2xl bg-stone-900/70 p-5 shadow-sm ring-1 ring-stone-800">
+          <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-stone-200">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-stone-500">
               <Banknote className="h-3.5 w-3.5" aria-hidden /> Lifetime earned
             </div>
@@ -146,11 +146,11 @@ export default async function PartnerDashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
           <h2 className="text-lg font-semibold tracking-tight">
             Stripe payouts
           </h2>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             {partner.stripeAccountId
               ? "Connected. Use the Transfer button on a pending commission to push it to your bank via Stripe."
               : "Connect a Stripe Express account so we can wire your monthly commissions automatically. Until you do, you can still self-acknowledge off-platform payouts."}
@@ -162,11 +162,11 @@ export default async function PartnerDashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl bg-stone-900/70 p-6 shadow-sm ring-1 ring-stone-800">
+        <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
           <h2 className="text-lg font-semibold tracking-tight">
             Your referral link
           </h2>
-          <p className="mt-1 text-sm text-stone-400">
+          <p className="mt-1 text-sm text-stone-600">
             Share this link with QuickBooks-using SMBs you work with. Anyone
             who signs up within 30 days of clicking is attributed to you.
           </p>
@@ -190,7 +190,7 @@ export default async function PartnerDashboardPage() {
             Referred customers
           </h2>
           {enrichedReferrals.length === 0 ? (
-            <div className="mt-3 rounded-2xl bg-stone-900/70 p-12 text-center shadow-sm ring-1 ring-stone-800">
+            <div className="mt-3 rounded-2xl bg-white p-12 text-center shadow-sm ring-1 ring-stone-200">
               <Users
                 className="mx-auto h-8 w-8 text-stone-500"
                 aria-hidden
@@ -201,10 +201,10 @@ export default async function PartnerDashboardPage() {
               </p>
             </div>
           ) : (
-            <div className="mt-3 overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+            <div className="mt-3 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
+                  <tr className="border-b border-stone-200 bg-white text-xs font-semibold uppercase tracking-wide text-stone-500">
                     <th className="px-4 py-3 text-left">Customer</th>
                     <th className="px-4 py-3 text-left">Joined</th>
                     <th className="px-4 py-3 text-left">Subscription</th>
@@ -215,12 +215,12 @@ export default async function PartnerDashboardPage() {
                   {enrichedReferrals.map((r) => (
                     <tr
                       key={r.id}
-                      className="border-b border-stone-800/60 last:border-b-0"
+                      className="border-b border-stone-100 last:border-b-0"
                     >
-                      <td className="px-4 py-3 font-medium text-stone-200">
+                      <td className="px-4 py-3 font-medium text-stone-800">
                         {r.orgName}
                       </td>
-                      <td className="px-4 py-3 text-stone-400">
+                      <td className="px-4 py-3 text-stone-600">
                         {formatRelativeTime(r.attributedAt)}
                       </td>
                       <td className="px-4 py-3">
@@ -231,7 +231,7 @@ export default async function PartnerDashboardPage() {
                           </span>
                         ) : null}
                       </td>
-                      <td className="px-4 py-3 text-stone-400">
+                      <td className="px-4 py-3 text-stone-600">
                         {r.firstPaidAt
                           ? formatRelativeTime(r.firstPaidAt)
                           : "—"}
@@ -252,10 +252,10 @@ export default async function PartnerDashboardPage() {
               referrals start paying.
             </p>
           ) : (
-            <div className="mt-3 overflow-hidden rounded-2xl bg-stone-900/70 shadow-sm ring-1 ring-stone-800">
+            <div className="mt-3 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-stone-800 bg-stone-950 text-xs font-semibold uppercase tracking-wide text-stone-500">
+                  <tr className="border-b border-stone-200 bg-white text-xs font-semibold uppercase tracking-wide text-stone-500">
                     <th className="px-4 py-3 text-left">Period</th>
                     <th className="px-4 py-3 text-left">Source</th>
                     <th className="px-4 py-3 text-right">Basis</th>
@@ -267,15 +267,15 @@ export default async function PartnerDashboardPage() {
                   {commissions.map((c) => (
                     <tr
                       key={c.id}
-                      className="border-b border-stone-800/60 last:border-b-0"
+                      className="border-b border-stone-100 last:border-b-0"
                     >
-                      <td className="px-4 py-3 text-stone-300">
+                      <td className="px-4 py-3 text-stone-700">
                         {new Date(c.periodStart).toLocaleDateString("en-US", {
                           month: "short",
                           year: "numeric",
                         })}
                       </td>
-                      <td className="px-4 py-3 text-stone-400">
+                      <td className="px-4 py-3 text-stone-600">
                         {c.source === "subscription"
                           ? "Subscription"
                           : "Platform fees"}
