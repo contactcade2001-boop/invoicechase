@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Container } from "./Container";
 import { Section } from "./Section";
 
@@ -135,20 +136,24 @@ export function HowItWorks() {
   return (
     <Section id="product" tone="default">
       <Container>
-        <div className="mx-auto max-w-[640px] text-center">
-          <p className="mk-display text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-primary-600">
-            Three steps. Sixty seconds.
-          </p>
-          <h2 className="mk-display mt-3 text-[32px] font-bold leading-[1.1] text-mk-ink-950 sm:text-[44px]">
-            Set it up once. Let it land.
-          </h2>
-        </div>
+        <ScrollReveal>
+          <div className="mx-auto max-w-[640px] text-center">
+            <p className="mk-display text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-primary-600">
+              Three steps. Sixty seconds.
+            </p>
+            <h2 className="mk-display mt-3 text-[32px] font-bold leading-[1.1] text-mk-ink-950 sm:text-[44px]">
+              Set it up once. Let it land.
+            </h2>
+          </div>
+        </ScrollReveal>
 
         <ol className="mt-14 grid gap-5 md:grid-cols-3">
-          {STEPS.map((s) => (
-            <li
+          {STEPS.map((s, i) => (
+            <ScrollReveal
               key={s.number}
-              className="group relative flex flex-col rounded-mk-lg bg-mk-surface p-6 shadow-mk-1 ring-1 ring-mk-ink-300/60"
+              as="li"
+              delay={i * 120}
+              className="group mk-card-lift relative flex flex-col rounded-mk-lg bg-mk-surface p-6 shadow-mk-1 ring-1 ring-mk-ink-300/60"
             >
               <div className="flex items-center gap-3">
                 <span className="mk-display font-mono text-[12px] font-semibold tracking-[0.12em] text-mk-primary-600">
@@ -168,7 +173,7 @@ export function HowItWorks() {
               <div className="mt-6 rounded-mk-md bg-mk-ink-50 p-4 ring-1 ring-mk-ink-300/60">
                 {s.visual}
               </div>
-            </li>
+            </ScrollReveal>
           ))}
         </ol>
       </Container>

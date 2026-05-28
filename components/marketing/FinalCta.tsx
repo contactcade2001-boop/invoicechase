@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Section } from "./Section";
@@ -12,7 +13,7 @@ export function FinalCta() {
   return (
     <Section as="aside" tone="ink" aria-label="Get started">
       <Container width="narrow">
-        <div className="text-center">
+        <ScrollReveal className="text-center">
           <h2 className="mk-display text-[36px] font-bold leading-[1.1] text-white sm:text-[52px]">
             Stop chasing.
             <br />
@@ -43,7 +44,7 @@ export function FinalCta() {
           <p className="mt-5 text-[12px] text-white/50">
             No card required · Cancel anytime · 1.9% only when we collect
           </p>
-        </div>
+        </ScrollReveal>
       </Container>
     </Section>
   );

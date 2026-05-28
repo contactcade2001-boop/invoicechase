@@ -1,4 +1,5 @@
 import { ArrowRight, Check } from "lucide-react";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { Section } from "./Section";
@@ -40,21 +41,26 @@ export function Pricing() {
     <Section id="pricing" tone="default">
       <Container>
         {/* ── Header ────────────────────────────────────────────────── */}
-        <div className="mx-auto max-w-[680px] text-center">
-          <p className="mk-display text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-primary-600">
-            One plan
-          </p>
-          <h2 className="mk-display mt-3 text-[32px] font-bold leading-[1.1] text-mk-ink-950 sm:text-[44px]">
-            Less than one unpaid invoice.
-          </h2>
-          <p className="mx-auto mt-5 max-w-[52ch] text-[17px] leading-7 text-mk-ink-700">
-            $49 a month, plus 1.9% on every payment we actually collect for
-            you. No setup fee, no per-seat fee, no contract.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="mx-auto max-w-[680px] text-center">
+            <p className="mk-display text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-primary-600">
+              One plan
+            </p>
+            <h2 className="mk-display mt-3 text-[32px] font-bold leading-[1.1] text-mk-ink-950 sm:text-[44px]">
+              Less than one unpaid invoice.
+            </h2>
+            <p className="mx-auto mt-5 max-w-[52ch] text-[17px] leading-7 text-mk-ink-700">
+              $49 a month, plus 1.9% on every payment we actually collect
+              for you. No setup fee, no per-seat fee, no contract.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* ── Plan card ─────────────────────────────────────────────── */}
-        <div className="mx-auto mt-12 max-w-[920px] overflow-hidden rounded-mk-xl bg-mk-surface shadow-mk-2 ring-1 ring-mk-ink-300/60">
+        <ScrollReveal
+          delay={120}
+          className="mk-card-lift mx-auto mt-12 max-w-[920px] overflow-hidden rounded-mk-xl bg-mk-surface shadow-mk-2 ring-1 ring-mk-ink-300/60"
+        >
           <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:divide-x lg:divide-mk-ink-300/60">
             {/* Price block */}
             <div className="p-8 sm:p-10">
@@ -127,23 +133,29 @@ export function Pricing() {
               </ul>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* ── FAQ ───────────────────────────────────────────────────── */}
         <div className="mx-auto mt-20 max-w-[760px]">
-          <h3 className="mk-display text-center text-[22px] font-semibold text-mk-ink-950 sm:text-[26px]">
-            Common questions
-          </h3>
+          <ScrollReveal>
+            <h3 className="mk-display text-center text-[22px] font-semibold text-mk-ink-950 sm:text-[26px]">
+              Common questions
+            </h3>
+          </ScrollReveal>
           <dl className="mt-8 divide-y divide-mk-ink-300/60">
-            {FAQS.map((f) => (
-              <div key={f.q} className="py-6">
+            {FAQS.map((f, i) => (
+              <ScrollReveal
+                key={f.q}
+                delay={i * 80}
+                className="py-6"
+              >
                 <dt className="mk-display text-[16px] font-semibold leading-snug text-mk-ink-950">
                   {f.q}
                 </dt>
                 <dd className="mt-2 text-[14px] leading-6 text-mk-ink-700">
                   {f.a}
                 </dd>
-              </div>
+              </ScrollReveal>
             ))}
           </dl>
         </div>

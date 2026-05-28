@@ -63,6 +63,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        {/* Sets `html.js` BEFORE first paint so reveal-on-scroll styles
+            only hide content for users whose JS is actually running.
+            JS-disabled users see content immediately, no flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "document.documentElement.classList.add('js')",
+          }}
+        />
+      </head>
       <body className="relative min-h-screen font-sans text-stone-900 antialiased">
         <AppBackground />
         <PageMount>{children}</PageMount>

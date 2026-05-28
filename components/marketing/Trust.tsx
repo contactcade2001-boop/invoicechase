@@ -5,6 +5,7 @@ import {
   StripeLogo,
   XeroLogo,
 } from "@/components/BrandLogos";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Container } from "./Container";
 import { Section } from "./Section";
 
@@ -44,9 +45,11 @@ export function Trust() {
   return (
     <Section tone="default" size="tight">
       <Container>
-        <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-ink-500">
-          Connects with the tools your business already runs on
-        </p>
+        <ScrollReveal>
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-mk-ink-500">
+            Connects with the tools your business already runs on
+          </p>
+        </ScrollReveal>
         <ul
           className="mt-8 grid grid-cols-2 items-center justify-items-center gap-x-8 gap-y-8 sm:grid-cols-4"
           aria-label="Supported integrations"
@@ -56,22 +59,28 @@ export function Trust() {
             { Logo: StripeLogo, name: "Stripe" },
             { Logo: XeroLogo, name: "Xero" },
             { Logo: JobberLogo, name: "Jobber" },
-          ].map(({ Logo, name }) => (
-            <li
+          ].map(({ Logo, name }, i) => (
+            <ScrollReveal
               key={name}
+              as="li"
+              delay={i * 80}
               className="flex items-center gap-2.5 opacity-70 grayscale transition-[opacity,filter] duration-200 hover:opacity-100 hover:grayscale-0 focus-within:opacity-100 focus-within:grayscale-0"
             >
               <Logo size={26} />
               <span className="mk-display text-[13px] font-semibold text-mk-ink-700">
                 {name}
               </span>
-            </li>
+            </ScrollReveal>
           ))}
         </ul>
 
         <div className="mx-auto mt-14 grid max-w-[920px] gap-px overflow-hidden rounded-mk-lg bg-mk-ink-300/60 ring-1 ring-mk-ink-300/60 sm:grid-cols-3">
-          {PROMISES.map((p) => (
-            <div key={p.title} className="bg-mk-surface p-6">
+          {PROMISES.map((p, i) => (
+            <ScrollReveal
+              key={p.title}
+              delay={i * 100}
+              className="bg-mk-surface p-6"
+            >
               <span
                 aria-hidden
                 className="grid h-9 w-9 place-items-center rounded-mk-md bg-mk-accent-50 text-mk-accent-600"
@@ -84,7 +93,7 @@ export function Trust() {
               <p className="mt-1.5 text-[13px] leading-5 text-mk-ink-700">
                 {p.body}
               </p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </Container>

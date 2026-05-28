@@ -317,8 +317,11 @@
   );
 }
 
-/* Reveal-on-scroll: start hidden, slide+fade up when class is added. */
-.reveal-init {
+/* Reveal-on-scroll: gated on `html.js` so users with JS disabled (or
+ * with reveal-init server-rendered in the DOM before hydration) never
+ * see hidden content. The inline <script> in app/layout.tsx adds the
+ * `js` class synchronously before paint. */
+html.js .reveal-init {
   opacity: 0;
   transform: translateY(20px);
 }
@@ -328,6 +331,76 @@
   transition:
     opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
     transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───── Hero mesh (mobile-gated) ─────────────────────────────────── */
+@keyframes mkHeroDriftA {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -3%, 0) scale(1.08); }
+}
+@keyframes mkHeroDriftB {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-5%, 4%, 0) scale(0.95); }
+}
+.mk-mesh-a, .mk-mesh-b {
+  will-change: transform;
+}
+/* Animation only kicks in from md up; static below to keep mobile cool. */
+@media (min-width: 768px) {
+  .mk-mesh-a { animation: mkHeroDriftA 28s ease-in-out infinite; }
+  .mk-mesh-b { animation: mkHeroDriftB 34s ease-in-out infinite; }
+}
+
+/* ───── DSO sparkline line-draw ──────────────────────────────────── */
+.mk-spark-line {
+  stroke-dasharray: 380;
+  stroke-dashoffset: 380;
+}
+.mk-spark-line.is-visible {
+  animation: mkSparkDraw 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.mk-spark-dot {
+  opacity: 0;
+}
+.mk-spark-line.is-visible ~ .mk-spark-dot {
+  animation: mkSparkDotIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(1) { animation-delay: 800ms; }
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(2) { animation-delay: 950ms; }
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(3) { animation-delay: 1100ms; }
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(4) { animation-delay: 1250ms; }
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(5) { animation-delay: 1400ms; }
+.mk-spark-line.is-visible ~ .mk-spark-dot:nth-of-type(6) { animation-delay: 1550ms; }
+@keyframes mkSparkDraw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mkSparkDotIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ───── Card lift on hover ───────────────────────────────────────── */
+.mk-card-lift {
+  transition:
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.mk-card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 28px -12px rgba(11, 15, 18, 0.14),
+    0 4px 12px -4px rgba(11, 15, 18, 0.06);
+}
+
+/* Reduced-motion fallback — covers all new keyframes too. */
+@media (prefers-reduced-motion: reduce) {
+  .mk-mesh-a, .mk-mesh-b,
+  .mk-spark-line.is-visible,
+  .mk-spark-line.is-visible ~ .mk-spark-dot { animation: none !important; }
+  .mk-spark-line { stroke-dasharray: 0 !important; stroke-dashoffset: 0 !important; }
+  .mk-spark-dot { opacity: 1 !important; }
+  .mk-card-lift { transition: none !important; }
 }
 
 /* Spotlight follows cursor — set --x and --y via JS (percentages). */
