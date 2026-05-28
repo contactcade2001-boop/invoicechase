@@ -48,7 +48,8 @@ export type AuditKind =
   | "payment_plan.created"
   | "payment_plan.installment_paid"
   | "pay.link_generated"
-  | "report.weekly_sent";
+  | "report.weekly_sent"
+  | "onboarding.first_batch_approved";
 
 export type LogAuditEventInput = {
   organizationId: number;

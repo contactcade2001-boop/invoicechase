@@ -24,6 +24,9 @@ on:
     # itself checks each org's local timezone + scheduled hour and only
     # sends to those whose window matches right now.
     - cron: "5 * * * *"
+    # Every 15 min — drains the onboarding first-win batch send queue,
+    # throttled per-org (max 5 sends/run) and only during business hours.
+    - cron: "*/15 * * * *"
   workflow_dispatch: {}
 
 jobs:
@@ -83,6 +86,19 @@ jobs:
           curl -fsS \
             -H "Authorization: Bearer $CRON_SECRET" \
             "$APP_BASE_URL/api/cron/weekly-report"
+        env:
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+  first-batch-send:
+    if: github.event.schedule == '*/15 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: First-win onboarding batch drain
+        run: |
+          curl -fsS \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$APP_BASE_URL/api/cron/first-batch-send"
         env:
           APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}

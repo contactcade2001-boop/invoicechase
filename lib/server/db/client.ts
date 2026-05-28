@@ -320,6 +320,37 @@ CREATE INDEX IF NOT EXISTS reminder_sends_org_customer_tone
   ON reminder_sends(organization_id, customer_id, tone);
 CREATE INDEX IF NOT EXISTS reminder_sends_sent_at ON reminder_sends(sent_at);
 
+CREATE TABLE IF NOT EXISTS onboarding_first_batches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'draft',
+  total_at_risk_cents INTEGER NOT NULL DEFAULT 0,
+  eligible_count INTEGER NOT NULL DEFAULT 0,
+  skipped_count INTEGER NOT NULL DEFAULT 0,
+  approved_at INTEGER,
+  approved_by_user_id INTEGER,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS onboarding_first_batch_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  batch_id INTEGER NOT NULL,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  customer_name TEXT,
+  customer_phone TEXT,
+  amount_cents INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'queued',
+  skip_reason TEXT,
+  sent_at INTEGER,
+  reminder_id INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS onboarding_first_batch_items_batch
+  ON onboarding_first_batch_items(batch_id);
+CREATE INDEX IF NOT EXISTS onboarding_first_batch_items_org_status
+  ON onboarding_first_batch_items(organization_id, status);
+
 CREATE TABLE IF NOT EXISTS weekly_report_sends (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   organization_id INTEGER NOT NULL,
@@ -897,6 +928,16 @@ function ensureLegacyMigrations(sqlite: Database.Database) {
     !hasColumn(sqlite, "customer_metadata", "tone")
   ) {
     sqlite.exec("ALTER TABLE customer_metadata ADD COLUMN tone TEXT");
+  }
+  // Add first_batch_id to reminder_sends so we can attribute payments back
+  // to the onboarding cohort.
+  if (
+    hasColumn(sqlite, "reminder_sends", "id") &&
+    !hasColumn(sqlite, "reminder_sends", "first_batch_id")
+  ) {
+    sqlite.exec(
+      "ALTER TABLE reminder_sends ADD COLUMN first_batch_id INTEGER",
+    );
   }
   void tableHasRows; // reserved for future migration checks
 }

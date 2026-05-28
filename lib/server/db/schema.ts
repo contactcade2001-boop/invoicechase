@@ -400,8 +400,58 @@ export const reminderSends = sqliteTable("reminder_sends", {
   tone: text("tone").notNull(),
   channel: text("channel").notNull(),
   sentAt: integer("sent_at").notNull(),
+  /** When non-null, this reminder is part of the org's "first win"
+   *  onboarding batch. Used to attribute payments back to onboarding so
+   *  the first weekly report can say "since you started: $X collected". */
+  firstBatchId: integer("first_batch_id"),
   createdAt: integer("created_at").notNull(),
 });
+
+/**
+ * One row per org's onboarding "first win" batch. Owner clicks "Start
+ * collecting" on the connect-success page → we create one of these rows
+ * + a child row per overdue invoice in onboarding_first_batch_items.
+ * No SMS goes out without status='approved'.
+ */
+export const onboardingFirstBatches = sqliteTable(
+  "onboarding_first_batches",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    organizationId: integer("organization_id").notNull().unique(),
+    /** "draft" | "approved" | "sending" | "complete" | "cancelled". */
+    status: text("status").notNull().default("draft"),
+    /** Snapshot of total $ at risk when the batch was previewed. */
+    totalAtRiskCents: integer("total_at_risk_cents").notNull().default(0),
+    /** How many items were queued at approval. */
+    eligibleCount: integer("eligible_count").notNull().default(0),
+    /** How many were skipped at preview for compliance reasons. */
+    skippedCount: integer("skipped_count").notNull().default(0),
+    approvedAt: integer("approved_at"),
+    approvedByUserId: integer("approved_by_user_id"),
+    createdAt: integer("created_at").notNull(),
+  },
+);
+
+export const onboardingFirstBatchItems = sqliteTable(
+  "onboarding_first_batch_items",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    batchId: integer("batch_id").notNull(),
+    organizationId: integer("organization_id").notNull(),
+    customerId: text("customer_id").notNull(),
+    customerName: text("customer_name"),
+    customerPhone: text("customer_phone"),
+    amountCents: integer("amount_cents").notNull(),
+    /** "queued" | "sent" | "skipped" | "failed". */
+    status: text("status").notNull().default("queued"),
+    /** Why a row was skipped: opted_out | no_phone | outside_hours |
+     *  zero_balance | no_consent | a2p_not_approved | send_error. */
+    skipReason: text("skip_reason"),
+    sentAt: integer("sent_at"),
+    reminderId: integer("reminder_id"),
+    createdAt: integer("created_at").notNull(),
+  },
+);
 
 /**
  * One row per invoice we've observed paid. Sourced from QBO/Xero/Jobber

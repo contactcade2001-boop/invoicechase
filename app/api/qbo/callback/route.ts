@@ -106,9 +106,14 @@ export async function GET(req: NextRequest) {
     console.warn("[qbo] baseline DSO backfill failed", err);
   });
 
-  const res = NextResponse.redirect(
-    redirectUrl(req, "/dashboard?qbo_connected=1"),
-  );
+  // Land owners on the first-win review page so they get the "I made
+  // money in week one" experience. Managers/techs go straight to the
+  // dashboard.
+  const target =
+    user.role === "owner"
+      ? "/onboarding/first-win?qbo_connected=1"
+      : "/dashboard?qbo_connected=1";
+  const res = NextResponse.redirect(redirectUrl(req, target));
   res.cookies.delete(STATE_COOKIE);
   return res;
 }
