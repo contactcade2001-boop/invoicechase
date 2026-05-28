@@ -47,8 +47,8 @@ export function TemplateStatsTable({ rows }: { rows: TemplateStat[] }) {
       ) : (
         <>
           {top ? (
-            <div className="mt-5 rounded-xl bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-4 ring-1 ring-amber-200">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-700">
+            <div className="mt-5 rounded-xl bg-gradient-to-br from-amber-950/40 via-orange-950/40 to-rose-950/40 p-4 ring-1 ring-amber-700/40">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-400">
                 Top performer
               </p>
               <p className="font-display mt-1 text-base font-bold text-stone-100">

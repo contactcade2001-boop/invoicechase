@@ -39,13 +39,13 @@ export default async function LeaderboardPage() {
         </header>
 
         {top ? (
-          <section className="mb-6 rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 p-6 ring-1 ring-amber-200">
+          <section className="mb-6 rounded-2xl bg-gradient-to-br from-amber-950/40 via-orange-950/40 to-rose-950/40 p-6 ring-1 ring-amber-700/40">
             <div className="flex items-center gap-4">
               <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm">
                 <Trophy className="h-6 w-6" aria-hidden />
               </span>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-700">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-400">
                   Leader
                 </p>
                 <p className="font-display text-xl font-bold text-stone-100">
