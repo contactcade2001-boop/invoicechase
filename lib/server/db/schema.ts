@@ -394,6 +394,59 @@ export const reminderSends = sqliteTable("reminder_sends", {
   createdAt: integer("created_at").notNull(),
 });
 
+/**
+ * One row per invoice we've observed paid. Sourced from QBO/Xero/Jobber
+ * payment + invoice records. Used to compute DSO (paid_at − issued_at).
+ * If a payment plan splits an invoice, we record one row per installment
+ * paid so the median/mean reflects actual cash dates.
+ */
+export const paidInvoices = sqliteTable("paid_invoices", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  customerId: text("customer_id").notNull(),
+  /** Source-system invoice id (QBO Id, Xero invoiceId, etc.). */
+  sourceInvoiceId: text("source_invoice_id").notNull(),
+  /** Optional installment marker so the same invoice can have N rows. */
+  installmentNumber: integer("installment_number").notNull().default(1),
+  /** "qbo" | "xero" | "jobber" | "stripe" — used so we can dedupe per source. */
+  source: text("source").notNull(),
+  /** When the invoice was originally issued (cents-accurate to TxnDate). */
+  issuedAt: integer("issued_at").notNull(),
+  /** When this slice of the invoice was actually paid. */
+  paidAt: integer("paid_at").notNull(),
+  /** Days late = paidAt − dueAt; null when invoice didn't have a due date. */
+  daysToPayment: integer("days_to_payment").notNull(),
+  /** Cents collected on this row (the slice, not the total invoice). */
+  amountCents: integer("amount_cents").notNull(),
+  /** Reminder id that preceded this payment by ≤14d, if any. Powers
+   *  attributed-collections reporting ("we collected this"). */
+  attributedReminderId: integer("attributed_reminder_id"),
+  /** Was an AI autopilot reply sent in the conversation before payment? */
+  attributedAiReplyAt: integer("attributed_ai_reply_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+/**
+ * Snapshots of an organization's DSO over time. The first row per org is
+ * the baseline (captured on connect). Subsequent rows are periodic
+ * roll-ups so we can chart trend.
+ */
+export const dsoSnapshots = sqliteTable("dso_snapshots", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  organizationId: integer("organization_id").notNull(),
+  /** "baseline" (one per org) | "rolling" (periodic). */
+  kind: text("kind").notNull(),
+  /** Trailing window in days the snapshot covers (e.g. 30, 90). */
+  windowDays: integer("window_days").notNull(),
+  /** Mean days from issue to payment. */
+  dsoDays: integer("dso_days").notNull(),
+  /** Sample size used in the calc. */
+  paidInvoiceCount: integer("paid_invoice_count").notNull(),
+  /** Total cents collected during the window. */
+  totalCollectedCents: integer("total_collected_cents").notNull(),
+  capturedAt: integer("captured_at").notNull(),
+});
+
 export const insightsCache = sqliteTable(
   "insights_cache",
   {

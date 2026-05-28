@@ -320,6 +320,41 @@ CREATE INDEX IF NOT EXISTS reminder_sends_org_customer_tone
   ON reminder_sends(organization_id, customer_id, tone);
 CREATE INDEX IF NOT EXISTS reminder_sends_sent_at ON reminder_sends(sent_at);
 
+CREATE TABLE IF NOT EXISTS paid_invoices (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  customer_id TEXT NOT NULL,
+  source_invoice_id TEXT NOT NULL,
+  installment_number INTEGER NOT NULL DEFAULT 1,
+  source TEXT NOT NULL,
+  issued_at INTEGER NOT NULL,
+  paid_at INTEGER NOT NULL,
+  days_to_payment INTEGER NOT NULL,
+  amount_cents INTEGER NOT NULL,
+  attributed_reminder_id INTEGER,
+  attributed_ai_reply_at INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS paid_invoices_dedupe
+  ON paid_invoices(organization_id, source, source_invoice_id, installment_number);
+CREATE INDEX IF NOT EXISTS paid_invoices_org_paid_at
+  ON paid_invoices(organization_id, paid_at);
+
+CREATE TABLE IF NOT EXISTS dso_snapshots (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  organization_id INTEGER NOT NULL,
+  kind TEXT NOT NULL,
+  window_days INTEGER NOT NULL,
+  dso_days INTEGER NOT NULL,
+  paid_invoice_count INTEGER NOT NULL,
+  total_collected_cents INTEGER NOT NULL,
+  captured_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS dso_snapshots_org_kind
+  ON dso_snapshots(organization_id, kind);
+CREATE INDEX IF NOT EXISTS dso_snapshots_captured_at
+  ON dso_snapshots(captured_at);
+
 CREATE TABLE IF NOT EXISTS insights_cache (
   organization_id INTEGER NOT NULL,
   kind TEXT NOT NULL,

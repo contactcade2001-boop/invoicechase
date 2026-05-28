@@ -6,6 +6,7 @@ import { logAuditEvent } from "@/lib/server/db/auditEvents";
 import { upsertConnection } from "@/lib/server/db/connections";
 import { getQboApiBase, QBO_MINOR_VERSION, STATE_COOKIE } from "@/lib/server/qbo/config";
 import { exchangeCodeForTokens } from "@/lib/server/qbo/oauth";
+import { backfillBaselineDsoForOrg } from "@/lib/server/insights/dsoBackfill";
 import { warmDashboardCache } from "@/lib/server/qbo/sync";
 
 export const dynamic = "force-dynamic";
@@ -97,6 +98,13 @@ export async function GET(req: NextRequest) {
   // Warm the dashboard cache asynchronously so the redirect to /dashboard
   // doesn't have to wait for the QBO query roundtrip.
   void warmDashboardCache(orgId);
+
+  // Seed the DSO baseline + ingest the last 90d of paid invoices so we
+  // have before/after numbers to show later. Best-effort — never blocks
+  // the connect flow.
+  void backfillBaselineDsoForOrg(orgId).catch((err) => {
+    console.warn("[qbo] baseline DSO backfill failed", err);
+  });
 
   const res = NextResponse.redirect(
     redirectUrl(req, "/dashboard?qbo_connected=1"),
