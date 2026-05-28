@@ -3,6 +3,80 @@
 /* Class-based dark mode (toggle .dark on <html>). */
 @variant dark (&:where(.dark, .dark *));
 
+/* ───────── Marketing (mk-) design tokens ─────────────────────────
+ * Mirror of lib/design/tokens.ts so Tailwind can statically pick up
+ * `bg-mk-primary-500`, `text-mk-ink-700`, `shadow-mk-2`, etc. Scoped
+ * with the `mk-` prefix so the existing app palette stays untouched.
+ * When you edit either side, edit BOTH for consistency.
+ */
+@theme {
+  /* Palette */
+  --color-mk-primary-50: #FDF1EB;
+  --color-mk-primary-100: #F9DDCC;
+  --color-mk-primary-200: #F1B79B;
+  --color-mk-primary-400: #DD6B3A;
+  --color-mk-primary-500: #D14A1F;
+  --color-mk-primary-600: #B23E18;
+  --color-mk-primary-700: #8E2F11;
+  --color-mk-primary-900: #52180A;
+
+  --color-mk-accent-50: #E7F1ED;
+  --color-mk-accent-500: #0E5240;
+  --color-mk-accent-600: #0A3F31;
+  --color-mk-accent-700: #062A21;
+
+  --color-mk-ink-950: #0B0F12;
+  --color-mk-ink-800: #1B2025;
+  --color-mk-ink-700: #3A4047;
+  --color-mk-ink-500: #6B7178;
+  --color-mk-ink-300: #D7D3CD;
+  --color-mk-ink-100: #F2EFEA;
+  --color-mk-ink-50: #FBFAF7;
+
+  --color-mk-surface: #FFFFFF;
+  --color-mk-success: #0E5240;
+  --color-mk-warning: #E8B14B;
+  --color-mk-danger: #B53D24;
+
+  /* Border radius */
+  --radius-mk-sm: 6px;
+  --radius-mk-md: 10px;
+  --radius-mk-lg: 16px;
+  --radius-mk-xl: 24px;
+
+  /* Shadows (Tailwind picks up --shadow-* keys for shadow utilities). */
+  --shadow-mk-1: 0 1px 2px rgba(11, 15, 18, 0.06);
+  --shadow-mk-2: 0 4px 16px -4px rgba(11, 15, 18, 0.10), 0 2px 6px -2px rgba(11, 15, 18, 0.06);
+  --shadow-mk-3: 0 20px 48px -20px rgba(11, 15, 18, 0.18), 0 8px 16px -8px rgba(11, 15, 18, 0.10);
+  --shadow-mk-focus: 0 0 0 3px rgba(209, 74, 31, 0.22);
+}
+
+/* Display-class typography for headings on marketing pages. */
+.mk-display {
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.03em;
+}
+
+/* Skip-link for keyboard users — visible only when focused. */
+.mk-skip-link {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 10px 14px;
+  background: var(--color-mk-ink-950);
+  color: white;
+  border-radius: var(--radius-mk-md);
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 100;
+  transform: translateY(-200%);
+  transition: transform 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+.mk-skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+}
+
 @theme {
   --color-risk-low: #16a34a;
   --color-risk-medium: #d97706;
