@@ -11,7 +11,9 @@ export function Wordmark({ size = 22 }: { size?: number }) {
         height={size}
         viewBox="0 0 24 24"
         fill="none"
-        aria-hidden
+        role="img"
+        aria-label="Invoice Chase logo"
+        focusable="false"
         className="text-mk-primary-500"
       >
         {/* Two ascending bars + a leading vertical, suggesting upward
