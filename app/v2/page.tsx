@@ -2,6 +2,8 @@ import { Footer } from "@/components/marketing/Footer";
 import { Hero } from "@/components/marketing/Hero";
 import { HowItWorks } from "@/components/marketing/HowItWorks";
 import { Nav } from "@/components/marketing/Nav";
+import { Pricing } from "@/components/marketing/Pricing";
+import { Proof } from "@/components/marketing/Proof";
 
 export const metadata = {
   title: "Invoice Chase — Get overdue invoices paid faster",
@@ -24,6 +26,8 @@ export default function MarketingShell() {
       <main id="main" tabIndex={-1}>
         <Hero />
         <HowItWorks />
+        <Proof />
+        <Pricing />
       </main>
       <Footer />
     </div>
