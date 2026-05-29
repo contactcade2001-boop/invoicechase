@@ -66,6 +66,10 @@ export function buildDailyDigest(input: DigestInputs): DailyDigest {
     topPriority &&
     `${topPriority.name} owes ${formatCurrency(topPriority.amountOwed)} (${topPriority.daysLate}d late)`;
 
+  const dashboardUrl = `${(
+    process.env.APP_BASE_URL ?? "https://invoicechase.com"
+  ).replace(/\/$/, "")}/dashboard`;
+
   const textBody = [
     `Good morning. Here's your 24-hour AR snapshot for ${input.businessName}.`,
     ``,
@@ -76,7 +80,7 @@ export function buildDailyDigest(input: DigestInputs): DailyDigest {
     ``,
     top ? `Top priority today: ${top}.` : `Everyone's current. Take the win.`,
     ``,
-    `Open dashboard: https://invoicechase.com/dashboard`,
+    `Open dashboard: ${dashboardUrl}`,
   ].join("\n");
 
   const htmlBody = `
@@ -112,7 +116,7 @@ export function buildDailyDigest(input: DigestInputs): DailyDigest {
           : ""
       }
       <p style="margin-top:24px;text-align:center">
-        <a href="https://invoicechase.com/dashboard" style="display:inline-block;background:#1c1917;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;font-size:13px">Open dashboard</a>
+        <a href="${dashboardUrl}" style="display:inline-block;background:#1c1917;color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;font-size:13px">Open dashboard</a>
       </p>
       <p style="margin-top:16px;font-size:11px;color:#a8a29e;text-align:center">You're getting this because daily digests are on. Turn off in Settings.</p>
     </div>`;
