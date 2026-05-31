@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { Button } from "./Button";
 import { Container } from "./Container";
-import { HeroVisual } from "./HeroVisual";
+import { HeroVideo } from "./HeroVideo";
 import { Section } from "./Section";
 
 /**
@@ -119,7 +119,7 @@ export function Hero() {
           </div>
           <div className="lg:pl-4">
             <div className="mk-card-lift">
-              <HeroVisual />
+              <HeroVideo />
             </div>
           </div>
         </div>
