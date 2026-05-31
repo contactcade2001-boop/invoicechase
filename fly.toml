@@ -9,7 +9,7 @@
 # Update name + region below if needed. SQLite + better-sqlite3 wants a
 # single machine — keep min/max at 1 unless you also wire LiteFS.
 
-app = "invoicechase"
+app = "invoicechase-spind"
 primary_region = "iad"
 
 [build]
