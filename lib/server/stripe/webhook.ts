@@ -355,6 +355,13 @@ export async function handleEvent(event: Stripe.Event): Promise<void> {
       return;
     }
     case "charge.refunded": {
+      // OBSERVATIONAL ONLY. We do not initiate refunds here — this fires when a
+      // refund was created elsewhere (Stripe Dashboard or our refundCharge()
+      // helper). Whether our 1.9% application fee came back is decided at refund
+      // creation time via `refund_application_fee` (see refundCharge() +
+      // shouldRefundApplicationFee() in connect.ts). Refunds issued directly
+      // from the connected account's Stripe Dashboard do NOT refund the
+      // application fee by default, so the platform keeps its 1.9%.
       const charge = event.data.object;
       const paymentIntentId =
         typeof charge.payment_intent === "string"

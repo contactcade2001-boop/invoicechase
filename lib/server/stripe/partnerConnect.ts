@@ -47,6 +47,10 @@ export async function transferCommissionCents(input: {
   amountCents: number;
   metadata: Record<string, string>;
 }): Promise<{ id: string }> {
+  // This is a PAYOUT of our own money, not a customer charge: the transfer
+  // moves commission from the PLATFORM balance to the partner's connected
+  // account. Intentionally no `{ stripeAccount }` option — it must originate
+  // from the platform. No Stripe processing fee applies to transfers.
   const stripe = getStripe();
   const transfer = await stripe.transfers.create({
     amount: input.amountCents,

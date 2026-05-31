@@ -47,48 +47,58 @@ export async function createPayCheckoutUrl(input: {
   if (amount >= 5000) paymentMethodTypes.push("klarna");
   if (amount >= 3500 && amount <= 200_000) paymentMethodTypes.push("afterpay_clearpay");
 
-  const session = await getStripe().checkout.sessions.create({
-    mode: "payment",
-    payment_method_types: paymentMethodTypes,
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: amount,
-          product_data: {
-            name: productName,
-            description: input.customer.name,
+  // DIRECT CHARGE: the `{ stripeAccount }` request option (last arg) creates
+  // the Checkout Session — and therefore the PaymentIntent and charge — ON the
+  // contractor's connected account. That is what makes Stripe's processing fee
+  // (~2.9% + 30¢) come out of the CONTRACTOR's balance, not ours. We collect
+  // our cut as `application_fee_amount`, which transfers to the platform clean.
+  //
+  // Do NOT add `transfer_data`/`destination` here — that turns this back into a
+  // DESTINATION charge, where the charge lives on the platform account and
+  // Stripe deducts its fee from OUR balance. (See the $100 walkthrough at the
+  // top of connect.ts.)
+  const session = await getStripe().checkout.sessions.create(
+    {
+      mode: "payment",
+      payment_method_types: paymentMethodTypes,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "usd",
+            unit_amount: amount,
+            product_data: {
+              name: productName,
+              description: input.customer.name,
+            },
           },
         },
+      ],
+      customer_email: input.customer.email,
+      payment_intent_data: {
+        application_fee_amount: fee,
+        // When the org opts into custom receipts, suppress Stripe's auto-receipt
+        // so we don't send two. Otherwise let Stripe handle it.
+        receipt_email:
+          getOrgById(input.organizationId)?.customReceiptsEnabled === 1
+            ? undefined
+            : input.customer.email,
+        metadata: {
+          organizationId: String(input.organizationId),
+          customerId: input.customer.id,
+          payLinkToken: input.token,
+        },
       },
-    ],
-    customer_email: input.customer.email,
-    payment_intent_data: {
-      application_fee_amount: fee,
-      transfer_data: {
-        destination: account!.stripeAccountId,
-      },
-      // When the org opts into custom receipts, suppress Stripe's auto-receipt
-      // so we don't send two. Otherwise let Stripe handle it.
-      receipt_email:
-        getOrgById(input.organizationId)?.customReceiptsEnabled === 1
-          ? undefined
-          : input.customer.email,
       metadata: {
         organizationId: String(input.organizationId),
         customerId: input.customer.id,
         payLinkToken: input.token,
       },
+      success_url: successUrl,
+      cancel_url: cancelUrl,
     },
-    metadata: {
-      organizationId: String(input.organizationId),
-      customerId: input.customer.id,
-      payLinkToken: input.token,
-    },
-    success_url: successUrl,
-    cancel_url: cancelUrl,
-  });
+    { stripeAccount: account!.stripeAccountId },
+  );
 
   if (!session.url) {
     return { ok: false, error: "no_session_url" };
